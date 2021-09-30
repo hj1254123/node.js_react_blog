@@ -13,7 +13,7 @@ router.post('/', function(req, res) {
 })
 
 router.delete('/', function(req, res, next) {
-  next(new Error('删除文章出错'))
+  res.json('删除文章')
 })
 
 router.put('/', function(req, res) {
@@ -23,12 +23,5 @@ router.put('/', function(req, res) {
 router.get('/:id', function(req, res) {
   res.json('获取某篇文章')
 })
-
-// 错误处理
-router.use(function(err, req, res, next) {
-  console.log(err.message);
-  res.status(500).send(err.message);
-})
-
 
 module.exports = router
