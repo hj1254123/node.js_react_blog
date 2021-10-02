@@ -3,11 +3,19 @@ const path = require("path")
 const xss = require("xss")
 
 const userDBPath = path.resolve(__dirname, '../db/user.json')
-const utilsAuthPath = path.resolve(__dirname, '../utils/auth_handle.js')
 
-const { md5password } = require(utilsAuthPath)
+const { md5password } = require('../utils/auth_handle.js')
+const { REGISTRY_INVITATION_CODE } = require('../constants/config')
 
 const userController = {}
+
+userController.getUsersData = () => {
+  return usersData = JSON.parse(fs.readFileSync(userDBPath))
+}
+
+userController.save = (usersData) => {
+  fs.writeFileSync(userDBPath, JSON.stringify(usersData))
+}
 
 userController.createUser = (userName, password, invitationCode, callback) => {
   // err为true表示失败，data带给客户端的数据。
@@ -21,7 +29,7 @@ userController.createUser = (userName, password, invitationCode, callback) => {
   let checkPassword = 6 <= cleanPassword.length && cleanPassword.length < 16
   // 查询数据库，用户名是否存在
   let checkUserRepeat = true
-  let usersData = JSON.parse(fs.readFileSync(userDBPath))
+  let usersData = userController.getUsersData()
   usersData.forEach(item => {
     if(item.userName === userName) {
       checkUserRepeat = false
@@ -34,17 +42,17 @@ userController.createUser = (userName, password, invitationCode, callback) => {
     err = { message: '密码不合法，长度6-16' }
   } else if(!checkUserRepeat) {
     err = { message: '用户名已存在' }
-  } else if(invitationCode !== '7355608') {
+  } else if(invitationCode !== REGISTRY_INVITATION_CODE) {
     err = { message: '邀请码错误' }
   } else {
     // 以上校验通过，注册新用户
     let newUser = {}
     // 计算唯一id
-    var onlyID = usersData[usersData.length - 1]
-    if(onlyID === undefined) {
+    var uniqueId = usersData[usersData.length - 1]
+    if(uniqueId === undefined) {
       newUser.id = 1
     } else {
-      newUser.id = onlyID.id + 1
+      newUser.id = uniqueId.id + 1
     }
     // 用户名
     newUser.userName = cleanUserName
@@ -54,7 +62,7 @@ userController.createUser = (userName, password, invitationCode, callback) => {
     newUser.time = new Date().getTime()
     // push并写入
     usersData.push(newUser)
-    fs.writeFileSync(userDBPath, JSON.stringify(usersData))
+    userController.save(usersData)
     // 待返回给客户端的数据
     data = {
       message: '注册成功',
