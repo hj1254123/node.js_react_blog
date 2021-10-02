@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const userController = require('../controller/user')
+const userController = require('../model/user')
 
 router.post('/register', (req, res, next) => {
   // - 拿到用户数据

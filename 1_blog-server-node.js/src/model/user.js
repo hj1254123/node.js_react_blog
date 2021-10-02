@@ -17,34 +17,34 @@ userController.createUser = (userName, password, invitationCode, callback) => {
   let cleanUserName = xss(userName)
   let cleanPassword = xss(password)
   // 长度控制
-  let a = 6 <= cleanUserName.length && cleanUserName.length < 16
-  let b = 6 <= cleanPassword.length && cleanPassword.length < 16
+  let checkUserName = 6 <= cleanUserName.length && cleanUserName.length < 16
+  let checkPassword = 6 <= cleanPassword.length && cleanPassword.length < 16
   // 查询数据库，用户名是否存在
-  let c = true
+  let checkUserRepeat = true
   let usersData = JSON.parse(fs.readFileSync(userDBPath))
   usersData.forEach(item => {
     if(item.userName === userName) {
-      c = false
+      checkUserRepeat = false
     }
   })
   // 不同错误状态处理
-  if(!a) {
+  if(!checkUserName) {
     err = { message: '用户名不合法，长度6-16' }
-  } else if(!b) {
+  } else if(!checkPassword) {
     err = { message: '密码不合法，长度6-16' }
-  } else if(!c) {
+  } else if(!checkUserRepeat) {
     err = { message: '用户名已存在' }
   } else if(invitationCode !== '7355608') {
     err = { message: '邀请码错误' }
-  } else if(a && b && c) {
+  } else {
     // 以上校验通过，注册新用户
     let newUser = {}
     // 计算唯一id
-    var d = usersData[usersData.length - 1]
-    if(d === undefined) {
+    var onlyID = usersData[usersData.length - 1]
+    if(onlyID === undefined) {
       newUser.id = 1
     } else {
-      newUser.id = d.id + 1
+      newUser.id = onlyID.id + 1
     }
     // 用户名
     newUser.userName = cleanUserName
