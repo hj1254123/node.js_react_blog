@@ -13,6 +13,8 @@ app.use('/article', articleRouter);
 
 // 错误处理
 app.use(function(err, req, res, next) {
+    // TODO: 根据错误信息，返回特定状态码、message
+    console.log('全局错误处理', err.message);
     res.status(500).send(err.message);
 })
 

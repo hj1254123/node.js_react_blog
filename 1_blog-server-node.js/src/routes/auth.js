@@ -4,28 +4,37 @@ const router = express.Router()
 const userController = require('../model/user')
 
 router.post('/register', (req, res, next) => {
-  // - 拿到用户数据
-  const userName = req.body.userName
-  const password = req.body.password
-  const invitationCode = req.body.invitation_code //邀请码，暂不开放注册功能
-  // - 初始化待返回给客户端数据
-  let data = null
-  let error = null
+  // // - 拿到用户数据
+  let { userName, password, invitationCode } = req.body
   // - 创建用户
-  userController.createUser(userName, password, invitationCode, (err, userData) => {
-    error = err
-    data = userData
-  })
-  // - 失败/成功结果返回给客户端
-  if(error) {
-    next(error)
-  } else {
-    res.json(data)
-  }
+  userController
+    .createUser(userName, password, invitationCode)
+    .then(data => {
+      res.json(data)
+    })
+    .catch(err => {
+      next(err)
+    })
 })
 
-router.post('/login', (req, res) => {
-  res.json('登录接口')
+router.post('/login', (req, res, next) => {
+  // 拿到 用户名、密码
+  let { userName, password } = req.body
+
+  // 根据用户名、密码，验证登录
+  userController
+    .userNamePasswordAuth(userName, password)
+    .then(data => {
+      if(data.message === '登录成功') {
+        // 颁发token
+        
+      }
+      // 向客户端返回结果
+      res.json(data)
+    })
+    .catch(err => {
+      next(err)
+    })
 })
 
 module.exports = router

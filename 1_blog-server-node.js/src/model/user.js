@@ -17,19 +17,29 @@ userController.save = (usersData) => {
   fs.writeFileSync(userDBPath, JSON.stringify(usersData))
 }
 
-userController.createUser = (userName, password, invitationCode, callback) => {
-  // err为true表示失败，data带给客户端的数据。
-  let err = null
-  let data = null
+userController.cleanUserNameAndPassword = (userName, password) => {
   // 校验用户名、密码的合法性
   let cleanUserName = xss(userName)
   let cleanPassword = xss(password)
   // 长度控制
   let checkUserName = 6 <= cleanUserName.length && cleanUserName.length < 16
   let checkPassword = 6 <= cleanPassword.length && cleanPassword.length < 16
-  // 查询数据库，用户名是否存在
+  return { cleanUserName, cleanPassword, checkUserName, checkPassword }
+}
+
+userController.createUser = async (userName, password, invitationCode) => {
+  let message = '注册成功'
+  let data = null
+  let {
+    cleanUserName,
+    cleanPassword,
+    checkUserName,
+    checkPassword
+  } = userController.cleanUserNameAndPassword(userName, password)
+
+  // 查询数据库，用户名是否重复
   let checkUserRepeat = true
-  let usersData = userController.getUsersData()
+  let usersData = await userController.getUsersData()
   usersData.forEach(item => {
     if(item.userName === userName) {
       checkUserRepeat = false
@@ -37,13 +47,13 @@ userController.createUser = (userName, password, invitationCode, callback) => {
   })
   // 不同错误状态处理
   if(!checkUserName) {
-    err = { message: '用户名不合法，长度6-16' }
+    message = '用户名不合法，长度6-16'
   } else if(!checkPassword) {
-    err = { message: '密码不合法，长度6-16' }
+    message = '密码不合法，长度6-16'
   } else if(!checkUserRepeat) {
-    err = { message: '用户名已存在' }
+    message = '用户名已存在'
   } else if(invitationCode !== REGISTRY_INVITATION_CODE) {
-    err = { message: '邀请码错误' }
+    message = '邀请码错误'
   } else {
     // 以上校验通过，注册新用户
     let newUser = {}
@@ -64,16 +74,46 @@ userController.createUser = (userName, password, invitationCode, callback) => {
     usersData.push(newUser)
     userController.save(usersData)
     // 待返回给客户端的数据
+    message = '注册成功'
     data = {
-      message: '注册成功',
-      data: {
-        id: newUser.id,
-        userName: newUser.userName
-      }
+      id: newUser.id,
+      userName: newUser.userName
     }
   }
 
-  callback(err, data)
+  return { message, data }
+}
+
+userController.userNamePasswordAuth = async (userName, password) => {
+  let {
+    cleanUserName,
+    cleanPassword,
+    checkUserName,
+    checkPassword
+  } = userController.cleanUserNameAndPassword(userName, password)
+  
+  let message = '没有该用户'
+  let data = {}
+  // 读取用户数据
+  const usersData = await userController.getUsersData()
+  // 查找用户是否存档，并校验。
+  for(let i = 0; i < usersData.length; i++) {
+    const item = usersData[i]
+    if(item.userName === cleanUserName) {
+      if(item.hashPassword === md5password(cleanPassword)) {
+        message = '登录成功'
+        data = {
+          id: item.id,
+          userName: item.userName,
+          time: item.time
+        }
+      } else {
+        message = '密码错误'
+      }
+      break
+    }
+  }
+  return { message, data }
 }
 
 module.exports = userController
