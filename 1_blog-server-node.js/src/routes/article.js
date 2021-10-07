@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 router.post('/', function(req, res) {
+  console.log(req.user);
   // 拿到数据
   const articleData = req.body
   // 校验、转义数据
@@ -13,6 +14,7 @@ router.post('/', function(req, res) {
 })
 
 router.delete('/', function(req, res, next) {
+  console.log(req.uesr);
   res.json('删除文章')
 })
 
@@ -21,7 +23,10 @@ router.put('/', function(req, res) {
 })
 
 router.get('/:id', function(req, res) {
-  res.json('获取某篇文章')
+  const articleID = req.params.id
+  res.json(`获取文章:${articleID}`)
 })
+
+
 
 module.exports = router

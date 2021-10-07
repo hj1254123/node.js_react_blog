@@ -30,8 +30,9 @@ router.post('/login', (req, res, next) => {
       if(data.message === '登录成功') {
         // 颁发token
         const token = jwt.sign(data.data, PRIVATE_KEY, {
-          expiresIn: 86400, //1天过期
-          algorithm: 'RS256'// 设置算法为 RS256
+          expiresIn: 60 * 60 * 24 * 2, //2天过期
+          algorithm: 'RS256',// 设置算法为 RS256
+          issuer: 'Monkey'
         })
         data.data.token = token
         res.json(data)
