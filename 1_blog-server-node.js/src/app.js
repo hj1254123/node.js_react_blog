@@ -1,15 +1,26 @@
 const express = require('express')
+const expressJwt = require('express-jwt')
+
+const { PUBLIC_KEY } = require('./constants/config.js')
+// 路由
+var authRouter = require('./routes/auth.js');
+var articleRouter = require('./routes/article.js');
+
 const app = express()
 const port = 3000
 
 app.use(express.json())
 
-// 路由
-var authRouter = require('./routes/auth.js');
-var articleRouter = require('./routes/article.js');
+app.use(expressJwt({
+    secret: PUBLIC_KEY,
+    algorithms: ['RS256']
+}).unless({
+    path: ['/auth/login']  // 指定路径不经过 Token 解析
+}))
 
 app.use('/auth', authRouter)
-app.use('/article', articleRouter);
+app.use('/article', articleRouter)
+
 
 // 错误处理
 app.use(function(err, req, res, next) {

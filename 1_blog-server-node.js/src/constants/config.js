@@ -4,12 +4,11 @@ const path = require("path")
 let PRIVATE_KEY
 let PUBLIC_KEY
 
-// TODO:项目上线时重新生成
 try {
   PRIVATE_KEY = fs.readFileSync(path.resolve(__dirname, './private.key'))
   PUBLIC_KEY = fs.readFileSync(path.resolve(__dirname, './public.key'))
 } catch(error) {
-  console.log('密钥读取出错：', error.message);
+  console.log('密钥读取出错，请查看是否需要重新生成：', error.message);
 }
 
 // TODO:项目上线时修改
