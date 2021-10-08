@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 
-const userController = require('../model/user')
+const userModel = require('../model/user')
 
 const { PRIVATE_KEY, PUBLIC_KEY } = require('../constants/config')
 
@@ -10,7 +10,7 @@ router.post('/register', (req, res, next) => {
   // // - 拿到用户数据
   let { userName, password, invitationCode } = req.body
   // - 创建用户
-  userController
+  userModel
     .createUser(userName, password, invitationCode)
     .then(data => {
       res.json(data)
@@ -24,7 +24,7 @@ router.post('/login', (req, res, next) => {
   // 拿到 用户名、密码
   let { userName, password } = req.body
   // 根据用户名、密码，验证登录
-  userController
+  userModel
     .userNamePasswordAuth(userName, password)
     .then(data => {
       if(data.message === '登录成功') {
