@@ -2,6 +2,9 @@ const fs = require("fs")
 const path = require("path")
 const xss = require("xss")
 
+const tagsModel = require("./tags.js")
+const tagAndArticleModel = require("./tag&article.js")
+
 const articlesDBPath = path.resolve(__dirname, '../db/articles.json')
 
 const articleModel = {}
@@ -65,8 +68,14 @@ articleModel.articleSecurityHandling = (articleData) => {
 
 // 添加文章
 articleModel.addArticle = async (articleData) => {
+  /**
+   * 保存文章数据、返回文章id
+   * 保存标签数据、返回标签id的数组
+   * 根据两者id，保存关系文档数据
+   */
+
   let data = {
-    message: '添加文章成功',
+    message: '',
     data: null
   }
   // 文章校验
@@ -85,9 +94,9 @@ articleModel.addArticle = async (articleData) => {
     intro: intro,
     content: content
   }
-  
+
   // 查询数据库，读取文章数据
-  let articlesDB = await articleModel.getArticlesData()
+  let articlesDB = articleModel.getArticlesData()
   // 计算文章唯一id
   let lastItem = articlesDB[articlesDB.length - 1]
   if(lastItem === undefined) {
@@ -95,12 +104,35 @@ articleModel.addArticle = async (articleData) => {
   } else {
     newArticleData.id = lastItem.id + 1
   }
+  // 创建时间
   newArticleData.time = new Date().getTime()
   // push并保存文章数据
   articlesDB.push(newArticleData)
   articleModel.save(articlesDB)
-  
-  data.data = {...newArticleData}
+  // 拷贝一份
+  data.data = { ...newArticleData }
+  // 保存标签数据
+  await tagsModel
+    .addTags(tags)
+    .then(tagsArr => {
+      data.data.tags = tagsArr
+    })
+    .catch(err => {
+      data.message = '标签保存出错'
+      data.data = null
+    })
+  if(data.message === '标签保存出错') return data
+  // 保存标签与文章关系数据文档
+  await tagAndArticleModel
+    .addTagArticle(data.data.id, data.data.tags)
+    .then(data => {
+      if(data === '成功') return
+      return Promise.reject('出错')
+    })
+    .catch(err => {
+      data.message = '标签与文章关系数据文档，保存出错'
+      data.data = null
+    })
   return data
 }
 

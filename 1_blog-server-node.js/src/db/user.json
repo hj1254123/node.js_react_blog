@@ -4,29 +4,5 @@
     "userName": "monkey",
     "hashPassword": "505c5fa68a64621b435531f143e70173",
     "time": 1633360928200
-  },
-  {
-    "id": 2,
-    "userName": "monkey1",
-    "hashPassword": "505c5fa68a64621b435531f143e70173",
-    "time": 1633361907221
-  },
-  {
-    "id": 3,
-    "userName": "monkey2",
-    "hashPassword": "505c5fa68a64621b435531f143e70173",
-    "time": 1633361909699
-  },
-  {
-    "id": 4,
-    "userName": "monkey3",
-    "hashPassword": "505c5fa68a64621b435531f143e70173",
-    "time": 1633361912050
-  },
-  {
-    "id": 5,
-    "userName": "monkey888",
-    "hashPassword": "505c5fa68a64621b435531f143e70173",
-    "time": 1633362375053
   }
 ]
