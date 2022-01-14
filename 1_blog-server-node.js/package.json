@@ -15,5 +15,10 @@
     "start": "nodemon ./src/app.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "nodemonConfig": {
+    "ignore": [
+      "src/db/*"
+    ]
+  }
 }

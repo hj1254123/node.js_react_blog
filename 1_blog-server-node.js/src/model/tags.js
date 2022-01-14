@@ -13,14 +13,14 @@ tagsModel.save = (tagDBData) => {
   fs.writeFileSync(tagsDBPath, JSON.stringify(tagDBData))
 }
 // 参数 tagsArr 在 ./article.js 中已校验和安全处理
-tagsModel.addTags = async (tagsArr) => {
+tagsModel.addTags = (tagsArr) => {
   // tagsArrReturned 期望返回格式：[{id: 1, tagName: '测试'}]
   let tagsArrReturned
   const tagsDBData = tagsModel.getTagsData()
 
   tagsArrReturned = tagsArr.map(item => {
     // - 检查标签是否已经存在
-    for (const i of tagsDBData) {
+    for(const i of tagsDBData) {
       if(item === i.tagName) {
         // 存在直接返回，不再保存
         return i
@@ -41,8 +41,9 @@ tagsModel.addTags = async (tagsArr) => {
     return newTagData
   })
 
-  // 保存
+  // 保存标签数据文档
   tagsModel.save(tagsDBData)
+  // 返回已保存的标签信息
   return tagsArrReturned
 }
 

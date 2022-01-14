@@ -1,6 +1,6 @@
 const tagAndArticle = {}
 
-tagAndArticle.addTagArticle = async (articleID, tagsArr) => {
+tagAndArticle.addTagArticle = (articleID, tagsArr) => {
   console.log(articleID, tagsArr);
   return '成功'
 }

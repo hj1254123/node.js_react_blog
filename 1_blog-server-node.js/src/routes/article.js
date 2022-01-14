@@ -5,7 +5,7 @@ const router = express.Router()
 router.post('/', function(req, res) {
   // - 拿到数据
   const articleData = req.body
-  // - 存文章数据
+  // - 存文章数据（包含了tags）
   articleModel
     .addArticle(articleData)
     .then(data => {
