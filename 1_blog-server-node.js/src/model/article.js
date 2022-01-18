@@ -111,7 +111,7 @@ articleModel.saveNewArticle = (title, intro, content) => {
  * - 根据文章、标签两者id，保存关系文档数据，并返回数据
  * - 最后合并文章、标签数据，返回给客户端
  */
-articleModel.addArticle = async (articleData) => {
+articleModel.addArticle = (articleData) => {
   // 0.初始化返回给客户端的数据
   //   - message：处理结果描述；
   //   - data：文章数据（包含id、time等信息）
@@ -132,10 +132,10 @@ articleModel.addArticle = async (articleData) => {
   // 2.文章数据安全处理
   let { title, intro, content, tags } = articleModel.articleSecurityHandling(articleData)
 
-  // 3.保存新文章，并返回的数据（包含文章id、时间等）
+  // 3.保存新文章
   let newArticleData = articleModel.saveNewArticle(title, intro, content)
 
-  // data.data 最终返回给客户端的数据，包含了文章处理后的信息（文章id、time...）
+  // data.data 是最终返回给客户端的数据，包含了文章处理后的信息（文章id、time...）
   data.data = { ...newArticleData }
 
   // 4.保存标签数据
@@ -143,14 +143,25 @@ articleModel.addArticle = async (articleData) => {
     let tagsArr = tagsModel.addTags(tags)
     data.data.tags = tagsArr
   } catch(error) {
-    data.message = '标签保存出错。请手动清理新添加的文章，或通过后台添加标签。'
+    data.message = '标签保存出错，请手动删除新添加数据。'
     data.data = null
     return data
   }
 
   // 5.保存标签与文章关系数据文档
-  tagAndArticleModel.addTagArticle(data.data.id, data.data.tags)
+  const articleID = data.data.id
+  const tagsIDArr = []
+  for(const item of data.data.tags) {
+    tagsIDArr.push(item.id)
+  }
 
+  try {
+    tagAndArticleModel.addTagArticle(articleID, tagsIDArr)
+  } catch(error) {
+    data.message = '标签与文章关系文档保存出错，请手动删除新添加数据。'
+  }
+  
+  data.message = '文章添加成功'
   return data
 }
 

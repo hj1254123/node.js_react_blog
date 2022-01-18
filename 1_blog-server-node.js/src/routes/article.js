@@ -6,14 +6,12 @@ router.post('/', function(req, res) {
   // - 拿到数据
   const articleData = req.body
   // - 存文章数据（包含了tags）
-  articleModel
-    .addArticle(articleData)
-    .then(data => {
-      res.json(data)
-    })
-    .catch(err => {
-      res.json(err)
-    })
+  try {
+    const data = articleModel.addArticle(articleData)
+    res.json(data)
+  } catch(error) {
+    res.json('添加文章出错，注意处理', error)
+  }
 })
 
 router.delete('/', function(req, res, next) {

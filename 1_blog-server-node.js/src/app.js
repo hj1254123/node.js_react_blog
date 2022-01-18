@@ -19,11 +19,11 @@ app.use(expressJwt({
   algorithms: ['RS256'],
 }).unless({
   // 这些路径不解析、验证
-    path: [
-      {url: '/auth/register', methods: ['POST']},
-      {url: '/auth/login', methods: ['POST']},
-      {url: /^\/article\/\d+$/, methods: ['GET']},
-    ]
+  path: [
+    { url: '/auth/register', methods: ['POST'] },
+    { url: '/auth/login', methods: ['POST'] },
+    { url: /^\/article\/\d+$/, methods: ['GET'] },
+  ]
 }))
 
 // 路由
