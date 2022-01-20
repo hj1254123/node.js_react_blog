@@ -25,18 +25,28 @@ articleModel.save = (articlesData) => {
 articleModel.articleVerification = (articleData) => {
   let result = { message: '校验通过', boolean: true }
   let { title, intro, content, tags } = articleData
-  // 标题不能为空、类型为string
-  // 简介类型为string
-  // 内容不能为空、类型为string
-  // 标签必须为数组，且元素为string
+  // 标题：不能为空、类型为string
+  // 简介: 类型为string
+  // 内容：不能为空、类型为string
+  // 标签：必须为数组，且元素为string
+
   let checkTitle = !title || (typeof title !== 'string')
   let checkIntro = typeof intro !== 'string'
   let checkContent = !content || (typeof content !== 'string')
+  // 长度控制
+  if(title.length > 50) {
+    checkTitle = true
+  } else if(content.length > 30000) {
+    checkContent = true
+  }
+  // 标签校验
   let checkTags = !Array.isArray(tags)
   // 如果tags是数组，校验标签元素
   if(!checkTags) {
     tags.forEach(item => {
       if(typeof item !== 'string') {
+        checkTags = true
+      } else if(item.length > 20) {
         checkTags = true
       }
     })
@@ -160,8 +170,46 @@ articleModel.addArticle = (articleData) => {
   } catch(error) {
     data.message = '标签与文章关系文档保存出错，请手动删除新添加数据。'
   }
-  
+
   data.message = '文章添加成功'
+  return data
+}
+
+articleModel.delArticle = (articleID) => {
+  // 初始化待返回给客户端的数据
+  const data = {
+    message: "",
+    data: {
+      articleID: articleID
+    }
+  }
+  // 1.删除文章
+  // - 数据校验
+  if(typeof articleID !== 'number') {
+    data.message = '文章ID只能为数字'
+    return data
+  }
+  // - 读取文章数据
+  const articlesDB = articleModel.getArticlesData()
+  // - 遍历找到文章并删除
+  // 找到文章下标
+  const result = articlesDB.findIndex(item => {
+    return item.id === articleID
+  })
+  // 没找到返回结果
+  if(result === -1) {
+    data.message = '没有该文章'
+    return data
+  }
+  // 删除文章
+  articlesDB.splice(result, 1)
+  // - 保存文章数据
+  articleModel.save(articlesDB)
+
+  // 2.删除文章与标签关系文档对应的数据
+  tagAndArticleModel.filterByArticleID(articleID)
+
+  data.message = '删除文章成功'
   return data
 }
 

@@ -10,13 +10,17 @@ router.post('/', function(req, res) {
     const data = articleModel.addArticle(articleData)
     res.json(data)
   } catch(error) {
-    res.json('添加文章出错，注意处理', error)
+    res.status(500).json('添加文章出错，注意处理')
   }
 })
 
-router.delete('/', function(req, res, next) {
-  console.log(req.uesr);
-  res.json('删除文章')
+router.delete('/', function(req, res) {
+  try {
+    const data = articleModel.delArticle(req.body.articleID)
+    res.json(data)
+  } catch(error) {
+    res.status(500).json('删除文章出错，注意处理')
+  }
 })
 
 router.put('/', function(req, res) {

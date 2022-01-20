@@ -3,18 +3,18 @@ const path = require("path")
 
 const tag_articleDBPath = path.resolve(__dirname, '../db/tag&article.json')
 
-const tagAndArticle = {}
+const tagAndArticleModel = {}
 
-tagAndArticle.getTagArticleData = () => {
+tagAndArticleModel.getTagArticleData = () => {
   return JSON.parse(fs.readFileSync(tag_articleDBPath))
 }
 
-tagAndArticle.save = (data) => {
+tagAndArticleModel.save = (data) => {
   fs.writeFileSync(tag_articleDBPath, JSON.stringify(data))
 }
 
-tagAndArticle.addTagArticle = (articleID, tagsIDArr) => {
-  const tagArticleDBData = tagAndArticle.getTagArticleData()
+tagAndArticleModel.addTagArticle = (articleID, tagsIDArr) => {
+  const tagArticleDBData = tagAndArticleModel.getTagArticleData()
 
   for(const tagID of tagsIDArr) {
     // 1.检查重复项
@@ -48,9 +48,21 @@ tagAndArticle.addTagArticle = (articleID, tagsIDArr) => {
     // 添加
     tagArticleDBData.push(tagArticleItem)
     // 保存
-    tagAndArticle.save(tagArticleDBData)
+    tagAndArticleModel.save(tagArticleDBData)
   }
   return '成功'
 }
 
-module.exports = tagAndArticle
+tagAndArticleModel.filterByArticleID = (articleID) => {
+  // 根据文章id过滤
+  const tagArticleDBData = tagAndArticleModel.getTagArticleData()
+
+  const newArr = tagArticleDBData.filter(item => {
+    return item.articleID !== articleID
+  })
+
+  tagAndArticleModel.save(newArr)
+
+  return true
+}
+module.exports = tagAndArticleModel
