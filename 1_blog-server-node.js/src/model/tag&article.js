@@ -53,10 +53,10 @@ tagAndArticleModel.addTagArticle = (articleID, tagsIDArr) => {
   return '成功'
 }
 
+// 过滤掉包含给定文章id的项，并覆盖保存数据文档。
 tagAndArticleModel.filterByArticleID = (articleID) => {
-  // 根据文章id过滤
   const tagArticleDBData = tagAndArticleModel.getTagArticleData()
-
+  
   const newArr = tagArticleDBData.filter(item => {
     return item.articleID !== articleID
   })

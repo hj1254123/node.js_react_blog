@@ -24,7 +24,13 @@ router.delete('/', function(req, res) {
 })
 
 router.put('/', function(req, res) {
-  res.json('修改文章')
+  const articleData = req.body
+  try {
+    const data = articleModel.putArticle(articleData)
+    res.json(data)
+  } catch (error) {
+    res.status(500).json('修改文章出错，注意处理')  
+  }
 })
 
 router.get('/:id', function(req, res) {

@@ -7,22 +7,9 @@ const tagAndArticleModel = require("./tag&article.js")
 
 const articlesDBPath = path.resolve(__dirname, '../db/articles.json')
 
-const articleModel = {}
 
-articleModel.getArticlesData = () => {
-  return JSON.parse(fs.readFileSync(articlesDBPath))
-}
-
-articleModel.save = (articlesData) => {
-  fs.writeFileSync(articlesDBPath, JSON.stringify(articlesData))
-}
-
-/**
- * @description 校验文章数据是否合法
- * @param {object} articleData 文章数据对象 
- * @returns {object} 返回对象包含两个属性。message:校验结果信息；boolean:true校验通过，false校验失败。
- */
-articleModel.articleVerification = (articleData) => {
+//添加文章接口校验数据是否合法
+const addArticleVerification = (articleData) => {
   let result = { message: '校验通过', boolean: true }
   let { title, intro, content, tags } = articleData
   // 标题：不能为空、类型为string
@@ -36,6 +23,8 @@ articleModel.articleVerification = (articleData) => {
   // 长度控制
   if(title.length > 50) {
     checkTitle = true
+  } else if(intro.length > 300) {
+    checkIntro = true
   } else if(content.length > 30000) {
     checkContent = true
   }
@@ -68,12 +57,8 @@ articleModel.articleVerification = (articleData) => {
   return result
 }
 
-/**
- * @description 文章数据安全(xss)
- * @param {object} articleData 文章数据
- * @returns {object} 返回一个干净的文章数据对象
- */
-articleModel.articleSecurityHandling = (articleData) => {
+// 添加文章接口xss过滤
+const addArticleXssFilter = (articleData) => {
   let data = {}
   let { title, intro, content, tags } = articleData
   data.title = xss(title)
@@ -85,6 +70,69 @@ articleModel.articleSecurityHandling = (articleData) => {
   })
   return data
 }
+
+// 修改文章接口校验是否合法
+const putArticleVerification = (articleData) => {
+  let result = { message: '校验通过', boolean: true }
+  let { articleID, title, intro, content } = articleData
+
+  // ID: 只能是数字
+  // 标题：不能为空、类型为string
+  // 简介: 类型为string
+  // 内容：不能为空、类型为string
+
+  let checkArticleID = typeof articleID !== 'number'
+  let checkTitle = !title || (typeof title !== 'string')
+  let checkIntro = typeof intro !== 'string'
+  let checkContent = !content || (typeof content !== 'string')
+  // 长度控制
+  if(title.length > 50) {
+    checkTitle = true
+  } else if(intro.length > 300) {
+    checkIntro = true
+  } else if(content.length > 30000) {
+    checkContent = true
+  }
+
+  if(checkArticleID || checkTitle || checkIntro || checkContent) {
+    result.boolean = false
+  }
+  if(checkArticleID) {
+    result.message = '文章id校验失败'
+  } else if(checkTitle) {
+    result.message = '文章标题校验失败'
+  } else if(checkIntro) {
+    result.message = '文章简介校验失败'
+  } else if(checkContent) {
+    result.message = '文章内容校验失败'
+  }
+  // 全部校验通过
+  return result
+}
+
+// 修改文章接口xss过滤
+const putArticleXssFilter = (articleData) => {
+  let data = {}
+  let { articleID, title, intro, content } = articleData
+  data.articleID = articleID
+  data.title = xss(title)
+  data.intro = xss(intro)
+  data.content = xss(content)
+  return data
+}
+
+const articleModel = {}
+
+articleModel.getArticlesData = () => {
+  return JSON.parse(fs.readFileSync(articlesDBPath))
+}
+
+articleModel.save = (articlesData) => {
+  fs.writeFileSync(articlesDBPath, JSON.stringify(articlesData))
+}
+
+
+
 
 articleModel.saveNewArticle = (title, intro, content) => {
   // 待保存的新文章
@@ -131,7 +179,7 @@ articleModel.addArticle = (articleData) => {
   }
 
   // 1.文章校验
-  let result = articleModel.articleVerification(articleData)
+  let result = addArticleVerification(articleData)
 
   // 如校验失败直接返回信息
   if(!result.boolean) {
@@ -140,7 +188,7 @@ articleModel.addArticle = (articleData) => {
   }
 
   // 2.文章数据安全处理
-  let { title, intro, content, tags } = articleModel.articleSecurityHandling(articleData)
+  let { title, intro, content, tags } = addArticleXssFilter(articleData)
 
   // 3.保存新文章
   let newArticleData = articleModel.saveNewArticle(title, intro, content)
@@ -210,6 +258,45 @@ articleModel.delArticle = (articleID) => {
   tagAndArticleModel.filterByArticleID(articleID)
 
   data.message = '删除文章成功'
+  return data
+}
+
+articleModel.putArticle = (articleData) => {
+  console.log('first', articleData)
+  // 初始化待返回给客户端的数据
+  const data = {
+    message: '',
+    data: {}
+  }
+  // 1.校验数据
+  const result = putArticleVerification(articleData)
+  // 如校验失败直接返回信息
+  if(!result.boolean) {
+    data.message = result.message
+    return data
+  }
+
+  // 2.安全过滤
+  const { articleID, title, intro, content } = putArticleXssFilter(articleData)
+  // 3.检查是否存在该文章
+  const articleDB = articleModel.getArticlesData()
+  const index = articleDB.findIndex((item) => {
+    return item.id === articleID
+  })
+  // 没有该文章直接返回
+  if(index === -1) {
+    data.message = '没有该文章'
+    return data
+  }
+
+  // 4.修改并保存
+  articleDB[index].title = title
+  articleDB[index].intro = intro
+  articleDB[index].content = content
+  articleModel.save(articleDB)
+  // 5.返回结果
+  data.message = '文章修改成功'
+  data.data = {...articleDB[index]}
   return data
 }
 
