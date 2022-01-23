@@ -35,7 +35,12 @@ router.put('/', function(req, res) {
 
 router.get('/:id', function(req, res) {
   const articleID = req.params.id
-  res.json(`获取文章:${articleID}`)
+  try {
+    const data = articleModel.getArticle(articleID)
+    res.json(data)
+  } catch (error) {
+    res.status(500).json('获取文章出错，注意处理')  
+  }
 })
 
 
