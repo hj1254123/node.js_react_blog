@@ -34,8 +34,8 @@ router.put('/', function(req, res) {
 })
 
 router.get('/:id', function(req, res) {
-  const articleID = req.params.id
   try {
+    const articleID = parseInt(req.params.id)
     const data = articleModel.getArticle(articleID)
     res.json(data)
   } catch (error) {

@@ -7,6 +7,7 @@ const tagAndArticleModel = require("./tag&article.js")
 
 const articlesDBPath = path.resolve(__dirname, '../db/articles.json')
 
+
 const articleModel = {
   articlesDB: getArticlesData()
 }
@@ -104,8 +105,8 @@ articleModel.delArticle = function(articleID) {
   // - 保存文章数据
   save(articlesDB)
 
-  // 2.删除文章与标签关系文档对应的数据
-  tagAndArticleModel.filterByArticleID(articleID)
+  // 2.根据文章id删除文章与标签关系文档中对应的数据
+  tagAndArticleModel.delItemsBasedOnTheArticleID(articleID)
 
   data.message = '删除文章成功'
   return data
@@ -150,12 +151,42 @@ articleModel.putArticle = function(articleData) {
 }
 
 articleModel.getArticle = function(articleID) {
-  console.log(this.articlesDB);
   // 初始化待返回给客户端的数据
   const data = {
     message: '',
     data: {}
   }
+  const articlesDB = this.articlesDB
+  // 0.检查是否有该文章
+  const index = articlesDB.findIndex(item => {
+    return item.id === articleID
+  })
+  if(index === -1) {
+    data.message = '没有该文章'
+    return data
+  }
+
+  // 1.拿到对应的文章数据
+  for (const item of articlesDB) {
+    if(item.id === articleID) {
+      data.data = item
+      break
+    }
+  }
+
+  // 2.拿到对应的标签数据
+  // 根据文章id拿到所有标签id
+  const arr = tagAndArticleModel.returnItemsBasedOnTheArticleID(articleID)
+  const tagIDArr = []
+  for (const item of arr) {
+    tagIDArr.push(item.tagID)
+  }
+  // 根据标签id数组拿到所有标签数据
+  const tags = tagsModel.returnItemsBasedOnTheTagsIDArr(tagIDArr)
+  // 添加标签数据
+  data.data.tags = tags
+  data.message = '成功'
+  // 返回
   return data
 }
 

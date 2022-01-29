@@ -3,23 +3,19 @@ const path = require("path")
 
 const tag_articleDBPath = path.resolve(__dirname, '../db/tag&article.json')
 
-const tagAndArticleModel = {}
 
-tagAndArticleModel.getTagArticleData = () => {
-  return JSON.parse(fs.readFileSync(tag_articleDBPath))
+
+const tagAndArticleModel = {
+  tagArticleDB: getTagArticleData()
 }
 
-tagAndArticleModel.save = (data) => {
-  fs.writeFileSync(tag_articleDBPath, JSON.stringify(data))
-}
-
-tagAndArticleModel.addTagArticle = (articleID, tagsIDArr) => {
-  const tagArticleDBData = tagAndArticleModel.getTagArticleData()
+tagAndArticleModel.addTagArticle = function(articleID, tagsIDArr) {
+  const tagArticleDB = this.tagArticleDB
 
   for(const tagID of tagsIDArr) {
     // 1.检查重复项
     let isRepeat = false
-    for(const item of tagArticleDBData) {
+    for(const item of tagArticleDB) {
       if((tagID === item.tagID) && (articleID === item.articleID)) {
         isRepeat = true
         break
@@ -37,7 +33,7 @@ tagAndArticleModel.addTagArticle = (articleID, tagsIDArr) => {
       time: 0
     }
     // 计算唯一ID
-    let lastItem = tagArticleDBData[tagArticleDBData.length - 1]
+    let lastItem = tagArticleDB[tagArticleDB.length - 1]
     if(lastItem === undefined) {
       tagArticleItem.id = 1
     } else {
@@ -46,23 +42,46 @@ tagAndArticleModel.addTagArticle = (articleID, tagsIDArr) => {
     // 创建时间
     tagArticleItem.time = new Date().getTime()
     // 添加
-    tagArticleDBData.push(tagArticleItem)
+    tagArticleDB.push(tagArticleItem)
     // 保存
-    tagAndArticleModel.save(tagArticleDBData)
+    save(tagArticleDB)
   }
   return '成功'
 }
 
 // 过滤掉包含给定文章id的项，并覆盖保存数据文档。
-tagAndArticleModel.filterByArticleID = (articleID) => {
-  const tagArticleDBData = tagAndArticleModel.getTagArticleData()
-  
-  const newArr = tagArticleDBData.filter(item => {
+tagAndArticleModel.delItemsBasedOnTheArticleID = function(articleID) {
+  const tagArticleDB = this.tagArticleDB
+
+  const newArr = tagArticleDB.filter(item => {
     return item.articleID !== articleID
   })
 
-  tagAndArticleModel.save(newArr)
+  save(newArr)
 
   return true
 }
+
+tagAndArticleModel.returnItemsBasedOnTheArticleID = function(articleID) {
+  const tagArticleDB = this.tagArticleDB
+
+  const newArr = tagArticleDB.filter(item => {
+    return item.articleID === articleID
+  })
+  
+  return newArr
+}
+
+
+// 下方是一些工具方法
+
+function getTagArticleData() {
+  return JSON.parse(fs.readFileSync(tag_articleDBPath))
+}
+
+function save(data) {
+  fs.writeFileSync(tag_articleDBPath, JSON.stringify(data))
+}
+
+
 module.exports = tagAndArticleModel
