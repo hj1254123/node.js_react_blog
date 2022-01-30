@@ -8,9 +8,7 @@ const tagAndArticleModel = require("./tag&article.js")
 const articlesDBPath = path.resolve(__dirname, '../db/articles.json')
 
 
-const articleModel = {
-  articlesDB: getArticlesData()
-}
+const articleModel = {}
 
 articleModel.addArticle = function(articleData) {
   /**
@@ -49,7 +47,7 @@ articleModel.addArticle = function(articleData) {
 
   // 4.保存标签数据
   try {
-    let tagsArr = tagsModel.addTags(tags)
+    let tagsArr = tagsModel.addTagsFromArticleInterface(tags)
     data.data.tags = tagsArr
   } catch(error) {
     data.message = '标签保存出错，请手动删除新添加数据。'
@@ -89,7 +87,7 @@ articleModel.delArticle = function(articleID) {
     return data
   }
   // - 读取文章数据
-  const articlesDB = this.articlesDB
+  const articlesDB = getArticlesData()
   // - 遍历找到文章并删除
   // 找到文章下标
   const result = articlesDB.findIndex(item => {
@@ -129,8 +127,8 @@ articleModel.putArticle = function(articleData) {
   // 2.安全过滤
   const { articleID, title, intro, content } = putArticleXssFilter(articleData)
   // 3.检查是否存在该文章
-  const articleDB = this.articlesDB
-  const index = articleDB.findIndex((item) => {
+  const articlesDB = getArticlesData()
+  const index = articlesDB.findIndex((item) => {
     return item.id === articleID
   })
   // 没有该文章直接返回
@@ -140,13 +138,13 @@ articleModel.putArticle = function(articleData) {
   }
 
   // 4.修改并保存
-  articleDB[index].title = title
-  articleDB[index].intro = intro
-  articleDB[index].content = content
-  save(articleDB)
+  articlesDB[index].title = title
+  articlesDB[index].intro = intro
+  articlesDB[index].content = content
+  save(articlesDB)
   // 5.返回结果
   data.message = '文章修改成功'
-  data.data = { ...articleDB[index] }
+  data.data = { ...articlesDB[index] }
   return data
 }
 
@@ -156,7 +154,7 @@ articleModel.getArticle = function(articleID) {
     message: '',
     data: {}
   }
-  const articlesDB = this.articlesDB
+  const articlesDB = getArticlesData()
   // 0.检查是否有该文章
   const index = articlesDB.findIndex(item => {
     return item.id === articleID

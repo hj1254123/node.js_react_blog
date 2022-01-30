@@ -4,15 +4,17 @@ const path = require("path")
 const tag_articleDBPath = path.resolve(__dirname, '../db/tag&article.json')
 
 
+const tagAndArticleModel = {}
 
-const tagAndArticleModel = {
-  tagArticleDB: getTagArticleData()
-}
-
+// 根据文章ID和标签ID数组，添加关联项
 tagAndArticleModel.addTagArticle = function(articleID, tagsIDArr) {
-  const tagArticleDB = this.tagArticleDB
+  const tagArticleDB = getTagArticleData()
 
   for(const tagID of tagsIDArr) {
+    // 0.标签ID不是数字报错
+    if(typeof tagID !== 'number') {
+      return '标签名不是数字'
+    }
     // 1.检查重复项
     let isRepeat = false
     for(const item of tagArticleDB) {
@@ -51,7 +53,7 @@ tagAndArticleModel.addTagArticle = function(articleID, tagsIDArr) {
 
 // 过滤掉包含给定文章id的项，并覆盖保存数据文档。
 tagAndArticleModel.delItemsBasedOnTheArticleID = function(articleID) {
-  const tagArticleDB = this.tagArticleDB
+  const tagArticleDB = getTagArticleData()
 
   const newArr = tagArticleDB.filter(item => {
     return item.articleID !== articleID
@@ -62,8 +64,9 @@ tagAndArticleModel.delItemsBasedOnTheArticleID = function(articleID) {
   return true
 }
 
+// 根据文章ID返回所有包含该ID的项（数组）
 tagAndArticleModel.returnItemsBasedOnTheArticleID = function(articleID) {
-  const tagArticleDB = this.tagArticleDB
+  const tagArticleDB = getTagArticleData()
 
   const newArr = tagArticleDB.filter(item => {
     return item.articleID === articleID

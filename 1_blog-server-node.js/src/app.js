@@ -3,15 +3,16 @@ const expressJwt = require('express-jwt')
 
 const { PUBLIC_KEY } = require('./constants/config.js')
 // 路由
-var authRouter = require('./routes/auth.js');
-var articleRouter = require('./routes/article.js');
+const authRouter = require('./routes/auth.js');
+const articleRouter = require('./routes/article.js');
+const tagsRouter = require('./routes/tags.js')
 
 const app = express()
 const port = 3000
 
 app.use(express.json())
 
-// token解析、验证，中间件
+// token解析验证中间件
 // 成功，把用户信息赋值 req.user
 // 失败，直接报错
 app.use(expressJwt({
@@ -29,6 +30,7 @@ app.use(expressJwt({
 // 路由
 app.use('/auth', authRouter)
 app.use('/article', articleRouter)
+app.use('/tags', tagsRouter)
 
 
 // 错误处理
