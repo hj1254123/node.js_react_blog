@@ -75,6 +75,35 @@ tagAndArticleModel.returnItemsBasedOnTheArticleID = function(articleID) {
   return newArr
 }
 
+// 删除某篇文章的单个标签
+tagAndArticleModel.removeTagFromArticle = function(articleID, tagID) {
+  // 待返回数据
+  const data = {
+    message: '',
+    data: null
+  }
+  // 校验数据
+  if((typeof articleID !== 'number') || typeof tagID !== 'number') {
+    data.message = '文章或标签id不为数字'
+    return data
+  }
+  // 检查是否存在
+  const tagArticleDB = getTagArticleData()
+  const index = tagArticleDB.findIndex((item) => {
+    return (item.articleID === articleID) && (item.tagID === tagID)
+  })
+  if(index === -1) {
+    data.message = '没有该关系项'
+    return data
+  }
+  // 删除该项，并保存 
+  tagArticleDB.splice(index, 1)
+  save(tagArticleDB)
+  // 返回
+  data.message = '删除该文章标签成功'
+  data.data = {articleID, tagID}
+  return data
+}
 
 // 下方是一些工具方法
 

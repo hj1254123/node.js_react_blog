@@ -1,4 +1,5 @@
 const express = require('express')
+const tagAndArticleModel = require('../model/tag&article.js')
 const tagsModel = require('../model/tags.js')
 
 const router = express.Router()
@@ -7,8 +8,8 @@ const router = express.Router()
 router.post('/article', function(req, res) {
   try {
     const { articleID, tagName } = req.body
-    const result = tagsModel.additionalTag(articleID, tagName)
-    res.json(result)
+    const data = tagsModel.additionalTag(articleID, tagName)
+    res.json(data)
   } catch(error) {
     res.status(500).json('向文章追加标签出错，注意处理')
   }
@@ -17,7 +18,9 @@ router.post('/article', function(req, res) {
 // 删除某篇文章的单个标签
 router.delete('/article', function(req, res) {
   try {
-    res.json('2')
+    const { articleID, tagID } = req.body
+    const data = tagAndArticleModel.removeTagFromArticle(articleID, tagID)
+    res.json(data)
   } catch(error) {
     res.status(500).json('删除文章某个标签出错，注意处理')
   }
