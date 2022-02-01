@@ -43,6 +43,15 @@ router.get('/:id', function(req, res) {
   }
 })
 
+router.get('/page/:id', function(req, res) {
+  try {
+    const pageN = parseInt(req.params.id)
+    const data = articleModel.getPage(pageN)
+    res.json(data)
+  } catch (error) {
+    res.status(500).json('获取某页文章列表出错，注意处理')
+  }
+})
 
 
 module.exports = router

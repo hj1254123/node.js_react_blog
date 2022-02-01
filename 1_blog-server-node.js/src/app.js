@@ -24,6 +24,7 @@ app.use(expressJwt({
     { url: '/auth/register', methods: ['POST'] },
     { url: '/auth/login', methods: ['POST'] },
     { url: /^\/article\/\d+$/, methods: ['GET'] },
+    { url: /^\/article\/page\/\d+$/, methods: ['GET'] },
   ]
 }))
 

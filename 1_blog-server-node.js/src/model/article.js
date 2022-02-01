@@ -165,7 +165,7 @@ articleModel.getArticle = function(articleID) {
   }
 
   // 1.拿到对应的文章数据
-  for (const item of articlesDB) {
+  for(const item of articlesDB) {
     if(item.id === articleID) {
       data.data = item
       break
@@ -176,7 +176,7 @@ articleModel.getArticle = function(articleID) {
   // 根据文章id拿到所有标签id
   const arr = tagAndArticleModel.returnItemsBasedOnTheArticleID(articleID)
   const tagIDArr = []
-  for (const item of arr) {
+  for(const item of arr) {
     tagIDArr.push(item.tagID)
   }
   // 根据标签id数组拿到所有标签数据
@@ -185,6 +185,39 @@ articleModel.getArticle = function(articleID) {
   data.data.tags = tags
   data.message = '成功'
   // 返回
+  return data
+}
+
+// 获取某页文章列表（10篇/页）
+articleModel.getPage = function(pageN) {
+  // 待返回的数据
+  const data = {
+    message: '',
+    data: []
+  }
+  // 计算截取范围
+  const size = 10 // 10篇/页
+  const start = (pageN - 1) * size
+  const end = start + (size - 1)
+  // 切割下需要的文章
+  const articlesDB = getArticlesData()
+  const cutArticleArr = articlesDB.slice(start, end)
+  // 给每一篇文章添加对应的标签数据
+  for(const item of cutArticleArr) {
+    // 根据文章id拿到所有标签id
+    const arr = tagAndArticleModel.returnItemsBasedOnTheArticleID(item.id)
+    const tagIDArr = []
+    for(const item2 of arr) {
+      tagIDArr.push(item2.tagID)
+    }
+    // 根据标签id数组拿到所有标签数据
+    const tags = tagsModel.returnItemsBasedOnTheTagsIDArr(tagIDArr)
+    // 给文章添加标签数据
+    item.tags = tags
+  }
+  // 返回
+  data.message = '获取文章列表成功'
+  data.data = cutArticleArr
   return data
 }
 
