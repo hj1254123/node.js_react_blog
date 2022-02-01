@@ -137,6 +137,40 @@ tagsModel.additionalTag = function(articleID, tagName) {
   return data
 }
 
+// 删除一个标签
+tagsModel.delTag = function(tagID) {
+  // 待返回数据
+  const data = {
+    message: '',
+    data: {
+      tag: {}
+    }
+  }
+  // 校验数据
+  if(typeof tagID !== 'number') {
+    data.message = '标签ID必须为数字'
+    return data
+  }
+
+  const tagsDB = getTagsData()
+  console.log('first', tagsDB);
+  const index = tagsDB.findIndex(item => {
+    return item.id === tagID
+  })
+  console.log('---', index, tagsDB);
+  if(index === -1) {
+    data.message = '没有该标签'
+    return data
+  }
+  data.data.tag = tagsDB[index]
+  // 删除该项
+  tagsDB.splice(index, 1)
+  // 覆盖
+  save(tagsDB)
+  // 返回
+  data.message = '删除该标签成功'
+  return data
+}
 
 // 以下是一些工具函数
 

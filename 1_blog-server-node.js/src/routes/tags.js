@@ -29,8 +29,16 @@ router.delete('/article', function(req, res) {
 // 删除某个标签（有这个标签的所有文章，都删除该标签）
 router.delete('/', function(req, res) {
   try {
-    res.json('3')
+    const tagID = req.body.tagID
+    // 删除该标签
+    const data = tagsModel.delTag(tagID)
+    if(data.message === '删除该标签成功') {
+      // 删除所有包含该tagID的关系项
+      tagAndArticleModel.delItemsBasedOnTheTagID(tagID)
+    }
+    res.json(data)
   } catch(error) {
+    console.log(error)
     res.status(500).json('删除标签出错，注意处理')
   }
 })

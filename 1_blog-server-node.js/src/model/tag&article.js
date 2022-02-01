@@ -51,12 +51,25 @@ tagAndArticleModel.addTagArticle = function(articleID, tagsIDArr) {
   return '成功'
 }
 
-// 过滤掉包含给定文章id的项，并覆盖保存数据文档。
+// 过滤掉包含给定articleID的项，并覆盖保存数据文档。
 tagAndArticleModel.delItemsBasedOnTheArticleID = function(articleID) {
   const tagArticleDB = getTagArticleData()
 
   const newArr = tagArticleDB.filter(item => {
     return item.articleID !== articleID
+  })
+
+  save(newArr)
+
+  return true
+}
+
+// 过滤掉包含给定tagID的项，并覆盖保存数据文档。
+tagAndArticleModel.delItemsBasedOnTheTagID = function(tagID) {
+  const tagArticleDB = getTagArticleData()
+
+  const newArr = tagArticleDB.filter(item => {
+    return item.tagID !== tagID
   })
 
   save(newArr)
