@@ -46,8 +46,11 @@ router.delete('/', function(req, res) {
 // 修改某个标签名称
 router.put('/', function(req, res) {
   try {
-    res.json('4')
+    const {tagID, tagName} = req.body
+    const data = tagsModel.putTagName(tagID, tagName)
+    res.json(data)
   } catch(error) {
+    console.log(error);
     res.status(500).json('修改标签名出错，注意处理')
   }
 })

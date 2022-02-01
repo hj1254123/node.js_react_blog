@@ -153,11 +153,9 @@ tagsModel.delTag = function(tagID) {
   }
 
   const tagsDB = getTagsData()
-  console.log('first', tagsDB);
   const index = tagsDB.findIndex(item => {
     return item.id === tagID
   })
-  console.log('---', index, tagsDB);
   if(index === -1) {
     data.message = '没有该标签'
     return data
@@ -171,6 +169,28 @@ tagsModel.delTag = function(tagID) {
   data.message = '删除该标签成功'
   return data
 }
+
+// 修改一个标签名
+tagsModel.putTagName = function(tagID, tagName) {
+  // 初始化待返回数据
+  const data = {
+    message: '',
+    data: { tag: null }
+  }
+  const tagsDB = getTagsData()
+  const i = tagsDB.findIndex(item => {
+    return item.id === tagID
+  })
+  if(i === -1) {
+    data.message = '没有该标签'
+  }
+  tagsDB[i].tagName = tagName
+  save(tagsDB)
+  data.message = '修改该标签名称成功'
+  data.data.tag = tagsDB[i]
+  return data
+}
+
 
 // 以下是一些工具函数
 
