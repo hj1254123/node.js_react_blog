@@ -8,8 +8,8 @@ const commentsDBPath = path.resolve(__dirname, '../db/comments.json')
 
 const commentModel = {}
 
-// 向某篇文章添加评论
-commentModel.addCommentToArticle = function(commentData) {
+// 根据文章id添加评论
+commentModel.addCommentByArticleID = function(commentData) {
   // - 待返回数据
   const data = {
     message: "",
@@ -80,7 +80,7 @@ commentModel.addCommentToArticle = function(commentData) {
 }
 
 // 根据文章id和评论id删除对应评论
-commentModel.delCommentToArticle = function(articleID, commentID) {
+commentModel.delCommentByArticleIDAndCommentID = function(articleID, commentID) {
   // - 待返回数据
   const data = {
     message: '',
@@ -112,10 +112,38 @@ commentModel.delCommentToArticle = function(articleID, commentID) {
   save(comentsDB)
   // - 返回结果
   data.message = '评论删除成功'
-  data.data = {articleID, commentID}
+  data.data = { articleID, commentID }
   return data
 }
 
+// 根据文章id获取评论
+commentModel.getCommentByArticleID = function(articleID) {
+  // 待返回数据
+  const data = {
+    message: '',
+    data: []
+  }
+  const commentDB = getCommentDB()
+  const commentArr = commentDB[articleID]
+  // 检查是否有该文章
+  if(!commentArr) {
+    data.message = '没有该文章'
+    return data
+  }
+  // 添加数据
+  for(const item of commentArr) {
+    const o = {
+      id: item.id,
+      time: item.time,
+      content: item.content,
+      userName: item.userName
+    }
+    data.data.push(o)
+  }
+  // 返回数据
+  data.message = '获取评论成功'
+  return data
+}
 /**
  * 下面是一些工具函数
  */

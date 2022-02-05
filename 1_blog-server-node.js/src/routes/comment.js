@@ -21,29 +21,34 @@ router.post('/', (req, res) => {
     }, 20000)
 
     // 添加评论
-    const data = commentModel.addCommentToArticle(commentData)
+    const data = commentModel.addCommentByArticleID(commentData)
     res.json(data)
   } catch(error) {
     console.log(error)
-    res.status(500).json('添加评论接口出错,注意处理')
+    res.status(500).json('添加评论出错,注意处理')
   }
 })
 
-// 根据文章id和评论id删除评论
+// 根据文章id和评论id删除对应评论
 router.delete('/', (req, res) => {
   try {
     const { articleID, commentID } = req.body
-    const data = commentModel.delCommentToArticle(articleID, commentID)
+    const data = commentModel.delCommentByArticleIDAndCommentID(articleID, commentID)
     res.json(data)
   } catch(error) {
     res.status(500).json('删除评论出错,注意处理')
   }
 })
 
-// 根据文章id获取评论数组
+// 根据文章id获取评论
 router.get('/:id', (req, res) => {
-  const articleID = parseInt(req.params.id)
-  res.json(articleID)
+  try {
+    const articleID = parseInt(req.params.id)
+    const data = commentModel.getCommentByArticleID(articleID)
+    res.json(data)
+  } catch(error) {
+    res.status(500).json('获取评论出错,注意处理')
+  }
 })
 
 module.exports = router
