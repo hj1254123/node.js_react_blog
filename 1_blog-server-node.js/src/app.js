@@ -6,12 +6,12 @@ const { PUBLIC_KEY } = require('./constants/config.js')
 const authRouter = require('./routes/auth.js');
 const articleRouter = require('./routes/article.js');
 const tagsRouter = require('./routes/tags.js')
+const commentRouter = require('./routes/comment.js');
 
 const app = express()
 const port = 3000
 
 app.use(express.json())
-
 // token解析验证中间件
 // 成功，把用户信息赋值 req.user
 // 失败，直接报错
@@ -21,10 +21,14 @@ app.use(expressJwt({
 }).unless({
   // 这些路径不解析、验证
   path: [
+    { url: '/', method: ['GET'] },
+    { url: '/favicon.ico', method: ['GET'] },
     { url: '/auth/register', methods: ['POST'] },
     { url: '/auth/login', methods: ['POST'] },
     { url: /^\/article\/\d+$/, methods: ['GET'] },
     { url: /^\/article\/page\/\d+$/, methods: ['GET'] },
+    { url: /^\/comment$/, methods: ['POST'] },
+    { url: /^\/comment\/\d+$/, methods: ['GET'] },
   ]
 }))
 
@@ -32,7 +36,7 @@ app.use(expressJwt({
 app.use('/auth', authRouter)
 app.use('/article', articleRouter)
 app.use('/tags', tagsRouter)
-
+app.use('/comment', commentRouter)
 
 // 错误处理
 app.use(function(err, req, res, next) {

@@ -221,6 +221,26 @@ articleModel.getPage = function(pageN) {
   return data
 }
 
+// 根据文章id检查是否存在对应的文章
+articleModel.checkIfTheArticleExists = function(articleID) {
+  // 默认存在
+  const data = {
+    message: '存在该文章',
+    boolean: true
+  }
+  const articlesDB = getArticlesData()
+
+  const index = articlesDB.findIndex(item => {
+    return item.id === articleID
+  })
+
+  if(index === -1) {
+    data.message = '没有该文章'
+    data.boolean = false
+  }
+
+  return data
+}
 
 /**
  * 下方是一些工具函数
@@ -231,7 +251,7 @@ function getArticlesData() {
   return JSON.parse(fs.readFileSync(articlesDBPath))
 }
 
-// 保存文档数据文档
+// 保存文章数据文档
 function save(articlesData) {
   fs.writeFileSync(articlesDBPath, JSON.stringify(articlesData))
 }
