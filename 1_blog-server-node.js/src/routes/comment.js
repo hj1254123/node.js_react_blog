@@ -32,10 +32,10 @@ router.post('/', (req, res) => {
 // 根据文章id和评论id删除评论
 router.delete('/', (req, res) => {
   try {
-    const {articleID, commentID} = req.body
-    
-    res.json('删除评论接口')
-  } catch (error) {
+    const { articleID, commentID } = req.body
+    const data = commentModel.delCommentToArticle(articleID, commentID)
+    res.json(data)
+  } catch(error) {
     res.status(500).json('删除评论出错,注意处理')
   }
 })

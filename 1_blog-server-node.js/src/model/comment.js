@@ -8,6 +8,7 @@ const commentsDBPath = path.resolve(__dirname, '../db/comments.json')
 
 const commentModel = {}
 
+// 向某篇文章添加评论
 commentModel.addCommentToArticle = function(commentData) {
   // - 待返回数据
   const data = {
@@ -75,6 +76,43 @@ commentModel.addCommentToArticle = function(commentData) {
     email,
     content
   }
+  return data
+}
+
+// 根据文章id和评论id删除对应评论
+commentModel.delCommentToArticle = function(articleID, commentID) {
+  // - 待返回数据
+  const data = {
+    message: '',
+    data: {}
+  }
+  // - 校验数据
+  if(typeof articleID !== 'number' || typeof commentID !== 'number') {
+    data.message = 'id只能为数字'
+    return data
+  }
+  // - 删除对应评论
+  const comentsDB = getCommentDB()
+  const comentsArr = comentsDB[articleID]
+  // 检查comentsDB中是否有该文章
+  if(!comentsArr) {
+    data.message = '该文章中没有评论'
+    return data
+  }
+  // 检查评论对应下标
+  const index = comentsArr.findIndex(item => {
+    return item.id === commentID
+  })
+  if(index === -1) {
+    data.message = '没有该评论'
+    return data
+  }
+  comentsArr.splice(index, 1)
+  // 保存
+  save(comentsDB)
+  // - 返回结果
+  data.message = '评论删除成功'
+  data.data = {articleID, commentID}
   return data
 }
 
