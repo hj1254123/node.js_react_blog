@@ -13,11 +13,11 @@ archiveModel.getPage = function(pageNumber) {
     data: []
   }
 
-  // - 拿到文章数据，并倒序数组（归档需要倒序时间线查看）
+  // - 拿到文章数据
   const articlesDB = articleModel.throwArticlesData()
 
   // - 按照年月归类文章
-  const yearMonthObj = {}  // 存放年月的归类数据
+  const yearMonthObj = {}  // 存放年月对应的文章数据
 
   for(const item of articlesDB) {
     // 获取键名，格式：2022-2
@@ -43,15 +43,23 @@ archiveModel.getPage = function(pageNumber) {
     articlesArr.push(item)
   }
 
-  // - 最后按年月时间倒序排序，并返回给客户端
+  // - 按年月时间倒序排序，并push给yearMonthArr数组
+  const yearMonthArr = []
   let yearMonthKeyArr = Object.keys(yearMonthObj)
   yearMonthKeyArr = yearMonthKeyArr.sort().reverse()
   for(const key of yearMonthKeyArr) {
     let o = {
       [key]: yearMonthObj[key]
     }
-    data.data.push(o)
+    yearMonthArr.push(o)
   }
+
+  // - 最后截取对应页码数据，并返回
+  // 计算截取范围
+  const size = 6 // 6项/页
+  const start = (pageNumber - 1) * size
+  const end = start + size
+  data.data = yearMonthArr.slice(start, end)
   data.message = '获取归档文章列表成功'
   return data
 }
