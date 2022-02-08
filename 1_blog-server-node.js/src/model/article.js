@@ -173,14 +173,7 @@ articleModel.getArticle = function(articleID) {
   }
 
   // 2.拿到对应的标签数据
-  // 根据文章id拿到所有标签id
-  const arr = tagAndArticleModel.returnItemsBasedOnTheArticleID(articleID)
-  const tagIDArr = []
-  for(const item of arr) {
-    tagIDArr.push(item.tagID)
-  }
-  // 根据标签id数组拿到所有标签数据
-  const tags = tagsModel.returnItemsBasedOnTheTagsIDArr(tagIDArr)
+  const tags = tagsModel.getTagsArrBasedOnTheArticleID(articleID)
   // 添加标签数据
   data.data.tags = tags
   data.message = '成功'
@@ -200,18 +193,12 @@ articleModel.getPage = function(pageN) {
   const start = (pageN - 1) * size
   const end = start + (size - 1)
   // 切割下需要的文章
-  const articlesDB = getArticlesData()
+  const articlesDB = getArticlesData().reverse() //倒序
   const cutArticleArr = articlesDB.slice(start, end)
   // 给每一篇文章添加对应的标签数据
   for(const item of cutArticleArr) {
     // 根据文章id拿到所有标签id
-    const arr = tagAndArticleModel.returnItemsBasedOnTheArticleID(item.id)
-    const tagIDArr = []
-    for(const item2 of arr) {
-      tagIDArr.push(item2.tagID)
-    }
-    // 根据标签id数组拿到所有标签数据
-    const tags = tagsModel.returnItemsBasedOnTheTagsIDArr(tagIDArr)
+    const tags = tagsModel.getTagsArrBasedOnTheArticleID(item.id)
     // 给文章添加标签数据
     item.tags = tags
   }
@@ -240,6 +227,11 @@ articleModel.checkIfTheArticleExists = function(articleID) {
   }
 
   return data
+}
+
+// 供其他模块获取文章数据文档
+articleModel.throwArticlesData = function() {
+  return getArticlesData()
 }
 
 /**

@@ -7,6 +7,7 @@ const authRouter = require('./routes/auth.js');
 const articleRouter = require('./routes/article.js');
 const tagsRouter = require('./routes/tags.js')
 const commentRouter = require('./routes/comment.js');
+const archiveRouter = require('./routes/archive.js')
 
 const app = express()
 const port = 3000
@@ -29,6 +30,7 @@ app.use(expressJwt({
     { url: /^\/article\/page\/\d+$/, methods: ['GET'] },
     { url: /^\/comment$/, methods: ['POST'] },
     { url: /^\/comment\/\d+$/, methods: ['GET'] },
+    { url: /^\/archive\/\d+$/, methods: ['GET'] },
   ]
 }))
 
@@ -37,6 +39,7 @@ app.use('/auth', authRouter)
 app.use('/article', articleRouter)
 app.use('/tags', tagsRouter)
 app.use('/comment', commentRouter)
+app.use('/archive', archiveRouter)
 
 // 错误处理
 app.use(function(err, req, res, next) {

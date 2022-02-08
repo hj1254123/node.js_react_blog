@@ -191,6 +191,17 @@ tagsModel.putTagName = function(tagID, tagName) {
   return data
 }
 
+// 根据文章id返回标签信息数组
+tagsModel.getTagsArrBasedOnTheArticleID = function(articleID) {
+  const arr = tagAndArticleModel.returnItemsBasedOnTheArticleID(articleID)
+  const tagIDArr = []
+  for(const item of arr) {
+    tagIDArr.push(item.tagID)
+  }
+  // 根据标签id数组拿到所有标签数据
+  const tags = tagsModel.returnItemsBasedOnTheTagsIDArr(tagIDArr)
+  return tags
+}
 
 // 以下是一些工具函数
 
