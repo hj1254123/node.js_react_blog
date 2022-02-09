@@ -1,5 +1,8 @@
 const express = require('express')
 const expressJwt = require('express-jwt')
+const fs = require('fs')
+const morgan = require('morgan')
+const path = require('path')
 
 const { PUBLIC_KEY } = require('./constants/config.js')
 // 路由
@@ -34,6 +37,13 @@ app.use(expressJwt({
     { url: '/tags/page', methods: ['GET'] },
   ]
 }))
+
+// 日志
+// create a write stream (in append mode)
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' })
+
+// setup the logger
+app.use(morgan('combined', { stream: accessLogStream }))
 
 // 路由
 app.use('/auth', authRouter)

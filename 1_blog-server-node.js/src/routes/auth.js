@@ -7,6 +7,8 @@ const authModel = require('../model/auth')
 const { PRIVATE_KEY, PUBLIC_KEY } = require('../constants/config')
 
 router.post('/register', (req, res, next) => {
+  // // - 临时关闭注册接口
+  // return res.json('注册接口已关闭！')
   // // - 拿到用户数据
   let { userName, password, invitationCode } = req.body
   // - 创建用户
