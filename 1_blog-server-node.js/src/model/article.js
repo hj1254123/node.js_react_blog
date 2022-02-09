@@ -234,6 +234,21 @@ articleModel.throwArticlesData = function() {
   return getArticlesData()
 }
 
+// 获取文章数据数组，基于文章id数组
+
+articleModel.getArticleArrBasedOnTheArticleIDArr = function(articleIDArr) {
+  // 待返回数据
+  const data = []
+  const articlesDB = getArticlesData()
+  for(const articleID of articleIDArr) {
+    const a = articlesDB.find(item => {
+      return item.id === articleID
+    })
+    data.push(a)
+  }
+  return data
+}
+
 /**
  * 下方是一些工具函数
  */

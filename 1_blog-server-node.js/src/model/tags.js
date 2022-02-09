@@ -203,6 +203,11 @@ tagsModel.getTagsArrBasedOnTheArticleID = function(articleID) {
   return tags
 }
 
+// 获取所有标签
+tagsModel.getTagsArr = function() {
+  return getTagsData()
+}
+
 // 以下是一些工具函数
 
 function getTagsData() {

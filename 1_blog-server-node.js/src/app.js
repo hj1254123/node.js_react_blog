@@ -31,6 +31,7 @@ app.use(expressJwt({
     { url: /^\/comment$/, methods: ['POST'] },
     { url: /^\/comment\/\d+$/, methods: ['GET'] },
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
+    { url: '/tags/page', methods: ['GET'] },
   ]
 }))
 

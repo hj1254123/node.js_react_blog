@@ -1,4 +1,5 @@
 const express = require('express')
+const articleModel = require('../model/article.js')
 const tagAndArticleModel = require('../model/tag&article.js')
 const tagsModel = require('../model/tags.js')
 
@@ -46,7 +47,7 @@ router.delete('/', function(req, res) {
 // 修改某个标签名称
 router.put('/', function(req, res) {
   try {
-    const {tagID, tagName} = req.body
+    const { tagID, tagName } = req.body
     const data = tagsModel.putTagName(tagID, tagName)
     res.json(data)
   } catch(error) {
@@ -54,5 +55,43 @@ router.put('/', function(req, res) {
     res.status(500).json('修改标签名出错，注意处理')
   }
 })
+
+// 标签页 - 获取所有标签和标签对应文章
+router.get('/page', function(req, res) {
+  try {
+    // - 拿到标签数据
+    const tagsArr = tagsModel.getTagsArr()
+
+    // - 拿到标签id对应文章数据
+    // 遍历得到所有标签id
+    const tagIDArr = []
+    for(const item of tagsArr) {
+      tagIDArr.push(item.id)
+    }
+    // 用于存标签id对应文章数据
+    const tagNameMapsToArticleArrObj = {}
+    // 添加映射数据
+    for(const tagID of tagIDArr) {
+      // 根据标签拿到文章id数组
+      const articleIDArr = tagAndArticleModel.getArticleIDArrBasedOnTagID(tagID)
+      // 根据文章id数组拿到对应数据arr
+      const articleArr = articleModel.getArticleArrBasedOnTheArticleIDArr(articleIDArr)
+      // 拿到标签名称
+      const tag = tagsArr.find(item => {
+        return item.id === tagID
+      })
+      const key = tag.tagName
+      // 添加映射关系
+      tagNameMapsToArticleArrObj[key] = articleArr
+    }
+
+    // - 返回
+    res.json([tagsArr, tagNameMapsToArticleArrObj])
+  } catch(error) {
+    console.log(error)
+    res.status(500).json('标签页接口出错，注意处理')
+  }
+})
+
 
 module.exports = router

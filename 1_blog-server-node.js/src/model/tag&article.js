@@ -118,6 +118,20 @@ tagAndArticleModel.removeTagFromArticle = function(articleID, tagID) {
   return data
 }
 
+// 根据标签id获取文章id数组 
+tagAndArticleModel.getArticleIDArrBasedOnTagID = function(tagID) {
+  // 待返回数据
+  const data = []
+  const tagArticleDB = getTagArticleData()
+  const items = tagArticleDB.filter(item => {
+    return item.tagID === tagID
+  })
+  for (const item of items) {
+    data.push(item.articleID)
+  }
+  return data
+}
+
 // 下方是一些工具方法
 
 function getTagArticleData() {
