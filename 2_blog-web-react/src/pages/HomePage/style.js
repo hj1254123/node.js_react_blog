@@ -9,5 +9,8 @@ export const ArticlesList = styled.div`
   width: 960px;
   min-height: 700px;
   background-color: pink;
+  @media (max-width: 1240px) {
+    width: 100%;
+  }
 `
 

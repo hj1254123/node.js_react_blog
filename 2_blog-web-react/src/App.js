@@ -1,66 +1,59 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { useMedia } from 'react-use'
 import { useRoutes } from 'react-router-dom'
 import router from './router'
+import usePageLayoutSwitch from './hooks/usePageLayoutSwitch'
+
+import { CSSTransition } from 'react-transition-group'
 import {
   Sidebar,
   TopHeader,
   Header,
   Footer
 } from './components'
-
-import { CSSTransition } from 'react-transition-group'
-
-import {
-  Main
-} from './app.style'
+import { Main, Mask } from './app.style'
 
 export default function App() {
-  // 控制侧边栏和main左移
-  const [toggle, setToggle] = useState(true)
-  const toggleSidebar = useCallback(() => {
-    setToggle(!toggle)
-  }, [toggle])
 
-  // 媒体查询，做响应式页面
-  const isMaxWidth1240px = useMedia('(max-width: 1240px)')
-  const isMaxWidth760px = useMedia('(max-width: 760px)')
-  useEffect(() => {
-    // 大屏
-    if(!isMaxWidth1240px && !isMaxWidth760px) {
-      setToggle(true)
-    }
-    // 中屏
-    if(isMaxWidth1240px && !isMaxWidth760px) {
-      setToggle(false)
-    }
-    // 小屏
-    if(isMaxWidth1240px && isMaxWidth760px) {
-      setToggle(false)
-    }
-  }, [isMaxWidth1240px, isMaxWidth760px])
-  
+  // 响应式布局，侧边栏、Main、遮罩逻辑。
+  const {
+    toggle,     // 控制页面整体移动
+    setToggle,
+    togglePage, // 每次调用，根据页面尺寸切换（侧边栏、Main、遮罩）
+    mainToggle, // 控制 Main 是否移动（中小屏不移动）
+    ismask,     // 控制遮罩是否显示
+    setIsmask,
+  } = usePageLayoutSwitch()
+
   // 通过路由表注册路由
   const element = useRoutes(router)
+
   return (
     <div>
       <Sidebar toggle={toggle} />
       <CSSTransition
-        in={toggle}
+        in={mainToggle}
         timeout={500}
         classNames='main-move'
       >
         <Main>
           <TopHeader
-            toggleSidebar={toggleSidebar}
+            togglePage={togglePage}
           >
           </TopHeader>
           <Header></Header>
-          {element}
+          <div className="content">
+            {element}
+          </div>
           <Footer></Footer>
         </Main>
       </CSSTransition>
-
+      {/* 中小屏下使用的遮罩 */}
+      <Mask
+        onClick={() => {
+          setIsmask(!ismask)
+          setToggle(!toggle)
+        }}
+        className={ismask ? 'on' : ''}
+      />
     </div>
   )
 }

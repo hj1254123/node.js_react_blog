@@ -9,23 +9,19 @@ export const SlidebarWrapper = styled.aside`
   left: 0;
   top: 0;
   bottom: 0;
+  z-index: 9999;
   transition: .4s cubic-bezier(.18, .81, .3, .89);
   &.${pre}-enter {
     transform: translateX(-100%);
   }
-  &.${pre}-enter-active {
+  &.${pre}-enter-active, &.${pre}-enter-done, &.${pre}-exit {
     transform: translateX(0%);
   }
-  &.${pre}-enter-done {
-    transform: translateX(0%);
-  }
-  &.${pre}-exit {
-    transform: translateX(0%);
-  }
-  &.${pre}-exit-active {
+
+  &.${pre}-exit-active, &.${pre}-exit-done {
     transform: translateX(-100%);
   }
-  &.${pre}-exit-done {
+  @media (max-width: 1240px) {
     transform: translateX(-100%);
   }
 `

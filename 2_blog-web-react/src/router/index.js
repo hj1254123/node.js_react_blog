@@ -5,7 +5,7 @@ import ArchivePage from '../pages/ArchivePage'
 import TagsPage from '../pages/TagsPage'
 import ArticlePage from '../pages/ArticlePage'
 
-export default [
+const router = [
   {
     path: '/',
     element: <Navigate to='/article/page/1' />
@@ -35,3 +35,5 @@ export default [
     element: <ArticlePage />
   }
 ]
+
+export default router
