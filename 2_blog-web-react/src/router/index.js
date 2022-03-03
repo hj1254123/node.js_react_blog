@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom"
+// import { Navigate } from "react-router-dom"
 
 import HomePage from '../pages/HomePage'
 import ArchivePage from '../pages/ArchivePage'
@@ -8,7 +8,7 @@ import ArticlePage from '../pages/ArticlePage'
 const router = [
   {
     path: '/',
-    element: <Navigate to='/article/page/1' />
+    element: <HomePage />
   },
   {
     path: '/article/page/:id',
@@ -16,7 +16,7 @@ const router = [
   },
   {
     path: '/archive',
-    element: <Navigate to='/archive/1' />
+    element: <ArchivePage />
   },
   {
     path: '/archive/:id',
@@ -24,7 +24,7 @@ const router = [
   },
   {
     path: '/tags',
-    element: <Navigate to='/tags/page/all' />
+    element: <TagsPage />
   },
   {
     path: '/tags/page/:tagName',

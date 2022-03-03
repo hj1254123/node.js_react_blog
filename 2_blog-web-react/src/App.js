@@ -12,6 +12,8 @@ import {
 import { Main, Mask } from './app.style'
 
 export default function App() {
+  // 通过路由表注册路由
+  const element = useRoutes(router)
 
   // 响应式布局，侧边栏、Main、遮罩逻辑。
   const {
@@ -23,8 +25,6 @@ export default function App() {
     setIsmask,
   } = usePageLayoutSwitch()
 
-  // 通过路由表注册路由
-  const element = useRoutes(router)
 
   return (
     <div>
@@ -35,15 +35,11 @@ export default function App() {
         classNames='main-move'
       >
         <Main>
-          <TopHeader
-            togglePage={togglePage}
-          >
-          </TopHeader>
-          <Header></Header>
-          <div className="content">
-            {element}
-          </div>
-          <Footer></Footer>
+          <TopHeader togglePage={togglePage} />
+          <Header />
+          {/* 注册路由(页面主体) */}
+          {element}
+          <Footer />
         </Main>
       </CSSTransition>
       {/* 中小屏下使用的遮罩 */}
