@@ -1,8 +1,9 @@
 import { useRoutes } from 'react-router-dom'
 import router from './router'
-import usePageLayoutSwitch from './hooks/usePageLayoutSwitch'
+import classNames from 'classnames'
 
-import { CSSTransition } from 'react-transition-group'
+import useResponsiveLayout from './hooks/useResponsiveLayout'
+
 import {
   Sidebar,
   TopHeader,
@@ -12,43 +13,25 @@ import {
 import { Main, Mask } from './app.style'
 
 export default function App() {
-  // 通过路由表注册路由
+  // 路由表
   const element = useRoutes(router)
-
-  // 响应式布局，侧边栏、Main、遮罩逻辑。
-  const {
-    toggle,     // 控制页面整体移动
-    setToggle,
-    togglePage, // 每次调用，根据页面尺寸切换（侧边栏、Main、遮罩）
-    mainToggle, // 控制 Main 是否移动（中小屏不移动）
-    ismask,     // 控制遮罩是否显示
-    setIsmask,
-  } = usePageLayoutSwitch()
-
-
+  // isShow 控制元素显示隐藏
+  const { isShow, toggleIsShow } = useResponsiveLayout()
+  const onClass = classNames({ 'on': isShow })
   return (
     <div>
-      <Sidebar toggle={toggle} />
-      <CSSTransition
-        in={mainToggle}
-        timeout={500}
-        classNames='main-move'
-      >
-        <Main>
-          <TopHeader togglePage={togglePage} />
-          <Header />
-          {/* 注册路由(页面主体) */}
-          {element}
-          <Footer />
-        </Main>
-      </CSSTransition>
+      <Sidebar isShow={isShow} />
+      <Main className={onClass}>
+        <TopHeader toggleIsShow={toggleIsShow} />
+        <Header />
+        {/* 注册路由(页面主体) */}
+        {element}
+        <Footer />
+      </Main >
       {/* 中小屏下使用的遮罩 */}
       <Mask
-        onClick={() => {
-          setIsmask(!ismask)
-          setToggle(!toggle)
-        }}
-        className={ismask ? 'on' : ''}
+        className={onClass}
+        onClick={toggleIsShow}
       />
     </div>
   )

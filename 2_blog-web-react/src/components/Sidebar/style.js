@@ -11,19 +11,7 @@ export const SlidebarWrapper = styled.aside`
   bottom: 0;
   z-index: 9999;
   transition: .4s cubic-bezier(.18, .81, .3, .89);
-  &.${pre}-enter {
-    transform: translateX(-100%);
-  }
-  &.${pre}-enter-active, &.${pre}-enter-done, &.${pre}-exit {
-    transform: translateX(0%);
-  }
-
-  &.${pre}-exit-active, &.${pre}-exit-done {
-    transform: translateX(-100%);
-  }
-  @media (max-width: 1240px) {
-    transform: translateX(-100%);
-  }
+  transform: ${props => props.isShow ? 'translateX(0%)' : 'translateX(-100%)'};
 `
 
 

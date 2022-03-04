@@ -3,10 +3,10 @@ import React, { memo } from 'react'
 import { TopHeaderWrapper } from './style'
 
 const TopHeader = memo((props) => {
-  const { togglePage } = props
+  const { toggleIsShow } = props
   return (
     <TopHeaderWrapper>
-      <button onClick={togglePage}>X</button>
+      <button onClick={toggleIsShow}>X</button>
     </TopHeaderWrapper>
   )
 })
