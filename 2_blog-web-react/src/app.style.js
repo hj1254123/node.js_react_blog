@@ -3,18 +3,23 @@ import styled from 'styled-components'
 
 export const Main = styled.main`
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: center; 
+  overflow: hidden;
   transition: all .3s ease-in-out;
+  .content {
+    width: 960px;
+    min-height: 700px;
+    background-color: pink;
+    @media (max-width: 1240px) {
+      width: 100%;
+    }
+  }
   &.on {
     padding-left: 240px;
   }
   @media (max-width: 1240px) {
     padding-left: 0 !important;
-    .content {
-      width: 100%;
-    }
   }
 `
 

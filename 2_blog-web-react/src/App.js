@@ -3,6 +3,7 @@ import router from './router'
 import classNames from 'classnames'
 
 import useResponsiveLayout from './hooks/useResponsiveLayout'
+import useLockPageScrollForMobileOnly from './hooks/useLockPageScrollForMobileOnly'
 
 import {
   Sidebar,
@@ -11,21 +12,26 @@ import {
   Footer
 } from './components'
 import { Main, Mask } from './app.style'
+// import { useState } from 'react'
 
 export default function App() {
-  // 路由表
-  const element = useRoutes(router)
-  // isShow 控制元素显示隐藏
-  const { isShow, toggleIsShow } = useResponsiveLayout()
+  const element = useRoutes(router) 
+  // isShow 控制各元素的显示/隐藏、移动端的滚动锁定
+  const { isShow, toggleIsShow } = useResponsiveLayout() 
   const onClass = classNames({ 'on': isShow })
+  useLockPageScrollForMobileOnly(isShow)
+  
+  // 测试组件用
+  // const [one, setOne] = useState(false)
   return (
     <div>
+      {/* <button onClick={() => {setOne(!one)}}>切换one: {one.toString()}</button> */}
       <Sidebar isShow={isShow} />
       <Main className={onClass}>
         <TopHeader toggleIsShow={toggleIsShow} />
         <Header />
         {/* 注册路由(页面主体) */}
-        {element}
+        <div className="content"> {element}</div>
         <Footer />
       </Main >
       {/* 中小屏下使用的遮罩 */}

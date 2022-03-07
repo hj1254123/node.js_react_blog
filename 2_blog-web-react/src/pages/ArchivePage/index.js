@@ -1,12 +1,9 @@
 import React, { memo } from 'react'
-import Sidebar from '../../components/Sidebar'
 
 const ArchivePage = memo(() => {
   return (
     <div>
-      ArchivePage
-      <Sidebar />
-
+      <p>archive page1;archive page;archive page;archive 2page;archive page;archive 3page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;4archive page;archive5 page;archive page;archive page;</p>
     </div>
   )
 })
