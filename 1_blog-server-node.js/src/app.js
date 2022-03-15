@@ -13,7 +13,16 @@ const commentRouter = require('./routes/comment.js');
 const archiveRouter = require('./routes/archive.js')
 
 const app = express()
-const port = 3000
+const port = 3001
+
+// 允许跨域
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.header('Access-Control-Allow-Headers', 'Authorization,X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')
+  res.header('Allow', 'GET, POST, PATCH, OPTIONS, PUT, DELETE')
+  next();
+});
 
 app.use(express.json())
 // token解析验证中间件
@@ -54,8 +63,14 @@ app.use('/archive', archiveRouter)
 
 // 错误处理
 app.use(function(err, req, res, next) {
-  console.log('===全局错误===', err)
-  res.status(500).send('未知错误')
+  console.dir('===全局错误===', err)
+  let status = 500
+  let msg = '未知错误'
+  if(err.status === 401) {
+    status = err.status
+    msg = 'token已过期，请重新登录！'
+  }
+  res.status(status).send(msg)
 })
 
 
