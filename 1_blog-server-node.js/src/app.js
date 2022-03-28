@@ -44,6 +44,7 @@ app.use(expressJwt({
     { url: /^\/comment\/\d+$/, methods: ['GET'] },
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
     { url: '/tags/page', methods: ['GET'] },
+    { url: '/test', methods: ['GET'] },
   ]
 }))
 
@@ -60,16 +61,37 @@ app.use('/article', articleRouter)
 app.use('/tags', tagsRouter)
 app.use('/comment', commentRouter)
 app.use('/archive', archiveRouter)
-
+// 测试接口
+app.get('/test', function(req, res) {
+  setTimeout(() => {
+    const d = new Date()
+    res.status(200).send('成功' + d.getTime());
+  }, 1000);
+})
+app.get('*', function(req, res) {
+  res.status(404).send();
+})
 // 错误处理
 app.use(function(err, req, res, next) {
   console.dir('===全局错误===', err)
+  // 默认值
   let status = 500
-  let msg = '未知错误'
-  if(err.status === 401) {
-    status = err.status
+  let msg = '服务端错误'
+
+  // 由于生产页面不需要鉴权，
+  // 按现在的写法没带正确token express-jwt 会报错，这里暂时这样处理
+  if(err.name === 'UnauthorizedError') {
+    // 管理页面返回401
+    status = 401
     msg = 'token已过期，请重新登录！'
+    // 生产页面返回404
+    // TODO:上线后替换来源网址为 https://blog.hou-jian.com
+    if(req.headers.origin === 'http://localhost:3000') {
+      status = 404
+      msg = 'Not Found'
+    }
   }
+
   res.status(status).send(msg)
 })
 
