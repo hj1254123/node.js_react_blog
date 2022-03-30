@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useMedia } from 'react-use'
 
-
 /**
  * 自定义hook，实现响应式布局。
  * 窗口变化会通过js媒体查询，切换样式(切换isShow的状态实现)。

@@ -1,9 +1,10 @@
 import React, { memo } from 'react'
+import { useIsShowContext } from '../../context/IsShow-context'
 
 import { TopHeaderWrapper } from './style'
 
-const TopHeader = memo((props) => {
-  const { toggleIsShow } = props
+const TopHeader = memo(() => {
+  const { toggleIsShow } = useIsShowContext()
   return (
     <TopHeaderWrapper>
       <button onClick={toggleIsShow}>X</button>

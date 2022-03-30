@@ -1,8 +1,10 @@
 import { useCallback, useEffect } from "react";
 import { useMedia } from 'react-use'
 
+import { MaxWidth1240px } from '../common/constant'
+
 export default function useLockPageScrollForMobileOnly(lock) {
-  const isMaxWidth1240px = useMedia('(max-width: 1240px)')
+  const isMaxWidth1240px = useMedia(MaxWidth1240px)
 
   const fn = useCallback(e => {
     e.preventDefault()
