@@ -36,10 +36,10 @@ export const Mask = styled.div`
   transition: all .4s;
 
   @media (max-width: 1240px) {
-    &.on{
-    visibility: visible;
-    opacity: .5;
-    pointer-events: auto;
-  }
+    &.on {
+      visibility: visible;
+      opacity: .5;
+      pointer-events: auto;
+    }
   }
 `

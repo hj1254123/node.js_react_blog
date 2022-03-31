@@ -17,6 +17,8 @@ export const IsShowProvider = ({ children }) => {
   )
 }
 
+// 用来拿 isShow, toggleIsShow
+// isShow 控制各元素的显示/隐藏，以及移动端的滚动锁定
 export const useIsShowContext = () => {
   const context = React.useContext(IsShowContext)
   if(!context) {

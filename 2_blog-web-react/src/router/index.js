@@ -1,9 +1,8 @@
-// import { Navigate } from "react-router-dom"
-
 import HomePage from '../pages/HomePage'
 import ArchivePage from '../pages/ArchivePage'
 import TagsPage from '../pages/TagsPage'
 import ArticlePage from '../pages/ArticlePage'
+import Error404 from '../components/Error404'
 
 const router = [
   {
@@ -33,6 +32,10 @@ const router = [
   {
     path: '/article/:id',
     element: <ArticlePage />
+  },
+  {
+    path: '*',
+    element: <Error404 />
   }
 ]
 

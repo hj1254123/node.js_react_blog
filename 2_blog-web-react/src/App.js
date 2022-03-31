@@ -15,21 +15,17 @@ import { Main, Mask } from './app.style'
 export default function App() {
   const element = useRoutes(router)
   const { isShow, toggleIsShow } = useIsShowContext() // isShow 控制各元素的显示/隐藏，以及移动端的滚动锁定
+  const on = classNames({ 'on': isShow })
   return (
     <div>
       <Sidebar />
-      <Main className={classNames({ 'on': isShow })}>
+      <Main className={on}>
         <TopHeader />
         <Header />
-        {/* 注册路由(页面主体) */}
-        <div className="content"> {element}</div>
+        <div className="content">{element}</div> {/* 注册路由(页面主体) */}
         <Footer />
       </Main >
-      {/* 中小屏下使用的遮罩 */}
-      <Mask
-        className={classNames({ 'on': isShow })}
-        onClick={toggleIsShow}
-      />
+      <Mask className={on} onClick={toggleIsShow} /> {/* 中小屏下使用的遮罩 */}
     </div>
   )
 }

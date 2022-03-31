@@ -73,12 +73,12 @@ app.get('*', function(req, res) {
 })
 // 错误处理
 app.use(function(err, req, res, next) {
-  console.dir('===全局错误===', err)
+  console.log('===全局错误===', err)
   // 默认值
   let status = 500
   let msg = '服务端错误'
 
-  // 由于生产页面不需要鉴权，
+  // 由于后端管理和生产页面共用该程序，而生产不需要鉴权，
   // 按现在的写法没带正确token express-jwt 会报错，这里暂时这样处理
   if(err.name === 'UnauthorizedError') {
     // 管理页面返回401
