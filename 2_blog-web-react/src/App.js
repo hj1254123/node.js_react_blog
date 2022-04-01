@@ -20,7 +20,7 @@ export default function App() {
     <div>
       <Sidebar />
       <Main className={on}>
-        <TopHeader />
+      <TopHeader />
         <Header />
         <div className="content">{element}</div> {/* 注册路由(页面主体) */}
         <Footer />

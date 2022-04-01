@@ -7,7 +7,7 @@ const TopHeader = memo(() => {
   const { toggleIsShow } = useIsShowContext()
   return (
     <TopHeaderWrapper>
-      <button onClick={toggleIsShow}>X</button>
+      <button onClick={toggleIsShow}>x</button>
     </TopHeaderWrapper>
   )
 })
