@@ -16,12 +16,17 @@ export const TopHeaderWrapper = styled.header`
     position: absolute;
     background-color: inherit;
     font-size: 18px;
+    font-weight: 600;
     color: #fff;
-    left: ${props => props.isShow ? '240px' : '0'};
     cursor: pointer;
+  }
+  .icon-cha1 {
+    transition: all .4s cubic-bezier(.18, .81, .3, .89);
+    left: ${props => props.isShow ? '240px' : '-56px'};
+    transform: ${props => props.isShow ? 'scale(1)' : 'scale(0)'};
     /* 小屏不显示关闭按钮（点击遮罩关闭） */
     @media (max-width: 1240px) {
-      left: 0;
+      left: -56px;
     }
   }
   div {
