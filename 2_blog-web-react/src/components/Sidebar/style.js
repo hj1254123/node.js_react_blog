@@ -11,7 +11,7 @@ export const SlidebarWrapper = styled.aside`
   bottom: 0;
   z-index: 9999;
   transition: all .4s cubic-bezier(.18, .81, .3, .89);
-  transform: ${props => props.isShow ? 'translateX(0%)' : 'translateX(-100%)'};
+  transform: ${props => props.isShow ? 'translateX(0)' : 'translateX(-100%)'};
 `
 
 export const BrandWrapper = styled.div`

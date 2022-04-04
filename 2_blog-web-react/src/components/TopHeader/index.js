@@ -8,7 +8,7 @@ import { TopHeaderWrapper } from './style'
 const TopHeader = memo((props) => {
   console.log('top-header')
   const { isShow, toggleIsShow } = useIsShowContext()
-  const topTitle = props.topTitle || '猴几的blog'
+  const topTitle = props.topTitle || "HouJi's Blog"
 
   // 滚动距离Y>80显示阴影和topTitle
   const [y, setY] = useState(0)
@@ -27,9 +27,13 @@ const TopHeader = memo((props) => {
 
   return (
     <TopHeaderWrapper isShow={isShow} className={fixed}>
-      <button className='iconfont icon-weibiaoti12' onClick={toggleIsShow} ></button>
-      <button className='iconfont icon-cha1' onClick={toggleIsShow} ></button>
-      <div>{isScrollY56 ? topTitle.toString() : ''}</div>
+      <div className='top-button'>
+        <button className='iconfont icon-weibiaoti12' onClick={toggleIsShow} ></button>
+        <button className='iconfont icon-cha1' onClick={toggleIsShow} ></button>
+      </div>
+      <div className='top-title'>
+        <span>{isScrollY56 ? topTitle.toString() : ''}</span>
+      </div>
     </TopHeaderWrapper>
   )
 })
