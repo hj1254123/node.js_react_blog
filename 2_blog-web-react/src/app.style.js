@@ -7,12 +7,16 @@ export const Main = styled.main`
   align-items: center; 
   overflow: hidden;
   transition: all .4s cubic-bezier(.18, .81, .3, .89);
-  .content {
-    width: 960px;
-    min-height: 700px;
-    background-color: pink;
-    @media (max-width: 1240px) {
-      width: 100%;
+  .content-wrapper {
+    width: 100%;
+    .content {
+      width: 960px;
+      min-height: 1000px;
+      margin: 0 auto;
+      background-color: pink;
+      @media screen and (max-width: 1040px) {
+        width: 100%;
+      }
     }
   }
   &.on {

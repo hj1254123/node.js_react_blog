@@ -48,3 +48,20 @@ img {
   border: none;
   vertical-align: middle;
 }
+
+/* 自定义滚动条样式 */
+html::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 8px;
+  height: 8px;
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: #b6b6b6;
+  border: 1px solid #fff;
+  border-radius: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background-color: inherit;
+}

@@ -20,9 +20,13 @@ export default function App() {
     <div>
       <Sidebar />
       <Main className={on}>
-      <TopHeader />
+        <TopHeader />
         <Header />
-        <div className="content">{element}</div> {/* 注册路由(页面主体) */}
+        <div className="content-wrapper">
+          <div className="content">
+            {element}  {/* 注册路由(页面主体) */}
+          </div>
+        </div>
         <Footer />
       </Main >
       <Mask className={on} onClick={toggleIsShow} /> {/* 中小屏下使用的遮罩 */}
