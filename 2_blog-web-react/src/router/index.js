@@ -2,7 +2,7 @@ import HomePage from '../pages/HomePage'
 import ArchivePage from '../pages/ArchivePage'
 import TagsPage from '../pages/TagsPage'
 import ArticlePage from '../pages/ArticlePage'
-import Error404 from '../components/Error404'
+import { Error404 } from '../components'
 
 const router = [
   {

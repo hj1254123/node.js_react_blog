@@ -8,7 +8,8 @@ import {
   Sidebar,
   TopHeader,
   Header,
-  Footer
+  Footer,
+  GoTopBtn,
 } from './components'
 import { Main, Mask } from './app.style'
 
@@ -29,6 +30,7 @@ export default function App() {
         </div>
         <Footer />
       </Main >
+      <GoTopBtn />
       <Mask className={on} onClick={toggleIsShow} /> {/* 中小屏下使用的遮罩 */}
     </div>
   )

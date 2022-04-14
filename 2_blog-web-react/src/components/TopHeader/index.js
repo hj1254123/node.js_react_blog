@@ -6,24 +6,20 @@ import { throttle } from '../../utils/my-utils'
 import { TopHeaderWrapper } from './style'
 
 const TopHeader = memo((props) => {
-  console.log('top-header')
   const { isShow, toggleIsShow } = useIsShowContext()
   const topTitle = props.topTitle || "HouJi's Blog"
 
   // 滚动距离Y>80显示阴影和topTitle
-  const [y, setY] = useState(0)
+  const [isScrollY80, setIsScrollY80] = useState(false)
   useEffect(() => {
     function handler() {
       const y = document.documentElement.scrollTop || document.body.scrollTop
-      setY(y)
+      setIsScrollY80(y > 80)
     }
-    window.addEventListener('scroll', throttle(handler, 30))
+    window.addEventListener('scroll', throttle(handler, 34))
   }, [])
 
-  const isScrollY56 = (y > 80)
-  const fixed = classnames({ 'fixed': isScrollY56 })
-
-
+  const fixed = classnames({ 'fixed': isScrollY80 })
 
   return (
     <TopHeaderWrapper isShow={isShow} className={fixed}>
@@ -32,7 +28,7 @@ const TopHeader = memo((props) => {
         <button className='iconfont icon-cha1' onClick={toggleIsShow} ></button>
       </div>
       <div className='top-title'>
-        <span>{isScrollY56 ? topTitle.toString() : ''}</span>
+        <span>{isScrollY80 ? topTitle.toString() : ''}</span>
       </div>
     </TopHeaderWrapper>
   )

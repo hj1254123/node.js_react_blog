@@ -39,6 +39,10 @@ input, textarea, button, select, a {
   border: none;
 }
 
+button {
+  -webkit-tap-highlight-color: transparent; /* 点击透明 */
+}
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
