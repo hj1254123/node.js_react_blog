@@ -66,7 +66,7 @@ app.get('/test', function(req, res) {
   setTimeout(() => {
     const d = new Date()
     res.status(200).send('成功' + d.getTime());
-  }, 1000);
+  }, 3000);
 })
 app.get('*', function(req, res) {
   res.status(404).send();

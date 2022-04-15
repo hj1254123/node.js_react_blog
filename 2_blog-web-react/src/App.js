@@ -10,6 +10,7 @@ import {
   Header,
   Footer,
   GoTopBtn,
+  Loading,
 } from './components'
 import { Main, Mask } from './app.style'
 
@@ -32,6 +33,8 @@ export default function App() {
       </Main >
       <GoTopBtn />
       <Mask className={on} onClick={toggleIsShow} /> {/* 中小屏下使用的遮罩 */}
+      <Loading />
+
     </div>
   )
 }

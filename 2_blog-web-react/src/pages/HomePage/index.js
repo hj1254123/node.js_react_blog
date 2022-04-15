@@ -15,7 +15,6 @@ const HomePage = memo(() => {
   const { data, error } = useSWR('/test', fetcher)
 
   if(error) {
-    console.log('home error', error)
     return <div>请求出错</div>
   }
   if(!data) {

@@ -1,5 +1,7 @@
 import axios from 'axios'
+import { EmitRequestNumberChange } from '../../utils/eventBus'
 import { BASE_URL, TIMEOUT } from './config'
+
 
 // 如果项目中需要请求多个服务器，多创建几个实例即可。
 const instance = axios.create({
@@ -7,6 +9,7 @@ const instance = axios.create({
   timeout: TIMEOUT,
 })
 
+let requestNumber = 0 // 正在请求的数量
 
 class HjRequest {
   constructor(instance) {
@@ -17,15 +20,31 @@ class HjRequest {
     const instance = this.instance
     // 实例请求拦截器
     instance.interceptors.request.use(config => {
+      // - 请求数加一，并发布出去
+      if(config.isLoading) { //如果为false则不计数
+        requestNumber++
+        EmitRequestNumberChange(requestNumber)
+      }
       return config
     }, err => {
       return Promise.reject(err)
     })
     // 实例响应拦截器
     instance.interceptors.response.use(res => {
+      // - 请求数减一，并发布出去
+      if(res.config.isLoading) {
+        requestNumber--
+        EmitRequestNumberChange(requestNumber)
+      }
+
       return res.data
-    }, err => {
-      // 超出200的状态码会在这里执行
+    }, err => { //超出200的状态码会在这里执行
+      console.dir(err)
+      // - 请求数减一，并发布出去
+      if(err.config.isLoading) {
+        requestNumber--
+        EmitRequestNumberChange(requestNumber)
+      }
       // TODO:根据状态码设置 message
       return Promise.reject({
         data: err.response?.data,
@@ -37,16 +56,20 @@ class HjRequest {
   request(config) {
     return this.instance.request(config)
   }
-  get(url, config) {
+  get(url, config = {}) {
+    // 不传默认true
+    if(config.isLoading === undefined) {
+      config.isLoading = true
+    }
     return this.request({ ...config, url, method: 'get' })
   }
-  post(url, config) {
+  post(url, config = {}) {
     return this.request({ ...config, url, method: 'post' })
   }
-  delete(url, config) {
+  delete(url, config = {}) {
     return this.request({ ...config, url, method: 'delete' })
   }
-  put(url, config) {
+  put(url, config = {}) {
     return this.request({ ...config, url, method: 'put' })
   }
 }
