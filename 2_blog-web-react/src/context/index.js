@@ -1,5 +1,6 @@
 import { SWRConfig } from 'swr'
 import { IsShowProvider } from './IsShow-context'
+import { TitleProvider } from './Title-context'
 
 export default function AppProviders({ children }) {
   return (
@@ -8,7 +9,11 @@ export default function AppProviders({ children }) {
         console.log('swr全局错误处理', error, key)
       }
     }}>
-      <IsShowProvider>{children}</IsShowProvider>
+      <IsShowProvider>
+        <TitleProvider>
+          {children}
+        </TitleProvider>
+      </IsShowProvider>
     </SWRConfig>
   )
 }

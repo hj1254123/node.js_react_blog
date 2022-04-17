@@ -2,12 +2,14 @@ import React, { memo, useEffect, useState } from 'react'
 import classnames from 'classnames'
 
 import { useIsShowContext } from '../../context/IsShow-context'
+import { useTitleContext } from '../../context/Title-context'
 import { throttle } from '../../utils/my-utils'
+
 import { TopHeaderWrapper } from './style'
 
 const TopHeader = memo((props) => {
   const { isShow, toggleIsShow } = useIsShowContext()
-  const topTitle = props.topTitle || "HouJi's Blog"
+  const { title } = useTitleContext()
 
   // 滚动距离Y>80显示阴影和topTitle
   const [isScrollY80, setIsScrollY80] = useState(false)
@@ -28,7 +30,7 @@ const TopHeader = memo((props) => {
         <button className='iconfont icon-cha1' onClick={toggleIsShow} ></button>
       </div>
       <div className='top-title'>
-        <span>{isScrollY80 ? topTitle.toString() : ''}</span>
+        <span>{isScrollY80 ? title : ''}</span>
       </div>
     </TopHeaderWrapper>
   )

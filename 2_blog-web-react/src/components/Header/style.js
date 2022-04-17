@@ -22,6 +22,7 @@ export const HeaderWrapper = styled.header`
       line-height: 24px;
       font-weight: 300;
       color: #c5cae9;
+      visibility: ${props => props.isShowSpan ? '' : 'hidden'};
     }
     @media screen and (max-width: 1040px) {
       width: 100%;

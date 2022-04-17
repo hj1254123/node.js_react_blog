@@ -12,6 +12,7 @@ const fetcher = (url) => {
 }
 
 const HomePage = memo(() => {
+
   const { data, error } = useSWR('/test', fetcher)
 
   if(error) {
