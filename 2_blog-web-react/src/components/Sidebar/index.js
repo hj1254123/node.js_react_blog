@@ -11,7 +11,6 @@ import {
   BrandWrapper,
   NavWrapper
 } from './style'
-import { useTitleContext } from '../../context/Title-context'
 
 const Sidebar = memo(() => {
   const { isShow, toggleIsShow } = useIsShowContext()
@@ -21,17 +20,12 @@ const Sidebar = memo(() => {
       toggleIsShow()
     }
   }
-  // 设置两个header组件需要用到的title
-  const { setTitle } = useTitleContext()
-  function handleClickLink(title) {
-    closeSidebarOnlyMobile()
-    setTitle(title)
-  }
+
   return (
     <SlidebarWrapper isShow={isShow}>
       <BrandWrapper>
         <div className="brand">
-          <Link to='/' className="avatar" onClick={() => handleClickLink("HouJi's Blog")}>
+          <Link to='/' className="avatar" onClick={closeSidebarOnlyMobile}>
             <img src={avatarImg} alt="头像" />
           </Link>
           <address>
@@ -43,19 +37,19 @@ const Sidebar = memo(() => {
       <NavWrapper>
         <ul>
           <li>
-            <NavLink to='/' onClick={() => handleClickLink("HouJi's Blog")}>
+            <NavLink to='/' onClick={closeSidebarOnlyMobile}>
               <i className='iconfont icon-fl-jia'></i>
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to='/archive' onClick={() => handleClickLink("Archives")}>
+            <NavLink to='/archive' onClick={closeSidebarOnlyMobile}>
               <i className='iconfont icon-guidang3'></i>
               Archive
             </NavLink>
           </li>
           <li>
-            <NavLink to='/tags' onClick={() => handleClickLink("Tags")}>
+            <NavLink to='/tags' onClick={closeSidebarOnlyMobile}>
               <i className='iconfont icon-24gf-tags'></i>
               Tags
             </NavLink>

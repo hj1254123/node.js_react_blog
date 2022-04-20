@@ -3,11 +3,14 @@ import useSWR from 'swr'
 import { CSSTransition } from 'react-transition-group'
 
 import hjRequest from '../../services/request'
+import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
 
 import { HomeWrapper, Main } from './style'
 import { Header } from '../../components'
 
 const HomePage = memo(() => {
+  useSetHeaderTitle("HouJi's Blog")
+
   const { data } = useSWR('/test', (url) => {
     return hjRequest.get(url).then(d => d)
   })

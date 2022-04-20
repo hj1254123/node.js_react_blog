@@ -1,9 +1,14 @@
 import React, { memo } from 'react'
 import { CSSTransition } from 'react-transition-group'
+
+import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
+
 import { Header } from '../../components'
 import { ArticleWrapper, Main } from './style'
 
 const ArticlePage = memo(() => {
+  useSetHeaderTitle('Article')
+
   return (
     <ArticleWrapper>
       <Header />
