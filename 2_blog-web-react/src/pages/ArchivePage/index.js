@@ -1,10 +1,26 @@
 import React, { memo } from 'react'
+import { CSSTransition } from 'react-transition-group'
+import { Header } from '../../components'
+import { ArchiveWrapper, Main } from './style'
 
 const ArchivePage = memo(() => {
+
   return (
-    <div>
-      <p>archive page1;archive page;archive page;archive 2page;archive page;archive 3page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;archive page;4archive page;archive5 page;archive page;archive page;</p>
-    </div>
+    <ArchiveWrapper>
+      <Header />
+      <CSSTransition
+        in={true}
+        timeout={500}
+        classNames='context'
+        appear
+      >
+        <Main>
+          archivepage
+        </Main>
+      </CSSTransition>
+
+    </ArchiveWrapper>
+
   )
 })
 

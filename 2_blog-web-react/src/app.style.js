@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-
 export const Main = styled.main`
   display: flex;
   flex-direction: column;
@@ -9,15 +8,7 @@ export const Main = styled.main`
   transition: all .4s cubic-bezier(.18, .81, .3, .89);
   .content-wrapper {
     width: 100%;
-    .content {
-      width: 960px;
-      min-height: 1000px;
-      margin: 0 auto;
-      background-color: pink;
-      @media screen and (max-width: 1040px) {
-        width: 100%;
-      }
-    }
+    min-height: 1000px;
   }
   &.on {
     padding-left: 240px;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const HomeWrapper = styled.div`
+export const ArticleWrapper = styled.div`
 
 `
 export const Main = styled.div`

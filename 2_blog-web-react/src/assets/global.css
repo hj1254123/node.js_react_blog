@@ -69,3 +69,23 @@ html::-webkit-scrollbar-thumb {
 html::-webkit-scrollbar-track {
   background-color: inherit;
 }
+
+/* 文章内容初始渲染动画 */
+.context-enter, .context-appear {
+  transform: translateY(10%);
+  opacity: 0;
+}
+
+.context-enter-active, .context-appear-active {
+  transition: all .5s;
+  transform: translate(0);
+  opacity: 1;
+}
+
+/* 离开动画 */
+.context-exit-active {
+  opacity: 0;
+}
+.context-exit-done {
+  opacity: 0;
+}

@@ -4,7 +4,6 @@ const TitleContext = React.createContext()
 
 export const TitleProvider = ({ children }) => {
   const [title, setTitle] = useState("HouJi's Blog")
-
   return (
     <TitleContext.Provider
       value={{ title, setTitle }}

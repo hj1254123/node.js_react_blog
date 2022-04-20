@@ -45,6 +45,7 @@ app.use(expressJwt({
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
     { url: '/tags/page', methods: ['GET'] },
     { url: '/test', methods: ['GET'] },
+    { url: '/test2', methods: ['GET'] },
   ]
 }))
 
@@ -66,7 +67,13 @@ app.get('/test', function(req, res) {
   setTimeout(() => {
     const d = new Date()
     res.status(200).send('成功' + d.getTime());
-  }, 3000);
+  }, 2000);
+})
+app.get('/test2', function(req, res) {
+  setTimeout(() => {
+    const d = new Date()
+    res.status(200).send('成功2' + d.getTime());
+  }, 2000);
 })
 app.get('*', function(req, res) {
   res.status(404).send();

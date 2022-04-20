@@ -1,34 +1,35 @@
 import React, { memo } from 'react'
-// import { Link } from 'react-router-dom'
 import useSWR from 'swr'
-
-import {
-  HomeWrapper,
-} from './style'
+import { CSSTransition } from 'react-transition-group'
 
 import hjRequest from '../../services/request'
-const fetcher = (url) => {
-  return hjRequest.get(url).then(d => d)
-}
+
+import { HomeWrapper, Main } from './style'
+import { Header } from '../../components'
 
 const HomePage = memo(() => {
+  const { data } = useSWR('/test', (url) => {
+    return hjRequest.get(url).then(d => d)
+  })
 
-  const { data, error } = useSWR('/test', fetcher)
-
-  if(error) {
-    return <div>请求出错</div>
-  }
   if(!data) {
-    return <div>loading...</div>
+    return <div>Loading</div>
   }
 
   return (
-    <div>
-      <HomeWrapper>
-        {data}
-      </HomeWrapper>
-
-    </div>
+    <HomeWrapper>
+      <Header />
+      <CSSTransition
+        in={true}
+        timeout={500}
+        classNames='context'
+        appear
+      >
+        <Main>
+          {data}
+        </Main>
+      </CSSTransition>
+    </HomeWrapper>
   )
 })
 

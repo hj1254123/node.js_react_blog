@@ -43,4 +43,17 @@ export const HeaderWrapper = styled.header`
       line-height: 20px !important;
     }
   }
+
+  /* 进入/初始渲染动画 */
+  .header-appear {
+    transform: translate(10%, 20%) scale(.6);
+    opacity: 0;
+  }
+
+  .header-appear-active {
+    transition: all .5s;
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+
 `

@@ -18,23 +18,21 @@ export default function App() {
   const element = useRoutes(router)
   const { isShow, toggleIsShow } = useIsShowContext() // isShow 控制各元素的显示/隐藏，以及移动端的滚动锁定
   const on = classNames({ 'on': isShow })
+
   return (
     <div>
       <Sidebar />
       <Main className={on}>
         <TopHeader />
-        <Header />
+        {/* <Header /> */}
         <div className="content-wrapper">
-          <div className="content">
-            {element}  {/* 注册路由(页面主体) */}
-          </div>
+          {element}  {/* 注册路由(页面主体) */}
         </div>
         <Footer />
       </Main >
       <GoTopBtn />
       <Mask className={on} onClick={toggleIsShow} /> {/* 中小屏下使用的遮罩 */}
       <Loading />
-
     </div>
   )
 }
