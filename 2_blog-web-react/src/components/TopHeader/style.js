@@ -9,6 +9,7 @@ export const TopHeaderWrapper = styled.header`
   width: 100%;
   height: 56px;
   background-color: #3f51b5;
+  z-index: 888;
   .top-button {
     width: 240px;
     height: 100%;

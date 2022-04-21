@@ -7,7 +7,6 @@ import { useIsShowContext } from './context/IsShow-context'
 import {
   Sidebar,
   TopHeader,
-  Header,
   Footer,
   GoTopBtn,
   Loading,

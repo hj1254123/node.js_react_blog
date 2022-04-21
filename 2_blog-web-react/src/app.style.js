@@ -29,6 +29,7 @@ export const Mask = styled.div`
   opacity: 0;
   pointer-events: none; // 使鼠标事件失效
   transition: all .4s;
+  z-index: 999;
 
   @media (max-width: 1240px) {
     &.on {
