@@ -8,7 +8,6 @@ export const Main = styled.main`
   transition: all .4s cubic-bezier(.18, .81, .3, .89);
   .content-wrapper {
     width: 100%;
-    min-height: 1000px;
   }
   &.on {
     padding-left: 240px;

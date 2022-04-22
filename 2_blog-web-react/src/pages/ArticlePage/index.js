@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import { CSSTransition } from 'react-transition-group'
+import { useParams } from 'react-router-dom'
 
 import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
 
@@ -8,7 +9,8 @@ import { ArticleWrapper, Main } from './style'
 
 const ArticlePage = memo(() => {
   useSetHeaderTitle('Article')
-
+  const { id } = useParams()
+  console.log('id', id)
   return (
     <ArticleWrapper>
       <Header />

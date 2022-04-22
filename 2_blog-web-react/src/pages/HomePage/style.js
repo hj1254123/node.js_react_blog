@@ -1,15 +1,20 @@
 import styled from 'styled-components';
 
-export const HomeWrapper = styled.div`
+export const HomePageWrapper = styled.div`
+  min-height: calc(100vh - 126px);
 
 `
+
 export const Main = styled.div`
   width: 960px;
-  min-height: 1000px;
   margin: 0 auto;
-  background-color: pink;
+  padding: 30px 0 40px;
   @media screen and (max-width: 1040px) {
     width: 100%;
+    padding: 20px 16px
+  }
+  .article-list-wrap {
+    background-color: lightblue;
   }
 `
 

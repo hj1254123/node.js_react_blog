@@ -7,7 +7,7 @@ import { throttle } from '../../utils/my-utils'
 
 import { TopHeaderWrapper } from './style'
 
-const TopHeader = memo((props) => {
+const TopHeader = memo(() => {
   const { isShow, toggleIsShow } = useIsShowContext()
   const { title } = useTitleContext()
 

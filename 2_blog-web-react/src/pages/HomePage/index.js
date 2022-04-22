@@ -5,8 +5,9 @@ import { CSSTransition } from 'react-transition-group'
 import hjRequest from '../../services/request'
 import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
 
-import { HomeWrapper, Main } from './style'
+import { HomePageWrapper, Main } from './style'
 import { Header } from '../../components'
+import ArticleList from './cpn/ArticleList'
 
 const HomePage = memo(() => {
   useSetHeaderTitle("HouJi's Blog")
@@ -16,9 +17,8 @@ const HomePage = memo(() => {
     return hjRequest.get(url).then(d => d)
   })
 
-  console.log(data)
   return (
-    <HomeWrapper>
+    <HomePageWrapper>
       <Header />
       {
         !data ? '' : <CSSTransition
@@ -28,11 +28,14 @@ const HomePage = memo(() => {
           appear
         >
           <Main>
-            home
+            <ArticleList data={data.data} />
+            <button onClick={() => {
+              setPageIndex(pageIndex + 1)
+            }}>下一页</button>
           </Main>
         </CSSTransition>
       }
-    </HomeWrapper>
+    </HomePageWrapper>
   )
 })
 

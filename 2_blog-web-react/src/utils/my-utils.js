@@ -54,3 +54,15 @@ export function goTop() {
     })
   }
 }
+
+export const formatDate = function(d) {
+  // 没传参数，返回当前时间
+  if (!d) {
+      d = new Date
+  }
+  let date = new Date(d)
+  let Y = date.getFullYear() + '年';
+  let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月';
+  let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '日';
+  return Y + M + D
+}

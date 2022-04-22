@@ -9,6 +9,7 @@ export const TopHeaderWrapper = styled.header`
   width: 100%;
   height: 56px;
   background-color: #3f51b5;
+  transition: all .4s;
   z-index: 888;
   .top-button {
     width: 240px;
@@ -23,7 +24,7 @@ export const TopHeaderWrapper = styled.header`
       color: #fff;
       cursor: pointer;
     }
-    .icon-cha1 {
+    .icon-cha1 { // 关闭按钮
       transition: all .4s cubic-bezier(.18, .81, .3, .89);
       left: ${props => props.isShow ? '240px' : '-56px'};
       transform: ${props => props.isShow ? 'scale(1)' : 'scale(0)'};
