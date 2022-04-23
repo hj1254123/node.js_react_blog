@@ -1,5 +1,4 @@
 const articleModel = require("./article")
-const tagAndArticleModel = require('./tag&article.js')
 const tagsModel = require('./tags.js')
 
 const archiveModel = {}
@@ -18,7 +17,6 @@ archiveModel.getPage = function(pageNumber) {
 
   // - 按照年月归类文章
   const yearMonthObj = {}  // 存放年月对应的文章数据
-
   for(const item of articlesDB) {
     // 获取键名，格式：2022-2
     const date = new Date(item.time)
@@ -39,11 +37,13 @@ archiveModel.getPage = function(pageNumber) {
     delete item.intro
 
     // 拿到 key 对应的数组，并 push 文章
+    // （这里是在直接对 yearMonthObj 操作，其实不便于理解，以后开发注意。 2022-4-23留）
     const articlesArr = yearMonthObj[key]
     articlesArr.push(item)
   }
 
   // - 按年月时间倒序排序，并push给yearMonthArr数组
+  // （这个yearMonthArr的格式见接口文档）
   const yearMonthArr = []
   let yearMonthKeyArr = Object.keys(yearMonthObj)
   yearMonthKeyArr = yearMonthKeyArr.sort().reverse()
@@ -53,7 +53,6 @@ archiveModel.getPage = function(pageNumber) {
     }
     yearMonthArr.push(o)
   }
-
   // - 最后截取对应页码数据，并返回
   // 计算截取范围
   const size = 6 // 6项/页
@@ -61,6 +60,8 @@ archiveModel.getPage = function(pageNumber) {
   const end = start + size
   data.data = yearMonthArr.slice(start, end)
   data.message = '获取归档文章列表成功'
+  // 计算总共多少页
+  data.pageNumber = Math.ceil(yearMonthArr.length / size)
   return data
 }
 

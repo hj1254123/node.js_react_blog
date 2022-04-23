@@ -47,7 +47,12 @@ router.get('/page/:id', function(req, res) {
   try {
     const pageN = parseInt(req.params.id)
     const data = articleModel.getPage(pageN)
-    res.json(data)
+    
+    if(data.data.length <= 0) { // 没有数据返回404
+      res.status(404).send('该页没有数据')
+    } else {
+      res.json(data)
+    }
   } catch (error) {
     res.status(500).json('获取某页文章列表出错，注意处理')
   }

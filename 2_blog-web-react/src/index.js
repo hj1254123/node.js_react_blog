@@ -8,10 +8,10 @@ import './assets/iconfont/iconfont.css' //图标
 import App from './App';
 
 ReactDOM.render(
-  <AppProviders>
-    <BrowserRouter>
+  <BrowserRouter>
+    <AppProviders>
       <App />
-    </BrowserRouter>
-  </AppProviders>,
+    </AppProviders>
+  </BrowserRouter>,
   document.getElementById('root')
 );

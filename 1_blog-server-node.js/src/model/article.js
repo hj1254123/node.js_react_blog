@@ -192,9 +192,13 @@ articleModel.getPage = function(pageN) {
   const size = 10 // 10篇/页
   const start = (pageN - 1) * size
   const end = start + size
-  // 切割下需要的文章
+  // 获取文章数据
   const articlesDB = getArticlesData().reverse() //倒序
+  // 总共多少页
+  const pageNumber = Math.ceil(articlesDB.length / size)
+  // 切割下需要的文章
   const cutArticleArr = articlesDB.slice(start, end)
+
   // 给每一篇文章添加对应的标签数据
   for(const item of cutArticleArr) {
     // 根据文章id拿到所有标签id
@@ -204,6 +208,7 @@ articleModel.getPage = function(pageN) {
   }
   // 返回
   data.message = '获取文章列表成功'
+  data.pageNumber = pageNumber
   data.data = cutArticleArr
   return data
 }
