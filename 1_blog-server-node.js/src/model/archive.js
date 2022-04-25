@@ -61,7 +61,7 @@ archiveModel.getPage = function(pageNumber) {
   data.data = yearMonthArr.slice(start, end)
   data.message = '获取归档文章列表成功'
   // 计算总共多少页
-  data.pageNumber = Math.ceil(yearMonthArr.length / size)
+  data.total = Math.ceil(yearMonthArr.length / size)
   return data
 }
 

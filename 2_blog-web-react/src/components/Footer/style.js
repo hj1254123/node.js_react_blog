@@ -5,6 +5,7 @@ export const FooterWrapper = styled.footer`
   height: 126px;
   color: rgba(255,255, 255, 0.6);
   font-size: 14px;
+  z-index: 10;
   a {
     border-bottom: 1px dotted rgba(255,255,255,0.5);
     color: inherit;

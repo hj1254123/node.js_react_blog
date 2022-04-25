@@ -195,7 +195,7 @@ articleModel.getPage = function(pageN) {
   // 获取文章数据
   const articlesDB = getArticlesData().reverse() //倒序
   // 总共多少页
-  const pageNumber = Math.ceil(articlesDB.length / size)
+  const total = Math.ceil(articlesDB.length / size)
   // 切割下需要的文章
   const cutArticleArr = articlesDB.slice(start, end)
 
@@ -208,7 +208,7 @@ articleModel.getPage = function(pageN) {
   }
   // 返回
   data.message = '获取文章列表成功'
-  data.pageNumber = pageNumber
+  data.total = total
   data.data = cutArticleArr
   return data
 }
