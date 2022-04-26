@@ -5,8 +5,9 @@ import { formatDate } from '../../../../utils/my-utils'
 import { ArticleListWrapper } from './style'
 
 const ArticleList = memo((props) => {
+
   const { data } = props
-  
+
   function getTagsJSX(tags) {
     return tags.map(item => {
       return <li key={item.id}>

@@ -1,11 +1,9 @@
 import React, { memo } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { PageNavWrapper } from './style'
 
 const PageNav = memo((props) => {
   // currentIndex:由父组件从url获取。total：总共页数。
-  let { currentIndex, total } = props
-  const navigate = useNavigate()
+  let { total, currentIndex, changeIndex } = props
 
   // 计算list，根据这两个参数返回不同格式
   function computeListJSX(currentIndex, total) {
@@ -48,7 +46,7 @@ const PageNav = memo((props) => {
       active = (currentIndex === item) ? 'active' : ''
       jsxArr.push(
         <li
-          onClick={() => { goPage(item) }}
+          onClick={() => { changeIndex(item) }}
           className={active}
           key={index}
           style={{ pointerEvents: item === '...' ? 'none' : '' }}
@@ -59,7 +57,7 @@ const PageNav = memo((props) => {
     if(currentIndex > 1) {
       jsxArr.unshift(
         <li
-          onClick={() => { goPage(currentIndex - 1) }}
+          onClick={() => { changeIndex(currentIndex - 1) }}
           key='-1'
         >上一页</li>
       )
@@ -67,17 +65,12 @@ const PageNav = memo((props) => {
     if(currentIndex < total) {
       jsxArr.push(
         <li
-        onClick={() => { goPage(currentIndex + 1) }}
-        key='+1'
-      >下一页</li>
+          onClick={() => { changeIndex(currentIndex + 1) }}
+          key='+1'
+        >下一页</li>
       )
     }
     return jsxArr
-  }
-  // 前往页码
-  function goPage(index) {
-    document.documentElement.scrollTop = 0
-    navigate(`/article/page/${index}`)
   }
 
   return (

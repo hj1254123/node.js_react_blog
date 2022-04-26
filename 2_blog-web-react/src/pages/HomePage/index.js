@@ -1,6 +1,7 @@
-import React, { memo } from 'react'
+import React, { memo, useCallback, useEffect } from 'react'
 import useSWR from 'swr'
-import { CSSTransition } from 'react-transition-group'
+import { useNavigate } from 'react-router-dom'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import hjRequest from '../../services/request'
 import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
@@ -19,24 +20,37 @@ const HomePage = memo(() => {
     return hjRequest.get(url).then(d => d)
   })
 
+  const navigate = useNavigate()
+  const changeIndex = useCallback((index) => {
+    navigate(`/article/page/${index}`)
+    document.documentElement.scrollTop = 0
+  }, [])
 
   return (
     <HomePageWrapper>
       <Header />
       {
-        !data ? '' : <CSSTransition
-          in={true}
-          timeout={500}
-          classNames='context'
-          appear
-        >
-          <Main>
-            <ArticleList data={data.data} />
-            <PageNav currentIndex={currentIndex} total={data.total} />
-          </Main>
-        </CSSTransition>
+        !data ? '' : (
+          <SwitchTransition mode='out-in'>
+            <CSSTransition
+              timeout={500}
+              classNames='context'
+              key={currentIndex}
+              appear
+            >
+              <Main>
+                <ArticleList data={data.data} />
+                <PageNav
+                  total={data.total}
+                  currentIndex={currentIndex}
+                  changeIndex={changeIndex}
+                />
+              </Main>
+            </CSSTransition>
+          </SwitchTransition>
+        )
       }
-    </HomePageWrapper>
+    </HomePageWrapper >
   )
 })
 
