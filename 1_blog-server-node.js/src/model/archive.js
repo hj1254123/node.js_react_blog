@@ -49,7 +49,8 @@ archiveModel.getPage = function(pageNumber) {
   yearMonthKeyArr = yearMonthKeyArr.sort().reverse()
   for(const key of yearMonthKeyArr) {
     let o = {
-      [key]: yearMonthObj[key]
+      title: key,
+      articlesData: yearMonthObj[key]
     }
     yearMonthArr.push(o)
   }

@@ -1,29 +1,80 @@
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
 
 import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
+import { useNavigate, useParams } from 'react-router-dom'
+import useSWR from 'swr'
 
-import { CSSTransition } from 'react-transition-group'
-import { Header } from '../../components'
+import hjRequest from '../../services/request'
+
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { ArticleCard, Header, PageNav } from '../../components'
 import { ArchiveWrapper, Main } from './style'
 
 const ArchivePage = memo(() => {
   useSetHeaderTitle('Archive')
+  // 从url获取page下标
+  const { id } = useParams()
+  const currentIndex = parseInt(id) || 1
+
+  const { data } = useSWR(`/archive/${currentIndex}`, (url) => {
+    return hjRequest.get(url).then(d => d)
+  })
+
+  const navigate = useNavigate()
+  // 根据page下标跳转页面，传给pageNav调用的回调函数
+  const changeIndex = useCallback((index) => {
+    navigate(`/archive/${index}`)
+    document.documentElement.scrollTop = 0
+  }, [navigate])
+
+  function mouthTitleHandle(title) {
+    const monthChineseArr = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"]
+    const arr = title.split('-')
+    const y = arr[0]
+    const m = arr[1]
+    return monthChineseArr[m] + '月,' + y
+  }
+
   return (
     <ArchiveWrapper>
       <Header />
-      <CSSTransition
-        in={true}
-        timeout={500}
-        classNames='context'
-        appear
-      >
-        <Main>
-          archivepage
-        </Main>
-      </CSSTransition>
-
+      {
+        data && (
+          <SwitchTransition mode='out-in'>
+            <CSSTransition
+              timeout={400}
+              classNames='context'
+              key={currentIndex}
+              appear
+            >
+              <Main>
+                {data.data.map(item => { // 月份列表
+                  return <div className='month-list-box' key={item.title}>
+                    <h3>{mouthTitleHandle(item.title)}</h3>
+                    <div className="article-list">
+                      <ul>
+                        {
+                          item.articlesData.map(item2 => { // 文章卡片列表
+                            return <li key={item2.id} className='article-card'>
+                              <ArticleCard data={item2} />
+                            </li>
+                          })
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                })}
+                <PageNav
+                  total={data.total}
+                  currentIndex={currentIndex}
+                  changeIndex={changeIndex}
+                />
+              </Main>
+            </CSSTransition>
+          </SwitchTransition>
+        )
+      }
     </ArchiveWrapper>
-
   )
 })
 

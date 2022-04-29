@@ -72,12 +72,12 @@ html::-webkit-scrollbar-track {
 
 /* 文章内容初始渲染动画 */
 .context-enter, .context-appear {
-  transform: translateY(5%);
+  transform: translateY(50px);
   opacity: 0;
 }
 
 .context-enter-active, .context-appear-active {
-  transition: all .5s;
+  transition: all .4s ease-in-out;
   transform: translate(0);
   opacity: 1;
 }
@@ -85,13 +85,13 @@ html::-webkit-scrollbar-track {
 /* 离开动画 */
 
 .context-exit-active {
-  transition: all .5s;
-  transform: translateY(5%);
+  transition: all .4s ease-in-out;
+  transform: translateY(50px);
   opacity: 0;
 }
 
 .context-exit-done {
-  transform: translateY(5%);
+  transform: translateY(50px);
   opacity: 0;
 }
 

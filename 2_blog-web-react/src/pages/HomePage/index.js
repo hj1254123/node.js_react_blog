@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect } from 'react'
+import React, { memo, useCallback } from 'react'
 import useSWR from 'swr'
 import { useNavigate } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom'
 
 const HomePage = memo(() => {
   useSetHeaderTitle("HouJi's Blog")
+  // 从url获取page下标
   const { id } = useParams()
   const currentIndex = parseInt(id) || 1
 
@@ -21,19 +22,20 @@ const HomePage = memo(() => {
   })
 
   const navigate = useNavigate()
+  // 根据page下标跳转页面，传给pageNav调用的回调函数
   const changeIndex = useCallback((index) => {
     navigate(`/article/page/${index}`)
     document.documentElement.scrollTop = 0
-  }, [])
+  }, [navigate])
 
   return (
     <HomePageWrapper>
       <Header />
       {
-        !data ? '' : (
+        data && (
           <SwitchTransition mode='out-in'>
             <CSSTransition
-              timeout={500}
+              timeout={400}
               classNames='context'
               key={currentIndex}
               appear

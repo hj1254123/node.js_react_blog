@@ -11,7 +11,7 @@ const ArticleList = memo((props) => {
   function getTagsJSX(tags) {
     return tags.map(item => {
       return <li key={item.id}>
-        <Link to='/tags/page/JavaScript' key={item.id}>{item.tagName}</Link>
+        <Link to={`/tags/page/${item.tagName}`} key={item.id}>{item.tagName}</Link>
       </li>
     })
   }
@@ -24,13 +24,13 @@ const ArticleList = memo((props) => {
               <li className='item' key={item.id}>
                 <time className='date'>{formatDate(item.time)}</time>
                 <h3>
-                  <Link to='/article/1'>{item.title}</Link>
+                  <Link to={`/article/${item.id}`}>{item.title}</Link>
                 </h3>
                 <div className='introduction'>
                   <p>
                     {item.intro}
                   </p>
-                  <Link to='/article/1'>阅读全文...</Link>
+                  <Link to={`/article/${item.id}`}>阅读全文...</Link>
                 </div>
                 <div className="tags">
                   <ul>
