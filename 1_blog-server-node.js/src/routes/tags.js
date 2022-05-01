@@ -57,6 +57,7 @@ router.put('/', function(req, res) {
 })
 
 // 标签页 - 获取所有标签和标签对应文章
+// TODO: 该接口时间复杂度太高了，待优化。
 router.get('/page', function(req, res) {
   try {
     // - 拿到标签数据
@@ -76,6 +77,10 @@ router.get('/page', function(req, res) {
       const articleIDArr = tagAndArticleModel.getArticleIDArrBasedOnTagID(tagID)
       // 根据文章id数组拿到对应数据arr
       const articleArr = articleModel.getArticleArrBasedOnTheArticleIDArr(articleIDArr)
+      // 给文章数组添加标签数组
+      for(const item of articleArr) {
+        item.tags = tagsModel.getTagsArrBasedOnTheArticleID(item.id)
+      }
       // 拿到标签名称
       const tag = tagsArr.find(item => {
         return item.id === tagID

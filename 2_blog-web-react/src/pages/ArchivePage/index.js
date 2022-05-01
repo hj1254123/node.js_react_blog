@@ -7,7 +7,7 @@ import useSWR from 'swr'
 import hjRequest from '../../services/request'
 
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { ArticleCard, Header, PageNav } from '../../components'
+import { ArticleCardList, Header, PageNav } from '../../components'
 import { ArchiveWrapper, Main } from './style'
 
 const ArchivePage = memo(() => {
@@ -19,14 +19,15 @@ const ArchivePage = memo(() => {
   const { data } = useSWR(`/archive/${currentIndex}`, (url) => {
     return hjRequest.get(url).then(d => d)
   })
-
   const navigate = useNavigate()
-  // 根据page下标跳转页面，传给pageNav调用的回调函数
+
+  // 根据page下标跳转页面（传给pageNav调用的回调函数）
   const changeIndex = useCallback((index) => {
     navigate(`/archive/${index}`)
     document.documentElement.scrollTop = 0
   }, [navigate])
 
+  // 标题格式处理为：二月,2022
   function mouthTitleHandle(title) {
     const monthChineseArr = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"]
     const arr = title.split('-')
@@ -48,22 +49,16 @@ const ArchivePage = memo(() => {
               appear
             >
               <Main>
-                {data.data.map(item => { // 月份列表
-                  return <div className='month-list-box' key={item.title}>
-                    <h3>{mouthTitleHandle(item.title)}</h3>
-                    <div className="article-list">
-                      <ul>
-                        {
-                          item.articlesData.map(item2 => { // 文章卡片列表
-                            return <li key={item2.id} className='article-card'>
-                              <ArticleCard data={item2} />
-                            </li>
-                          })
-                        }
-                      </ul>
-                    </div>
-                  </div>
-                })}
+                {
+                  data.data.map(item => { // 月份列表
+                    const title = mouthTitleHandle(item.title) // 标题格式处理
+                    return <ArticleCardList
+                      key={item.title}
+                      articlesData={item.articlesData}
+                      title={title}
+                    />
+                  })
+                }
                 <PageNav
                   total={data.total}
                   currentIndex={currentIndex}
