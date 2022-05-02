@@ -5,10 +5,10 @@ import { useTitleContext } from '../../context/Title-context'
 
 import { HeaderWrapper } from './style'
 
-const Header = memo(() => {
+const Header = memo(({ children }) => {
   const { title } = useTitleContext()
   const isShowSpan = (title === "HouJi's Blog")
-
+  console.log()
   return (
     <HeaderWrapper isShowSpan={isShowSpan}>
       <CSSTransition
@@ -22,6 +22,10 @@ const Header = memo(() => {
           <span>练习用，暂不运营 ;-)</span>
         </div>
       </CSSTransition>
+      {/* 标签页会用到的导航栏 */}
+      {children && <div className="solt">
+        {children}
+      </div>}
     </HeaderWrapper>
   )
 })

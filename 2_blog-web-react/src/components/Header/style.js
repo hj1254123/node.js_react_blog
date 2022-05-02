@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const HeaderWrapper = styled.header`
+  position: relative;
   width: 100%;
   padding: 104px 16px 48px 16px;
   background-color: #3f51b5;
@@ -33,7 +34,7 @@ export const HeaderWrapper = styled.header`
   @media screen and (max-width: 760px) {
     margin: 0;
     min-height: auto;
-    padding: 72px 16px 20px;
+    padding: 72px 16px 0;
     h1 {
       font-size: 24px !important;
       line-height: 30px !important;
@@ -56,4 +57,11 @@ export const HeaderWrapper = styled.header`
     transform: translate(0, 0) scale(1);
   }
 
+  .solt {
+    width: 100%;
+    height: 48px;
+    position: relative;
+    margin-bottom: -48px;
+  }
+ 
 `
