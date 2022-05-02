@@ -1,29 +1,47 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { useParams } from 'react-router-dom'
+import useSWRImmutable from 'swr'
 
-import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
+import hjRequest from '../../services/request'
+import { useTitleContext } from '../../context/Title-context'
 
 import { Header } from '../../components'
 import { ArticleWrapper, Main } from './style'
 
 const ArticlePage = memo(() => {
-  useSetHeaderTitle('Article')
+  useEffect(() => {
+    document.documentElement.scrollTop = 0
+  }, [])
+
+  const { setTitle } = useTitleContext()
+
   const { id } = useParams()
-  console.log('id', id)
+  const { data } = useSWRImmutable(`/article/${id}`, (url) => {
+    return hjRequest.get(url).then(d => d)
+  }, {
+    onSuccess: (data) => {
+      setTitle(data.data.title)
+    }
+  })
+
   return (
     <ArticleWrapper>
-      <Header />
-      <CSSTransition
-        in={true}
-        timeout={500}
-        classNames='context'
-        appear
-      >
-        <Main>
-          ArticlePage
-        </Main>
-      </CSSTransition>
+      {
+        data && <>
+          <Header />
+          <CSSTransition
+            in={true}
+            timeout={500}
+            classNames='context'
+            appear
+          >
+            <Main>
+              
+            </Main>
+          </CSSTransition>
+        </>
+      }
     </ArticleWrapper>
 
 
