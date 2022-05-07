@@ -37,7 +37,8 @@ articleModel.addArticle = function(articleData) {
   }
 
   // 2.文章数据安全处理
-  let { title, intro, content, tags } = addArticleXssFilter(articleData)
+  // let { title, intro, content, tags } = addArticleXssFilter(articleData)
+  let { title, intro, content, tags } = articleData
 
   // 3.保存新文章
   let newArticleData = saveNewArticle(title, intro, content)
@@ -125,7 +126,9 @@ articleModel.putArticle = function(articleData) {
   }
 
   // 2.安全过滤
-  const { articleID, title, intro, content } = putArticleXssFilter(articleData)
+  // const { articleID, title, intro, content } = putArticleXssFilter(articleData)
+  const { articleID, title, intro, content } = articleData
+
   // 3.检查是否存在该文章
   const articlesDB = getArticlesData()
   const index = articlesDB.findIndex((item) => {
@@ -178,6 +181,7 @@ articleModel.getArticle = function(articleID) {
   data.data.tags = tags
   data.message = '成功'
   // 返回
+
   return data
 }
 

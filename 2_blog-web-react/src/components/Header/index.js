@@ -5,7 +5,7 @@ import { useTitleContext } from '../../context/Title-context'
 
 import { HeaderWrapper } from './style'
 
-const Header = memo(({ children }) => {
+const Header = memo(({ children, isShowTitle = true }) => {
   const { title } = useTitleContext()
   const isShowSpan = (title === "HouJi's Blog")
   console.log()
@@ -18,7 +18,9 @@ const Header = memo(({ children }) => {
         appear
       >
         <div className="content">
-          <h1>{title}</h1>
+          <h1 style={{visibility: isShowTitle ? '' : 'hidden'}}>
+            {title}
+          </h1>
           <span>练习用，暂不运营 ;-)</span>
         </div>
       </CSSTransition>

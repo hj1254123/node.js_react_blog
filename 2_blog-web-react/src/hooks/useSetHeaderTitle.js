@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useTitleContext } from "../context/Title-context";
 
-export function useSetHeaderTitle(title = '未设置标题') {
+export function useSetHeaderTitle(title = '') {
   const { setTitle } = useTitleContext()
   useEffect(() => {
     document.documentElement.scrollTop = 0
