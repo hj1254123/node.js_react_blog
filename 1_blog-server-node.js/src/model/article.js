@@ -36,8 +36,7 @@ articleModel.addArticle = function(articleData) {
     return data
   }
 
-  // 2.文章数据安全处理
-  // let { title, intro, content, tags } = addArticleXssFilter(articleData)
+  // 2.这里关于xss防御，交给前端处理更合适。
   let { title, intro, content, tags } = articleData
 
   // 3.保存新文章
@@ -125,8 +124,7 @@ articleModel.putArticle = function(articleData) {
     return data
   }
 
-  // 2.安全过滤
-  // const { articleID, title, intro, content } = putArticleXssFilter(articleData)
+  // 2.这里关于xss防御，交给前端处理更合适。
   const { articleID, title, intro, content } = articleData
 
   // 3.检查是否存在该文章
@@ -314,7 +312,7 @@ function addArticleVerification(articleData) {
   let checkIntro = typeof intro !== 'string'
   let checkContent = !content || (typeof content !== 'string')
   // 长度控制
-  if(title.length > 50) {
+  if(title.length > 60) {
     checkTitle = true
   } else if(intro.length > 300) {
     checkIntro = true
@@ -350,19 +348,6 @@ function addArticleVerification(articleData) {
   return result
 }
 
-// 添加文章接口xss过滤
-function addArticleXssFilter(articleData) {
-  let data = {}
-  let { title, intro, content, tags } = articleData
-  data.title = xss(title)
-  data.intro = xss(intro)
-  data.content = xss(content)
-  data.tags = []
-  tags.forEach(item => {
-    data.tags.push(item)
-  })
-  return data
-}
 
 // 修改文章接口校验是否合法
 function putArticleVerification(articleData) {
@@ -379,7 +364,7 @@ function putArticleVerification(articleData) {
   let checkIntro = typeof intro !== 'string'
   let checkContent = !content || (typeof content !== 'string')
   // 长度控制
-  if(title.length > 50) {
+  if(title.length > 60) {
     checkTitle = true
   } else if(intro.length > 300) {
     checkIntro = true
@@ -403,15 +388,5 @@ function putArticleVerification(articleData) {
   return result
 }
 
-// 修改文章接口xss过滤
-function putArticleXssFilter(articleData) {
-  let data = {}
-  let { articleID, title, intro, content } = articleData
-  data.articleID = articleID
-  data.title = xss(title)
-  data.intro = xss(intro)
-  data.content = xss(content)
-  return data
-}
 
 module.exports = articleModel

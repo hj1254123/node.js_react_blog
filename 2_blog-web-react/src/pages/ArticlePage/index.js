@@ -34,7 +34,6 @@ const ArticlePage = memo(() => {
     }
   })
   console.log(data)
-
   return (
     <ArticleWrapper>
       {

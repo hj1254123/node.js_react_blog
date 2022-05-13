@@ -63,18 +63,13 @@ app.use('/tags', tagsRouter)
 app.use('/comment', commentRouter)
 app.use('/archive', archiveRouter)
 // 测试接口
-app.get('/test', function(req, res) {
-  setTimeout(() => {
-    const d = new Date()
-    res.status(200).send('成功' + d.getTime());
-  }, 2000);
+const xss = require('xss')
+app.post('/test', function(req, res) {
+  let cleanData = xss(req.body.data)
+  console.log('cleanData', cleanData)
+  res.status(200).send(cleanData);
 })
-app.get('/test2', function(req, res) {
-  setTimeout(() => {
-    const d = new Date()
-    res.status(200).send('成功2' + d.getTime());
-  }, 2000);
-})
+
 app.get('*', function(req, res) {
   res.status(404).send();
 })

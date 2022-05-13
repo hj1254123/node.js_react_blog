@@ -46,9 +46,9 @@ authModel.save = (usersData) => {
 }
 
 authModel.cleanUserNameAndPassword = (userName, password) => {
-  // 校验用户名、密码的合法性
+  // TODO：用户名的非法字符过滤
   let cleanUserName = xss(userName)
-  let cleanPassword = xss(password)
+  let cleanPassword = password
   // 长度控制
   let checkUserName = 6 <= cleanUserName.length && cleanUserName.length < 16
   let checkPassword = 6 <= cleanPassword.length && cleanPassword.length < 16

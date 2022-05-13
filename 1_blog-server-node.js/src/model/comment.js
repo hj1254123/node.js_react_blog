@@ -202,7 +202,7 @@ function addCommentToArticleXssFilter(commentData) {
 
   commentData.userName = xss(userName)
   commentData.email = xss(email)
-  commentData.content = xss(content)
+  commentData.content = content //评论内容，交给前端过滤。
 
   return commentData
 }
