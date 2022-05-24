@@ -12,8 +12,9 @@ export const Main = styled.div`
     width: 100%;
     padding: 20px 16px
   }
-  .article-list-wrap {
-    background-color: lightblue;
+  @media screen and (max-width: 760px) {
+    width: 100%;
+    padding: 20px 0px
   }
 `
 

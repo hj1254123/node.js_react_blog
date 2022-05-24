@@ -8,6 +8,9 @@ export const ArticleCardListWrapper = styled.div`
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 13px;
+    @media screen and (max-width: 760px) {
+      padding-left: 15px;
+    }
   }
   .article-list {
     ul {
@@ -17,6 +20,10 @@ export const ArticleCardListWrapper = styled.div`
         width: 50%;
         padding-right: 20px;
         margin-bottom: 20px;
+        @media screen and (max-width: 760px) {
+          width: 100%;
+          padding-right: 0;
+        }
       }
     }
   }

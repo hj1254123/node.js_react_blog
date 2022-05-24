@@ -18,7 +18,7 @@ const TopHeader = memo(() => {
       const y = document.documentElement.scrollTop || document.body.scrollTop
       setIsScrollY80(y > 80)
     }
-    window.addEventListener('scroll', throttle(handler, 34))
+    window.addEventListener('scroll', throttle(handler, 17))
   }, [])
 
   const fixed = classnames({ 'fixed': isScrollY80 })

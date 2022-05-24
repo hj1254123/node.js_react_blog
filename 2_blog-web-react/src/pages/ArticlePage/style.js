@@ -7,6 +7,7 @@ export const ArticleWrapper = styled.div`
 `
 
 export const Main = styled.div`
+
   display: flex;
   width: 100%;
   margin: 0 auto;
@@ -48,6 +49,11 @@ export const Main = styled.div`
         visibility: visible;
       }
     }
+    /* 解决点击toc跳转位置被顶栏遮挡问题，顶栏高56px */
+    h2:target, h3:target {
+      padding-top: 56px;
+      margin-top: -48px; // 这里本该-56，但是由于margin重叠，上下差值为8px，所以为-48px
+    }
     code, a {
       color: #ff4081;
     }
@@ -59,12 +65,54 @@ export const Main = styled.div`
 
 export const TOC = styled.aside`
   width: 180px;
-  min-height: 100px;
+  margin-left: 60px;
+
   @media screen and (max-width: 1040px) {
     display: none;
   }
-  > ul {
-    position: fixed;
+  nav {
+    width: inherit;
+    position: sticky;
+    top: 80px;
+    h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #727272;
+      padding-bottom: 10px;
+      padding-left: 10px;
+    }
+    /* 目录列表 */
+    ul {
+      font-size: 14px;
+      li {
+      padding: 3px 0 3px 10px;
+      line-height: 24px;
+      }
+      li.active {
+        border-left: 2px solid #3f51b5;
+        background-color: rgba(0, 0, 0, 0.06);
+        a {
+          font-weight: 600;
+          color: #3f51b5;
+        }
+      }
+      /* 二级目录 */
+      ul {
+        margin-left: -10px;
+        li {
+          padding-left: 20px;
+        }
+      }
+
+    }
   }
+  nav.fixed {
+    position: fixed;
+    top: 60px;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+
+  
 `
 

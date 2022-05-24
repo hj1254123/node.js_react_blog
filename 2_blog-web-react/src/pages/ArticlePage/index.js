@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { useParams } from 'react-router-dom'
 import useSWRImmutable from 'swr'
@@ -8,10 +8,12 @@ import 'highlight.js/styles/github.css';
 
 import hjRequest from '../../services/request'
 import { useTitleContext } from '../../context/Title-context'
-import { formatDate } from '../../utils/my-utils';
+import { formatDate, throttle } from '../../utils/my-utils';
 
 import { Header } from '../../components'
 import { ArticleWrapper, Main, TOC } from './style'
+
+
 
 // 本项目用 highlight 会自动给代码块添加对应语言的 class，
 // 这里重写 code，取消markdown-to-jsx添加的无用class属性。
@@ -31,9 +33,21 @@ const ArticlePage = memo(() => {
       setTitle(data.data.title)
     }
   })
+
+  // 代码高亮
   useEffect(() => {
     hljs.highlightAll()
   }, [data])
+
+  // 根据滚动距离，调整样式
+  const [fixedTOC, setFixedTOC] = useState(false)
+  useEffect(() => {
+    function handler() {
+      const y = document.documentElement.scrollTop || document.body.scrollTop
+      setFixedTOC(y > 230)
+    }
+    window.addEventListener('scroll', throttle(handler, 34))
+  }, [])
 
   return (
     <ArticleWrapper>
@@ -63,18 +77,31 @@ const ArticlePage = memo(() => {
                 />
               </article>
               <TOC>
-                <ul>
-                  <li>1</li>
-                  <li>2
-                    <ul>
-                      <li>1</li>
-                      <li>2</li>
-                      <li>3</li>
-                      <li>4</li>
-                    </ul>
-                  </li>
-                  <li>3</li>
-                </ul>
+                <nav>
+                  <h4>TOC</h4>
+                  <ul>
+                    <li className='active'>
+                      <a href="#Hook 简介">Hook 简介</a>
+                    </li>
+                    <li>
+                      <a href="#使用规则">使用规则</a>
+                    </li>
+                    <li>
+                      <a href="#useState">useState</a>
+                      <ul>
+                        <li className='active'>
+                          <a href="#例1：管理多个状态">例1：管理多个状态</a>
+                        </li>
+                        <li>
+                          <a href="#例2：管理复杂状态">例2：管理复杂状态</a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#参考">参考</a>
+                    </li>
+                  </ul>
+                </nav>
               </TOC>
 
             </Main>

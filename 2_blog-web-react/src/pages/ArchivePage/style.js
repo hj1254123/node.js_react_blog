@@ -9,7 +9,11 @@ export const Main = styled.div`
   padding: 30px 0 40px;
   @media screen and (max-width: 1040px) {
     width: 100%;
-    padding: 20px 16px
+    padding: 20px 16px;
+  }
+  @media screen and (max-width: 760px) {
+    width: 100%;
+    padding: 20px 0;
   }
 `
 

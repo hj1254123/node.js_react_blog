@@ -4,7 +4,7 @@ export const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center; 
-  overflow: hidden;
+  /* overflow: hidden; */
   transition: all .4s cubic-bezier(.18, .81, .3, .89);
   .content-wrapper {
     width: 100%;
