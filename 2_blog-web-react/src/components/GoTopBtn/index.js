@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { goTop, throttle } from '../../utils/my-utils'
+import { goTop } from '../../utils/my-utils'
 
 export default function GoTopBtn() {
   const [isshow, setIsshow] = useState(false)
@@ -10,7 +10,10 @@ export default function GoTopBtn() {
       const y = document.documentElement.scrollTop || document.body.scrollTop
       setIsshow(y > 500)
     }
-    window.addEventListener('scroll', throttle(handler, 34))
+    window.addEventListener('scroll', handler)
+    return () => {
+      window.removeEventListener('scroll', handler)
+    }
   }, [])
   return (
     <GoTopBtnWrapper isshow={isshow}>

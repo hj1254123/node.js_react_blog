@@ -3,7 +3,6 @@ import classnames from 'classnames'
 
 import { useIsShowContext } from '../../context/IsShow-context'
 import { useTitleContext } from '../../context/Title-context'
-import { throttle } from '../../utils/my-utils'
 
 import { TopHeaderWrapper } from './style'
 
@@ -18,7 +17,10 @@ const TopHeader = memo(() => {
       const y = document.documentElement.scrollTop || document.body.scrollTop
       setIsScrollY80(y > 80)
     }
-    window.addEventListener('scroll', throttle(handler, 17))
+    window.addEventListener('scroll', handler)
+    return () => {
+      window.removeEventListener('scroll', handler)
+    }
   }, [])
 
   const fixed = classnames({ 'fixed': isScrollY80 })

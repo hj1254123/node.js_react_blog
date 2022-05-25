@@ -8,12 +8,10 @@ import 'highlight.js/styles/github.css';
 
 import hjRequest from '../../services/request'
 import { useTitleContext } from '../../context/Title-context'
-import { formatDate, throttle } from '../../utils/my-utils';
+import { formatDate } from '../../utils/my-utils';
 
 import { Header } from '../../components'
 import { ArticleWrapper, Main, TOC } from './style'
-
-
 
 // 本项目用 highlight 会自动给代码块添加对应语言的 class，
 // 这里重写 code，取消markdown-to-jsx添加的无用class属性。
@@ -41,12 +39,17 @@ const ArticlePage = memo(() => {
 
   // 根据滚动距离，调整样式
   const [fixedTOC, setFixedTOC] = useState(false)
+  const fixedTOCClass = fixedTOC ? 'fixed' : ''
   useEffect(() => {
     function handler() {
       const y = document.documentElement.scrollTop || document.body.scrollTop
-      setFixedTOC(y > 230)
+      let isFixedTOC = y >= 275
+      setFixedTOC(isFixedTOC)
     }
-    window.addEventListener('scroll', throttle(handler, 34))
+    window.addEventListener('scroll', handler)
+    return () => {
+      window.removeEventListener('scroll', handler)
+    }
   }, [])
 
   return (
@@ -77,7 +80,7 @@ const ArticlePage = memo(() => {
                 />
               </article>
               <TOC>
-                <nav>
+                <nav className={fixedTOCClass}>
                   <h4>TOC</h4>
                   <ul>
                     <li className='active'>
