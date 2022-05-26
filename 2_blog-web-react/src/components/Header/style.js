@@ -15,6 +15,9 @@ export const HeaderWrapper = styled.header`
       font-size: 44px;
       line-height: 48px;
       font-weight: 500;
+      white-space: nowrap;
+      text-overflow: ellipsis; 
+      overflow: hidden;
     }
     span {
       display: block;
