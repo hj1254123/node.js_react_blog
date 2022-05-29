@@ -1,9 +1,9 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import Markdown from 'markdown-to-jsx'; // markdown解析引擎
 import hljs from 'highlight.js'; // 语法高亮支持
 import 'highlight.js/styles/github.css';
 
-import { formatDate } from '../../../../utils/my-utils';
+import { formatDate, throttle } from '../../../../utils/my-utils';
 
 import { ArticleWrapper, TOC } from './style'
 
@@ -19,46 +19,79 @@ const Article = memo((props) => {
     hljs.highlightAll()
   }, [])
 
+  // toc 
   // 根据滚动距离，调整样式
+  //   - 是否 fixed toc
   const [fixedTOC, setFixedTOC] = useState(false)
   const fixedTOCClass = fixedTOC ? 'fixed' : ''
+  //   - 根据滚动位置，高亮对应导航栏
+  const articleRef = useRef()
+  const [activeTitleID, setActiveTitleID] = useState('')
 
-  // 根据滚动位置决定 fixed toc 与否
   useEffect(() => {
-    function handler() {
-      const y = document.documentElement.scrollTop || document.body.scrollTop
-      setFixedTOC(y >= 280)
+    // 包含文章h2、h3元素列表
+    const list = articleRef.current && articleRef.current.querySelectorAll('h2,h3')
+    // 设置需要被高亮的标题id
+    function activeTitleFn() {
+      if(list.length === 0) return // 为空跳过
+      for(const e of list) {
+        const { y } = e.getBoundingClientRect()
+        if(y >= 0) {
+          setActiveTitleID(e.id)
+          return
+        }
+      }
+      // 都为负数高亮最后一个
+      setActiveTitleID(list[list.length - 1].id)
     }
+
+    activeTitleFn() //初始化调用一次
+
+    // *主函数
+    const handler = throttle(function() {
+      const y = document.documentElement.scrollTop || document.body.scrollTop
+      setFixedTOC(y >= 275) //决定是否fixedTOC
+      activeTitleFn() //根据滚动位置，高亮对应标题
+    }, 85)
     window.addEventListener('scroll', handler)
     return () => {
       window.removeEventListener('scroll', handler)
     }
   }, [])
 
-  function renderTOC(tocData) {
+  function renderTOC(tocData, activeTitleID) {
     return <ul>
       {
         tocData.map(item => {
+          // 是否高亮h2对应的导航栏
+          const activeH2 = item.props.id === activeTitleID ? 'active' : ''
           return <li key={item.props.key}>
-            <a href={'#' + item.props.id}>{item.content}</a>
+            <a href={'#' + item.props.id} className={activeH2}>{item.content}</a>
             {
-              item.children.map(item2 => {
-                return <ul>
-                  <li key={item2.props.key}>
-                    <a href={'#' + item2.props.id}>{item2.content}</a>
-                  </li>
+              // 渲染二级目录
+              item.children.length !== 0 && (
+                <ul>
+                  {
+                    item.children.map(item2 => {
+                      // 是否高亮h3对应的导航栏
+                      const activeH3 = item2.props.id === activeTitleID ? 'active' : ''
+                      return <li key={item2.props.id}>
+                        <a href={'#' + item2.props.id} className={activeH3}>{item2.content}</a>
+                      </li>
+                    })
+                  }
                 </ul>
-              })
+              )
             }
           </li>
         })
       }
-    </ul>
+    </ul >
   }
 
   return (
     <ArticleWrapper>
-      <article className='markdown-body'>
+      <article className='markdown-body' ref={articleRef}>
         <h1>{articleData.title}</h1>
         <time>{formatDate(articleData.time)}</time>
         <Markdown
@@ -76,7 +109,7 @@ const Article = memo((props) => {
       <TOC>
         <nav className={fixedTOCClass}>
           <h4>TOC</h4>
-          {renderTOC(tocData)}
+          {renderTOC(tocData, activeTitleID)}
         </nav>
       </TOC>
     </ArticleWrapper>

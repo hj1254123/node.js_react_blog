@@ -89,22 +89,40 @@ export const TOC = styled.aside`
     ul {
       font-size: 14px;
       li {
-      padding: 3px 0 3px 10px;
-      line-height: 24px;
-      }
-      li.active {
-        border-left: 2px solid #3f51b5;
-        background-color: rgba(0, 0, 0, 0.06);
+        padding: 3px 0;
+        line-height: 24px;
         a {
+          position: relative;
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+          padding-left: 10px;
+        }
+        a::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-left: 3px solid #3f51b5;
+          background-color: rgba(0, 0, 0, 0.06);
           font-weight: 600;
           color: #3f51b5;
+          visibility: hidden;
+        }
+        a.active::after {
+          visibility: visible;
         }
       }
+
       /* 二级目录 */
       ul {
-        margin-left: -10px;
         li {
-          padding-left: 20px;
+          padding-left: 10px;
+          a::after {
+            margin-left: -10px;
+          }
         }
       }
 
