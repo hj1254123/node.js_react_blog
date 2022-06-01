@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useMedia } from 'react-use'
-import { MaxWidth1240px } from '../common/constant'
+import { LargeScreenWidth } from '../common/constant'
 
 /**
  * 自定义hook，实现响应式布局。
@@ -9,7 +9,7 @@ import { MaxWidth1240px } from '../common/constant'
  */
 export default function useResponsiveLayout() {
   // 媒体查询，控制大屏与中小屏的排版逻辑
-  const isMaxWidth1240px = useMedia(MaxWidth1240px)
+  const isLargeScreenWidth = useMedia(LargeScreenWidth)
   // 控制页面整体是否移动
   const [isShow, setIsShow] = useState(true)
 
@@ -21,14 +21,14 @@ export default function useResponsiveLayout() {
   // 窗口尺寸变化，自动切换大/中小屏
   useEffect(() => {
     // 大屏
-    if(!isMaxWidth1240px) {
+    if(!isLargeScreenWidth) {
       setIsShow(true)
     }
     // 中小屏
-    if(isMaxWidth1240px) {
+    if(isLargeScreenWidth) {
       setIsShow(false)
     }
-  }, [isMaxWidth1240px])
+  }, [isLargeScreenWidth])
 
   return {
     isShow,

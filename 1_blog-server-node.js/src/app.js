@@ -17,6 +17,7 @@ const port = 3001
 
 // 允许跨域
 app.use((req, res, next) => {
+  // res.header('Access-Control-Allow-Origin', 'http://192.168.3.42:3000')
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
   res.header('Access-Control-Allow-Headers', 'Authorization,X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method')
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')

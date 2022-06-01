@@ -10,8 +10,10 @@ export const ArticleWrapper = styled.div`
     padding: 15px;
   }
   @media screen and (max-width: 760px) {
-    padding: 15px 0;
+    padding: 0;
+   
   }
+
   /* 文章内容 */
   .markdown-body {
     flex: 1;
@@ -21,12 +23,11 @@ export const ArticleWrapper = styled.div`
     border-radius: 4px;
     min-height: 300px;
     box-shadow: 0 10px 30px rgb(0 0 0 / 20%);
-    @media screen and (max-width: 1040px) {
-      width: 100%;
-    }
+
     h1 {
       border-bottom: none;
     }
+
     time {
       display: block;
       margin-top: 8px;
@@ -61,6 +62,25 @@ export const ArticleWrapper = styled.div`
       padding-top: 56px;
       margin-top: -48px; // 这里本该-56，但是由于margin重叠，上下差值为8px，所以为-48px
     }
+    /* 中小屏适配 */
+    @media screen and (max-width: 1040px) {
+      width: 100%;
+    }
+    
+    @media screen and (max-width: 760px) {
+      margin-top: 0;
+      padding: 16px;
+      h1 {
+        display: none;
+      }
+      time {
+        margin-top: -40px;
+        padding: 20px 12px;
+        background: #fff;
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 16%);
+        border-radius: 2px
+      }
+    }
   }
 `
 
@@ -84,6 +104,7 @@ export const TOC = styled.aside`
       color: #727272;
       padding-bottom: 10px;
       padding-left: 10px;
+
     }
     /* 目录列表 */
     ul {

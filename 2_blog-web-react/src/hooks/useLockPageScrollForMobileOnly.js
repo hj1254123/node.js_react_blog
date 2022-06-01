@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from "react";
 import { useMedia } from 'react-use'
 
-import { MaxWidth1240px } from '../common/constant'
+import { LargeScreenWidth } from '../common/constant'
 
 export default function useLockPageScrollForMobileOnly(lock) {
-  const isMaxWidth1240px = useMedia(MaxWidth1240px)
+  const isLargeScreenWidth = useMedia(LargeScreenWidth)
 
   const fn = useCallback(e => {
     e.preventDefault()
@@ -13,7 +13,7 @@ export default function useLockPageScrollForMobileOnly(lock) {
   useEffect(() => {
     if(lock) {
       // 大屏特殊处理
-      if(!isMaxWidth1240px) {
+      if(!isLargeScreenWidth) {
         document.body.removeEventListener('touchmove', fn)
         return
       }
@@ -24,5 +24,5 @@ export default function useLockPageScrollForMobileOnly(lock) {
       document.body.removeEventListener('touchmove', fn);
     }
 
-  }, [lock, isMaxWidth1240px])
+  }, [lock, isLargeScreenWidth])
 }

@@ -1,8 +1,10 @@
-// 大屏与小屏的界线
-// - 小屏侧边栏隐藏、布局切换、出现遮罩禁止滚动页面
-// - 大屏反之
-const MaxWidth1240px = '(max-width: 1240px)' 
+// 大屏、中屏、小屏的界线
+const LargeScreenWidth = '(max-width: 1240px)' 
+const MediumScreenWidth = '(max-width: 1040px)' 
+const SmallScreenWidth = '(max-width: 760px)' 
 
 export {
-  MaxWidth1240px
+  LargeScreenWidth,
+  MediumScreenWidth,
+  SmallScreenWidth
 }

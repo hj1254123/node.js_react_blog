@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
 
-import { MaxWidth1240px } from '../../common/constant'
+import { LargeScreenWidth } from '../../common/constant'
 import { useIsShowContext } from '../../context/IsShow-context'
 import avatarImg from '../../assets/img/avatar.jpg'
 
@@ -14,9 +14,9 @@ import {
 
 const Sidebar = memo(() => {
   const { isShow, toggleIsShow } = useIsShowContext()
-  const isMaxWidth1240px = useMedia(MaxWidth1240px)
+  const isLargeScreenWidth = useMedia(LargeScreenWidth)
   function closeSidebarOnlyMobile() { //仅移动端点击链接关闭侧边栏
-    if(isMaxWidth1240px) {
+    if(isLargeScreenWidth) {
       toggleIsShow()
     }
   }

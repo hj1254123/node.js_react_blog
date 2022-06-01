@@ -6,6 +6,9 @@ import { compiler } from 'markdown-to-jsx'; // markdown解析引擎
 
 import hjRequest from '../../services/request'
 import { useTitleContext } from '../../context/Title-context'
+import { useMedia } from 'react-use';
+
+import { SmallScreenWidth } from '../../common/constant';
 
 import { Header } from '../../components'
 import { ArticleWrapper } from './style'
@@ -16,7 +19,8 @@ const ArticlePage = memo(() => {
   useEffect(() => {
     document.documentElement.scrollTop = 0
   }, [])
-
+  // 小屏显示headerTitle，中大屏反之。
+  const isShowHeaderTitle = useMedia(SmallScreenWidth)
   // 存储 h2、h3 元素信息，用于 toc 渲染
   const [tocData, setTocData] = useState([])
 
@@ -45,13 +49,11 @@ const ArticlePage = memo(() => {
     })
     return headings
   }
-  // console.log(data)
-  console.log(tocData)
   return (
     <ArticleWrapper>
       {
         data && <>
-          <Header isShowTitle={false} />
+          <Header isShowTitle={isShowHeaderTitle} />
           <CSSTransition
             in={true}
             timeout={500}
