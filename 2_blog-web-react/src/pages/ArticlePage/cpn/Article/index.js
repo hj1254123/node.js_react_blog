@@ -5,7 +5,8 @@ import 'highlight.js/styles/github.css';
 
 import { formatDate, throttle } from '../../../../utils/my-utils';
 
-import { ArticleWrapper, TOC } from './style'
+import { ArticleWrapper, TOC, Tag } from './style'
+import { Link } from 'react-router-dom';
 
 // 本项目用 highlight 会自动给代码块添加对应语言的 class，
 // 这里重写 code，取消markdown-to-jsx添加的无用class属性。
@@ -89,6 +90,13 @@ const Article = memo((props) => {
     </ul >
   }
 
+  function renderTag(tags) {
+    return tags.map(item => {
+      return <li key={item.id}>
+        <Link to={'/tags/page/' + item.tagName} key={item.id}>{item.tagName}</Link>
+      </li>
+    })
+  }
   return (
     <ArticleWrapper>
       <article className='markdown-body' ref={articleRef}>
@@ -105,6 +113,11 @@ const Article = memo((props) => {
             }
           }}
         />
+        <Tag>
+          <ul>
+            {renderTag(articleData.tags)}
+          </ul>
+        </Tag>
       </article>
       <TOC>
         <nav className={fixedTOCClass}>

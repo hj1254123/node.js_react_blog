@@ -3,7 +3,7 @@ import ArticleCard from '../ArticleCard'
 import { ArticleCardListWrapper } from './style'
 
 const ArticleCardList = memo((props) => {
-  const { title, articlesData } = props
+  const { title, articlesData = [] } = props
 
   return (
     <ArticleCardListWrapper>

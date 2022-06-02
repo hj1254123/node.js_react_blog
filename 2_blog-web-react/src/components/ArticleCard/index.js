@@ -5,10 +5,10 @@ import { ArticleListWrapper } from './style'
 
 const ArticleCard = memo((props) => {
   const { data } = props
-  function getTagsJSX(tags) {
+  function renderTag(tags) {
     return tags.map(item => {
       return <li key={item.id}>
-        <Link to='/tags/page/JavaScript' key={item.id}>{item.tagName}</Link>
+        <Link to={'/tags/page/' + item.tagName} key={item.id}>{item.tagName}</Link>
       </li>
     })
   }
@@ -22,7 +22,7 @@ const ArticleCard = memo((props) => {
 
         <div className="tags">
           <ul>
-            {getTagsJSX(data.tags)}
+            {renderTag(data.tags)}
           </ul>
         </div>
       </div>

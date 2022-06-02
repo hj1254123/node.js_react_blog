@@ -34,6 +34,7 @@ const ArticlePage = memo(() => {
       setTocData(buildToc(data))
     }
   })
+  console.log(data)
 
   function buildToc(data) {
     const headings = []

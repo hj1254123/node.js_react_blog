@@ -45,9 +45,26 @@ export const TopHeaderWrapper = styled.header`
       transform: ${props => props.isShow ? '' : 'translateX(-120px)'};
     }
   }
-  
 
   &.fixed {
     box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+  }
+
+  /* 中小屏适配 */
+  @media screen and (max-width: 1240px) {
+    .top-button {
+      width: 56px;
+      button {
+        position: static;
+      }
+    }
+    .top-title {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      span {
+        display: inline;
+      }
+    }
   }
 `
