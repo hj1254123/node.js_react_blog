@@ -37,6 +37,7 @@ const Article = memo((props) => {
       if(list.length === 0) return // 为空跳过
       for(const e of list) {
         const { y } = e.getBoundingClientRect()
+        // 高亮第一个 y 为正数的标题
         if(y >= 0) {
           setActiveTitleID(e.id)
           return

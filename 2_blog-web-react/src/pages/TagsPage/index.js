@@ -21,10 +21,24 @@ const TagsPage = memo(() => {
     return hjRequest.get(url).then(d => d)
   })
 
-  const titleNameArr = data ? data[0] : []
+  let titleNameArr = data ? data[0] : []
   const tagMapArticleObj = data ? data[1] : {}
 
-  function getTagNameNavJSX() {
+  // 调整被高亮度titleName位置到数组头部
+  function sortTitleNameArr() {
+    if(tagName === '全部') return
+    for(let i = 0; i < titleNameArr.length; i++) {
+      const item = titleNameArr[i]
+      if(item.tagName === tagName) {
+        titleNameArr.splice(i, 1)
+        titleNameArr.unshift(item)
+        return
+      }
+    }
+  }
+  sortTitleNameArr()
+
+  function renderTagNameNavJSX() {
     const tagnameListClass = classNames('tagname-list', {
       'unfold': isUnfold
     })
@@ -55,7 +69,7 @@ const TagsPage = memo(() => {
     </TagNameNavWrapper>
   }
 
-  function getMainJSX() {
+  function renderMainJSX() {
     if(tagName === '全部') {
       return titleNameArr.map(item => {
         let tagName = item.tagName
@@ -70,7 +84,7 @@ const TagsPage = memo(() => {
 
   return (
     <TagsWrapper>
-      <Header>{getTagNameNavJSX()}</Header>
+      <Header>{renderTagNameNavJSX()}</Header>
       {
         data && <SwitchTransition mode='out-in'>
           <CSSTransition
@@ -79,7 +93,7 @@ const TagsPage = memo(() => {
             key={tagName}
             appear
           >
-            <Main>{getMainJSX()}</Main>
+            <Main>{renderMainJSX()}</Main>
           </CSSTransition>
         </SwitchTransition>
       }
