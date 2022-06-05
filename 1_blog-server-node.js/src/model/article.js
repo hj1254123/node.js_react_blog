@@ -156,21 +156,33 @@ articleModel.getArticle = function(articleID) {
     data: {}
   }
   const articlesDB = getArticlesData()
-  // 0.检查是否有该文章
   const index = articlesDB.findIndex(item => {
     return item.id === articleID
   })
+  // 1.文章数据处理
   if(index === -1) {
+    // 没找到直接返回
     data.message = '没有该文章'
     return data
   }
+  // 文章数据
+  data.data = articlesDB[index]
+  // nav数据（上/下 一篇文章）
+  let prev = articlesDB[index - 1]
+  let next = articlesDB[index + 1]
+  let prevID = -1 // 默认-1，表示没有该文章
+  let nextID = -1
 
-  // 1.拿到对应的文章数据
-  for(const item of articlesDB) {
-    if(item.id === articleID) {
-      data.data = item
-      break
-    }
+  if(prev) { // 有文章才添加id
+    prevID = prev.id
+  }
+  if(next) {
+    nextID = next.id
+  }
+
+  data.data.nav = {
+    prevID,
+    nextID
   }
 
   // 2.拿到对应的标签数据
@@ -178,8 +190,8 @@ articleModel.getArticle = function(articleID) {
   // 添加标签数据
   data.data.tags = tags
   data.message = '成功'
+  
   // 返回
-
   return data
 }
 
