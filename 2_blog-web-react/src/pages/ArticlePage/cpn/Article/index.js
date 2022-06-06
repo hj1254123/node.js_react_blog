@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
-import Markdown from 'markdown-to-jsx'; // markdown解析引擎
+import Markdown, { compiler } from 'markdown-to-jsx'; // markdown解析引擎
 import hljs from 'highlight.js'; // 语法高亮支持
 import 'highlight.js/styles/github.css';
 
@@ -7,6 +7,7 @@ import { formatDate, throttle } from '../../../../utils/my-utils';
 
 import { ArticleWrapper, TOC, Tag } from './style'
 import { Link } from 'react-router-dom';
+import Nav from '../Nav'
 
 // 本项目用 highlight 会自动给代码块添加对应语言的 class，
 // 这里重写 code，取消markdown-to-jsx添加的无用class属性。
@@ -27,6 +28,7 @@ const Article = memo((props) => {
   const fixedTOCClass = fixedTOC ? 'fixed' : ''
   //   - 根据滚动位置，高亮对应导航栏
   const articleRef = useRef()
+  console.log(articleRef)
   const [activeTitleID, setActiveTitleID] = useState('')
 
   useEffect(() => {
@@ -62,6 +64,9 @@ const Article = memo((props) => {
   }, [])
 
   function renderTOC(tocData, activeTitleID) {
+    console.log('-0--')
+    console.log('11tocData', tocData)
+    console.log('11activeTitleID', activeTitleID)
     return <ul>
       {
         tocData.map(item => {
@@ -98,28 +103,49 @@ const Article = memo((props) => {
       </li>
     })
   }
+
+  const record = [] // 记录用过的html标题id，如果重复了做处理(我们期望id是唯一的)
+
   return (
     <ArticleWrapper>
-      <article className='markdown-body' ref={articleRef}>
-        <h1>{articleData.title}</h1>
-        <time>{formatDate(articleData.time)}</time>
-        <Markdown
-          children={articleData.content}
-          options={{
-            forceWrapper: true, //即使只有一个子元素，也包装（本例用div包装）
-            slugify: str => str, //标题元素id='中文'正常处理
-            disableParsingRawHTML: true, //转义尖括号<>
-            overrides: { // 通过重写code，去掉markdown-to-jsx添加的语言class，交给highlight.js自动添加
-              code: MyCode
-            }
-          }}
-        />
-        <Tag>
-          <ul>
-            {renderTag(articleData.tags)}
-          </ul>
-        </Tag>
-      </article>
+      <div>
+        <article className='markdown-body' ref={articleRef}>
+          <h1>{articleData.title}</h1>
+          <time>{formatDate(articleData.time)}</time>
+          <Markdown
+            children={articleData.content}
+            options={{
+              forceWrapper: true, //即使只有一个子元素也包装（本例用div包装）
+              slugify: str => { //标题元素id='中文'正常处理
+                // 如果id重复了
+                if(record.includes(str)) {
+                  // 检查已经有几个重复的id
+                  let count = 0
+                  for(const item of record) {
+                    if(item === str) {
+                      count = count + 1
+                    }
+                  }
+                  record.push(str)
+                  str += count
+                }
+                record.push(str)
+                return str
+              },
+              disableParsingRawHTML: true, //转义尖括号<>
+              overrides: { // 通过重写code，去掉markdown-to-jsx添加的语言class，交给highlight.js自动添加
+                code: MyCode
+              }
+            }}
+          />
+          <Tag>
+            <ul>
+              {renderTag(articleData.tags)}
+            </ul>
+          </Tag>
+        </article>
+        <Nav data={articleData.nav} />
+      </div>
       <TOC>
         <nav className={fixedTOCClass}>
           <h4>TOC</h4>

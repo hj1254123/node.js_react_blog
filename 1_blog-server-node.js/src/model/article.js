@@ -172,17 +172,23 @@ articleModel.getArticle = function(articleID) {
   let next = articlesDB[index + 1]
   let prevID = -1 // 默认-1，表示没有该文章
   let nextID = -1
+  let prevTitle = ''
+  let nextTitle = ''
 
   if(prev) { // 有文章才添加id
     prevID = prev.id
+    prevTitle = prev.title
   }
   if(next) {
     nextID = next.id
+    nextTitle = next.title
   }
 
   data.data.nav = {
     prevID,
-    nextID
+    nextID,
+    prevTitle,
+    nextTitle
   }
 
   // 2.拿到对应的标签数据

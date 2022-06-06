@@ -14,7 +14,6 @@ import { Header } from '../../components'
 import { ArticleWrapper } from './style'
 import Article from './cpn/Article'
 
-
 const ArticlePage = memo(() => {
   useEffect(() => {
     document.documentElement.scrollTop = 0
@@ -34,21 +33,39 @@ const ArticlePage = memo(() => {
       setTocData(buildToc(data))
     }
   })
-  console.log(data)
-
   function buildToc(data) {
-    const headings = []
+    const toc = [] // 最终处理好的标题数据
+    const record = [] // 记录用过的html标题id，如果重复了做处理(我们期望id是唯一的)
     compiler(data.data.content, {
-      slugify: str => str, //标题元素id='中文'正常处理
+      slugify: str => { //标题元素id='中文'正常处理
+        // 如果id重复了
+        if(record.includes(str)) {
+          // 检查已经有几个重复的id
+          let count = 0
+          for(const item of record) {
+            if(item === str) {
+              count = count + 1
+            }
+          }
+          record.push(str)
+          str += count
+        }
+        record.push(str)
+        return str
+      }, 
       createElement(type, props, children) {
         if(type === 'h2') {
-          headings.push({ type, props, content: children, children: [] })
+          toc.push({ type, props, content: children, children: [] })
         } else if(type === 'h3') {
-          headings[headings.length - 1].children.push({ type, props, content: children })
+          // h3元素作为子节点，添加给最后一个h2元素
+          toc[toc.length - 1].children.push({ type, props, content: children })
         }
+        return (
+          React.createElement(type, props, children)
+        )
       }
     })
-    return headings
+    return toc
   }
   return (
     <ArticleWrapper>
@@ -62,7 +79,6 @@ const ArticlePage = memo(() => {
             appear
           >
             <Article articleData={data.data} tocData={tocData} />
-
           </CSSTransition>
         </>
       }

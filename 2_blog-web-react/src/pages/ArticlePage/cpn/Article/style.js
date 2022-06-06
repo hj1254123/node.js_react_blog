@@ -87,14 +87,13 @@ export const ArticleWrapper = styled.div`
 export const TOC = styled.aside`
   width: 180px;
   margin-left: 60px;
-
   @media screen and (max-width: 1040px) {
     display: none;
   }
   nav {
     width: inherit;
     position: fixed;
-    max-height: calc(100vh - 275px);
+    max-height: calc(100vh - 300px);
     overflow-y: auto;
     /* position: sticky;
     top: 80px; */
@@ -152,8 +151,7 @@ export const TOC = styled.aside`
   /* 考虑到兼容性，不用position: sticky; 改用下面的方式固定toc */
   nav.fixed {
     top: 80px;
-    max-height: calc(100vh - 60px);
-    /* overflow-y: auto; */
+    max-height: calc(100vh - 220px);
   }
 `
 
@@ -164,6 +162,7 @@ export const Tag = styled.div`
   ul {
       display: flex;
       flex-wrap: wrap;
+      margin-bottom: 0%;
       li {
         display: inline-block;
         margin: 0 8px 8px 0;
