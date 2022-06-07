@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useRef, useState } from 'react'
-import Markdown, { compiler } from 'markdown-to-jsx'; // markdown解析引擎
+import Markdown from 'markdown-to-jsx'; // markdown解析引擎
 import hljs from 'highlight.js'; // 语法高亮支持
 import 'highlight.js/styles/github.css';
 
@@ -14,6 +14,7 @@ import Nav from '../Nav'
 const MyCode = ({ children }) => (<code>{children}</code>)
 
 const Article = memo((props) => {
+  console.log('Article render')
   const { articleData, tocData } = props
 
   // 代码高亮
@@ -28,14 +29,13 @@ const Article = memo((props) => {
   const fixedTOCClass = fixedTOC ? 'fixed' : ''
   //   - 根据滚动位置，高亮对应导航栏
   const articleRef = useRef()
-  console.log(articleRef)
   const [activeTitleID, setActiveTitleID] = useState('')
 
   useEffect(() => {
     // 包含文章h2、h3元素列表
     const list = articleRef.current && articleRef.current.querySelectorAll('h2,h3')
     // 设置需要被高亮的标题id
-    function activeTitleFn() {
+    const activeTitleFn = throttle(function() {
       if(list.length === 0) return // 为空跳过
       for(const e of list) {
         const { y } = e.getBoundingClientRect()
@@ -47,7 +47,7 @@ const Article = memo((props) => {
       }
       // 都为负数高亮最后一个
       setActiveTitleID(list[list.length - 1].id)
-    }
+    }, 96)
 
     activeTitleFn() //初始化调用一次
 
@@ -56,7 +56,7 @@ const Article = memo((props) => {
       const y = document.documentElement.scrollTop || document.body.scrollTop
       setFixedTOC(y >= 275) //决定是否fixedTOC
       activeTitleFn() //根据滚动位置，高亮对应标题
-    }, 85)
+    }, 16)
     window.addEventListener('scroll', handler)
     return () => {
       window.removeEventListener('scroll', handler)
@@ -64,9 +64,7 @@ const Article = memo((props) => {
   }, [])
 
   function renderTOC(tocData, activeTitleID) {
-    console.log('-0--')
-    console.log('11tocData', tocData)
-    console.log('11activeTitleID', activeTitleID)
+
     return <ul>
       {
         tocData.map(item => {
@@ -108,7 +106,7 @@ const Article = memo((props) => {
 
   return (
     <ArticleWrapper>
-      <div>
+      <div className='content'>
         <article className='markdown-body' ref={articleRef}>
           <h1>{articleData.title}</h1>
           <time>{formatDate(articleData.time)}</time>

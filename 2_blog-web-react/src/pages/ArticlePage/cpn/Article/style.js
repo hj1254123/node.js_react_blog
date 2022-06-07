@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const ArticleWrapper = styled.div`
   display: flex;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 45px;
@@ -11,9 +12,10 @@ export const ArticleWrapper = styled.div`
   }
   @media screen and (max-width: 760px) {
     padding: 0;
-   
   }
-
+  .content {
+    width: 100%;
+  }
   /* 文章内容 */
   .markdown-body {
     flex: 1;
@@ -156,12 +158,19 @@ export const TOC = styled.aside`
 `
 
 export const Tag = styled.div`
+  /* width: 100%; */
+  /* position: relative; */
   margin: 0 -35px;
   padding: 12px 20px 8px 0px;
   border-top: 1px solid #ddd;
+
+  @media screen and (max-width: 760px) {
+    margin: 0 -16px;
+  }
   ul {
       display: flex;
       flex-wrap: wrap;
+      /* width: 100%; */
       margin-bottom: 0%;
       li {
         display: inline-block;
