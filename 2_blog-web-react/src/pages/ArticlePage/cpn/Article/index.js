@@ -34,6 +34,29 @@ const Article = memo((props) => {
   useEffect(() => {
     // 包含文章h2、h3元素列表
     const list = articleRef.current && articleRef.current.querySelectorAll('h2,h3')
+    // TOC列表的高亮标题，在即将不可见时滚动到可视区域
+    function scrollToTOC() {
+      let tocNav = document.querySelector('.toc-nav') // toc
+      let activeLi = document.querySelector('.toc-list .active') // toc高亮的标题
+      
+      let activeDOMRect = activeLi && activeLi.getClientRects()[0]
+      let tocNavDOMRect = tocNav && tocNav.getClientRects()[0]
+
+      let activeLiTop = activeDOMRect.top
+      let activeLiBottom = activeDOMRect.bottom
+      let activeLiHeight = activeDOMRect.height
+
+      let tocNavTop = tocNavDOMRect.top
+      let tocNavBottom = tocNavDOMRect.bottom
+
+      if((tocNavBottom - activeLiBottom) < activeLiHeight) {
+        // 滚动三倍高亮标题的高度
+        tocNav.scrollTop = tocNav.scrollTop + activeLiHeight * 3 
+      }
+      if((activeLiTop - tocNavTop) < activeLiHeight) {
+        tocNav.scrollTop = tocNav.scrollTop - activeLiHeight * 3
+      }
+    }
     // 设置需要被高亮的标题id
     const activeTitleFn = throttle(function() {
       if(list.length === 0) return // 为空跳过
@@ -41,6 +64,7 @@ const Article = memo((props) => {
         const { y } = e.getBoundingClientRect()
         // 高亮第一个 y 为正数的标题
         if(y >= 0) {
+          scrollToTOC() // TOC列表的高亮标题，在即将不可见时滚动到可视区域
           setActiveTitleID(e.id)
           return
         }
@@ -65,7 +89,7 @@ const Article = memo((props) => {
 
   function renderTOC(tocData, activeTitleID) {
 
-    return <ul>
+    return <ul className='toc-list'>
       {
         tocData.map(item => {
           // 是否高亮h2对应的导航栏
@@ -145,7 +169,7 @@ const Article = memo((props) => {
         <Nav data={articleData.nav} />
       </div>
       <TOC>
-        <nav className={fixedTOCClass}>
+        <nav className={fixedTOCClass + ' ' + 'toc-nav'} >
           <h4>TOC</h4>
           {renderTOC(tocData, activeTitleID)}
         </nav>
