@@ -5,9 +5,10 @@ import 'highlight.js/styles/github.css';
 
 import { formatDate, throttle } from '../../../../utils/my-utils';
 
-import { ArticleWrapper, TOC, Tag } from './style'
+import { ArticleWrapper, Tag } from './style'
 import { Link } from 'react-router-dom';
 import Nav from '../Nav'
+import TOC from '../TOC'
 
 // 本项目用 highlight 会自动给代码块添加对应语言的 class，
 // 这里重写 code，取消markdown-to-jsx添加的无用class属性。
@@ -38,26 +39,46 @@ const Article = memo((props) => {
     function scrollToTOC() {
       let tocNav = document.querySelector('.toc-nav') // toc
       let activeLi = document.querySelector('.toc-list .active') // toc高亮的标题
-      
-      let activeDOMRect = activeLi && activeLi.getClientRects()[0]
-      let tocNavDOMRect = tocNav && tocNav.getClientRects()[0]
+      if(!tocNav || !activeLi) return
 
+      // 获取到元素矩形信息
+      let tocNavDOMRect = tocNav.getClientRects()[0]
+      let activeDOMRect = activeLi.getClientRects()[0]
+      if(!tocNavDOMRect || !activeDOMRect) return
+
+      // 拿到需要的数据
       let activeLiTop = activeDOMRect.top
       let activeLiBottom = activeDOMRect.bottom
       let activeLiHeight = activeDOMRect.height
 
       let tocNavTop = tocNavDOMRect.top
       let tocNavBottom = tocNavDOMRect.bottom
+      
+      // 判断如何滚动toc
+      // BUG：在高亮标题超出nav范围时，滚动页面需要直接跳转到可视区域，点击标题跳转页面是不要滚动toc
+      // if((tocNavBottom - activeLiBottom) < 0) {
+      //   tocNav.scrollTop = tocNavBottom + activeLiHeight
+      //   return
+      // }
 
-      if((tocNavBottom - activeLiBottom) < activeLiHeight) {
+      // if((activeLiTop - tocNavTop < 0)) {
+      //   // 这里只简单的滚动顶部，可以满足项目需求
+      //   // （如果是很长的目录，需要获取高亮标题在ul中的top位置，再位移）
+      //   tocNav.scrollTop = 0
+      //   return
+      // }
+
+      if((tocNavBottom - activeLiBottom) < activeLiHeight) { //上滚
         // 滚动三倍高亮标题的高度
-        tocNav.scrollTop = tocNav.scrollTop + activeLiHeight * 3 
+        tocNav.scrollTop = tocNav.scrollTop + activeLiHeight * 3
+        return
       }
-      if((activeLiTop - tocNavTop) < activeLiHeight) {
+      if((activeLiTop - tocNavTop) < activeLiHeight) { // 下滚
         tocNav.scrollTop = tocNav.scrollTop - activeLiHeight * 3
+        return
       }
     }
-    // 设置需要被高亮的标题id
+    // 设置需要被高亮的标题id（每次切换高亮时会调用 scrollToTOC 函数）
     const activeTitleFn = throttle(function() {
       if(list.length === 0) return // 为空跳过
       for(const e of list) {
@@ -65,7 +86,7 @@ const Article = memo((props) => {
         // 高亮第一个 y 为正数的标题
         if(y >= 0) {
           scrollToTOC() // TOC列表的高亮标题，在即将不可见时滚动到可视区域
-          setActiveTitleID(e.id)
+          setActiveTitleID(e.id) // 改变该属性，会使 toc 重新渲染，以更新高亮元素
           return
         }
       }
@@ -75,7 +96,7 @@ const Article = memo((props) => {
 
     activeTitleFn() //初始化调用一次
 
-    // *主函数
+    // 主函数
     const handler = throttle(function() {
       const y = document.documentElement.scrollTop || document.body.scrollTop
       setFixedTOC(y >= 275) //决定是否fixedTOC
@@ -87,36 +108,6 @@ const Article = memo((props) => {
     }
   }, [])
 
-  function renderTOC(tocData, activeTitleID) {
-
-    return <ul className='toc-list'>
-      {
-        tocData.map(item => {
-          // 是否高亮h2对应的导航栏
-          const activeH2 = item.props.id === activeTitleID ? 'active' : ''
-          return <li key={item.props.key}>
-            <a href={'#' + item.props.id} className={activeH2}>{item.content}</a>
-            {
-              // 渲染二级目录
-              item.children.length !== 0 && (
-                <ul>
-                  {
-                    item.children.map(item2 => {
-                      // 是否高亮h3对应的导航栏
-                      const activeH3 = item2.props.id === activeTitleID ? 'active' : ''
-                      return <li key={item2.props.id}>
-                        <a href={'#' + item2.props.id} className={activeH3}>{item2.content}</a>
-                      </li>
-                    })
-                  }
-                </ul>
-              )
-            }
-          </li>
-        })
-      }
-    </ul >
-  }
 
   function renderTag(tags) {
     return tags.map(item => {
@@ -168,12 +159,7 @@ const Article = memo((props) => {
         </article>
         <Nav data={articleData.nav} />
       </div>
-      <TOC>
-        <nav className={fixedTOCClass + ' ' + 'toc-nav'} >
-          <h4>TOC</h4>
-          {renderTOC(tocData, activeTitleID)}
-        </nav>
-      </TOC>
+      <TOC data={{ tocData, activeTitleID, fixedTOCClass }} />
     </ArticleWrapper>
   )
 })

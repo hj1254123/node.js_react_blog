@@ -60,9 +60,6 @@ const ArticlePage = memo(() => {
           // h3元素作为子节点，添加给最后一个h2元素
           toc[toc.length - 1].children.push({ type, props, content: children })
         }
-        return (
-          React.createElement(type, props, children)
-        )
       }
     })
     return toc
