@@ -37,7 +37,7 @@ const TOC = memo(({ data }) => {
 
   return (
     <TOCWrapper>
-      <nav className={fixedTOCClass + ' ' + 'toc-nav'} >
+      <nav className={fixedTOCClass} >
         <h4>TOC</h4>
         {renderTOC(tocData, activeTitleID)}
       </nav>

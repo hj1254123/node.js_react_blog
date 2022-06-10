@@ -15,7 +15,7 @@ import TOC from '../TOC'
 const MyCode = ({ children }) => (<code>{children}</code>)
 
 const Article = memo((props) => {
-  console.log('Article render')
+  // console.log('Article render')
   const { articleData, tocData } = props
 
   // 代码高亮
@@ -35,49 +35,7 @@ const Article = memo((props) => {
   useEffect(() => {
     // 包含文章h2、h3元素列表
     const list = articleRef.current && articleRef.current.querySelectorAll('h2,h3')
-    // TOC列表的高亮标题，在即将不可见时滚动到可视区域
-    function scrollToTOC() {
-      let tocNav = document.querySelector('.toc-nav') // toc
-      let activeLi = document.querySelector('.toc-list .active') // toc高亮的标题
-      if(!tocNav || !activeLi) return
 
-      // 获取到元素矩形信息
-      let tocNavDOMRect = tocNav.getClientRects()[0]
-      let activeDOMRect = activeLi.getClientRects()[0]
-      if(!tocNavDOMRect || !activeDOMRect) return
-
-      // 拿到需要的数据
-      let activeLiTop = activeDOMRect.top
-      let activeLiBottom = activeDOMRect.bottom
-      let activeLiHeight = activeDOMRect.height
-
-      let tocNavTop = tocNavDOMRect.top
-      let tocNavBottom = tocNavDOMRect.bottom
-      
-      // 判断如何滚动toc
-      // BUG：在高亮标题超出nav范围时，滚动页面需要直接跳转到可视区域，点击标题跳转页面是不要滚动toc
-      // if((tocNavBottom - activeLiBottom) < 0) {
-      //   tocNav.scrollTop = tocNavBottom + activeLiHeight
-      //   return
-      // }
-
-      // if((activeLiTop - tocNavTop < 0)) {
-      //   // 这里只简单的滚动顶部，可以满足项目需求
-      //   // （如果是很长的目录，需要获取高亮标题在ul中的top位置，再位移）
-      //   tocNav.scrollTop = 0
-      //   return
-      // }
-
-      if((tocNavBottom - activeLiBottom) < activeLiHeight) { //上滚
-        // 滚动三倍高亮标题的高度
-        tocNav.scrollTop = tocNav.scrollTop + activeLiHeight * 3
-        return
-      }
-      if((activeLiTop - tocNavTop) < activeLiHeight) { // 下滚
-        tocNav.scrollTop = tocNav.scrollTop - activeLiHeight * 3
-        return
-      }
-    }
     // 设置需要被高亮的标题id（每次切换高亮时会调用 scrollToTOC 函数）
     const activeTitleFn = throttle(function() {
       if(list.length === 0) return // 为空跳过
@@ -85,8 +43,9 @@ const Article = memo((props) => {
         const { y } = e.getBoundingClientRect()
         // 高亮第一个 y 为正数的标题
         if(y >= 0) {
-          scrollToTOC() // TOC列表的高亮标题，在即将不可见时滚动到可视区域
           setActiveTitleID(e.id) // 改变该属性，会使 toc 重新渲染，以更新高亮元素
+          let activeLi = document.querySelector('.toc-list .active')
+          activeLi && activeLi.scrollIntoView({block: 'center'}) // 滚动高亮的标题到可视区域
           return
         }
       }
