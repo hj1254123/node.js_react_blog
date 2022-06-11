@@ -28,6 +28,7 @@ a {
 a:hover {
   color: #727272;
   text-decoration: underline;
+  text-decoration-color:#3f51b5;
 }
 
 i, em {
@@ -95,3 +96,7 @@ img {
   opacity: 0;
 }
 
+/* 选中文本背景颜色 */
+::selection {
+  background: #d7dbf0;
+}

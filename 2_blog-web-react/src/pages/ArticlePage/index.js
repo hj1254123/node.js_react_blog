@@ -15,16 +15,19 @@ import { ArticleWrapper } from './style'
 import Article from './cpn/Article'
 
 const ArticlePage = memo(() => {
-  useEffect(() => {
-    document.documentElement.scrollTop = 0
-  }, [])
+
   // 小屏显示headerTitle，中大屏反之。
   const isShowHeaderTitle = useMedia(SmallScreenWidth)
-  // 存储 h2、h3 元素信息，用于 toc 渲染
-  const [tocData, setTocData] = useState([])
 
-  const { setTitle } = useTitleContext()
-  const { id } = useParams()
+  const { id } = useParams() // 从url取文章id
+
+  useEffect(() => {
+    document.documentElement.scrollTop = 0
+  }, [id])
+
+  const [tocData, setTocData] = useState([]) //存储 h2、h3 元素信息，用于 toc 渲染
+  const { setTitle } = useTitleContext() //全局title
+
   const { data } = useSWRImmutable(`/article/${id}`, (url) => {
     return hjRequest.get(url).then(d => d)
   }, {
@@ -33,6 +36,8 @@ const ArticlePage = memo(() => {
       setTocData(buildToc(data))
     }
   })
+  
+  // 解析返回用于渲染 TOC 的数据结构
   function buildToc(data) {
     const toc = [] // 最终处理好的标题数据
     const record = [] // 记录用过的html标题id，如果重复了做处理(我们期望id是唯一的)
@@ -52,7 +57,7 @@ const ArticlePage = memo(() => {
         }
         record.push(str)
         return str
-      }, 
+      },
       createElement(type, props, children) {
         if(type === 'h2') {
           toc.push({ type, props, content: children, children: [] })
@@ -64,6 +69,7 @@ const ArticlePage = memo(() => {
     })
     return toc
   }
+
   return (
     <ArticleWrapper>
       {

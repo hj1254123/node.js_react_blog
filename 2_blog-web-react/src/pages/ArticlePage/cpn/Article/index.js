@@ -67,16 +67,9 @@ const Article = memo((props) => {
     }
   }, [])
 
-
-  function renderTag(tags) {
-    return tags.map(item => {
-      return <li key={item.id}>
-        <Link to={'/tags/page/' + item.tagName} key={item.id}>{item.tagName}</Link>
-      </li>
-    })
-  }
-
-  const record = [] // 记录用过的html标题id，如果重复了做处理(我们期望id是唯一的)
+  // markdown 引擎没有对重复的 html 标签 id 做处理，
+  // 我们自行处理，用 record 来记录已用过的 id，详情见下方 <Markdown /> 实现
+  const record = []
 
   return (
     <ArticleWrapper>
@@ -112,7 +105,13 @@ const Article = memo((props) => {
           />
           <Tag>
             <ul>
-              {renderTag(articleData.tags)}
+              {
+                articleData.tags.map(item => {
+                  return <li key={item.id}>
+                    <Link to={'/tags/page/' + item.tagName} key={item.id}>{item.tagName}</Link>
+                  </li>
+                })
+              }
             </ul>
           </Tag>
         </article>
