@@ -9,6 +9,7 @@ import { ArticleWrapper, Tag } from './style'
 import { Link } from 'react-router-dom';
 import Nav from '../Nav'
 import TOC from '../TOC'
+import Comment from '../Comment';
 
 // 本项目用 highlight 会自动给代码块添加对应语言的 class，
 // 这里重写 code，取消markdown-to-jsx添加的无用class属性。
@@ -45,7 +46,7 @@ const Article = memo((props) => {
         if(y >= 0) {
           setActiveTitleID(e.id) // 改变该属性，会使 toc 重新渲染，以更新高亮元素
           let activeLi = document.querySelector('.toc-list .active')
-          activeLi && activeLi.scrollIntoView({block: 'center'}) // 滚动高亮的标题到可视区域
+          activeLi && activeLi.scrollIntoView({ block: 'center' }) // 滚动高亮的标题到可视区域
           return
         }
       }
@@ -116,6 +117,7 @@ const Article = memo((props) => {
           </Tag>
         </article>
         <Nav data={articleData.nav} />
+        <Comment articleID={articleData.id} />
       </div>
       <TOC data={{ tocData, activeTitleID, fixedTOCClass }} />
     </ArticleWrapper>
