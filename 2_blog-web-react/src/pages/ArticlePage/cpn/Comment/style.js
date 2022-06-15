@@ -68,4 +68,57 @@ export const CommentWrapper = styled.div`
       }
     }
   }
+
+  .list {
+    padding: 10px;
+    .number-of-comments {
+      width: 100%;
+      height: 37px;
+      font-size: 15px;
+      margin: 25px 0;
+      color: #555;
+      span {
+        font-weight: 600;
+        font-size: 20px;
+        margin-right: 3px;
+      }
+    }
+    .item {
+      display: flex;
+      width: 100%;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #f5f5f5;
+      margin: 20px 0;
+      .icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        overflow: hidden;
+        img {
+          width: inherit;
+          height: inherit;
+        }
+      }
+      .info {
+        flex: 1;
+        padding-left: 10px;
+        .username {
+          color: #1abc9c;
+          font-weight: 500;
+          height: 30px;
+          line-height: 30px;
+        }
+        .time {
+          color: #b3b3b3;
+          font-size: 14px;
+          line-height: 17px;
+        }
+        .comment-content {
+          color: #4a4a4a;
+          line-height: 26px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
 `
