@@ -163,17 +163,17 @@ function save(commentsData) {
 function addCommentToArticleVerification(commentData) {
   // 待返回的结果，默认通过
   let result = { message: '校验通过', boolean: true }
-
+  
   // 逐一校验
   let { articleID, userName, email, content } = commentData
   let checkArticleID = typeof articleID === 'number'
-  let checkUserName = (typeof userName === 'string') && (userName.length < 20)
-  let checkEmail = (typeof email === 'string') && (email.length < 30)
+  let checkUserName = (typeof userName === 'string') && (userName.length < 20) &&  (userName.length > 0)
+  let checkEmail = (typeof email === 'string') && (email.length < 30) && (email.length > 6)
   if(checkEmail) {
     let regexp = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
     checkEmail = regexp.test(email)
   }
-  let checkContent = (typeof content === 'string') && (content.length < 1000)
+  let checkContent = (typeof content === 'string') && (content.length < 1000) && (content.length > 0)
 
   // 给每一项校验失败设置 message
   if(!checkArticleID) {

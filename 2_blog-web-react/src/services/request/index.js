@@ -6,7 +6,7 @@ import { BASE_URL, TIMEOUT } from './config'
 // 如果项目中需要请求多个服务器，多创建几个实例即可。
 const instance = axios.create({
   baseURL: BASE_URL,
-  timeout: TIMEOUT,
+  timeout: TIMEOUT
 })
 
 let requestNumber = 0 // 正在请求的数量

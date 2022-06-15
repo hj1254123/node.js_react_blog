@@ -8,9 +8,12 @@ const ipSet = new Set()
 
 // 根据文章id添加评论
 router.post('/', (req, res) => {
+
   try {
     const ip = req.ip
     const commentData = { ...req.body, ip }
+    console.log(req.body)
+    
     // 限制单个ip评论频率
     if(ipSet.has(ip)) {
       return res.json('技能冷却中')

@@ -15,7 +15,6 @@ import { ArticleWrapper } from './style'
 import Article from './cpn/Article'
 
 const ArticlePage = memo(() => {
-
   // 小屏显示headerTitle，中大屏反之。
   const isShowHeaderTitle = useMedia(SmallScreenWidth)
 

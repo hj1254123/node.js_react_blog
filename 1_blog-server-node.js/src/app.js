@@ -17,15 +17,17 @@ const port = 3001
 
 // 允许跨域
 app.use((req, res, next) => {
-  // res.header('Access-Control-Allow-Origin', 'http://192.168.3.42:3000')
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
-  res.header('Access-Control-Allow-Headers', 'Authorization,X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')
-  res.header('Allow', 'GET, POST, PATCH, OPTIONS, PUT, DELETE')
-  next();
-});
+  console.log(req.headers.origin)
+  res.header('Access-Control-Allow-Origin', req.headers.origin)
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
+  res.header('Content-Type', 'application/json; charset=utf-8')
+  next()
+})
 
 app.use(express.json())
+
+
 // token解析验证中间件
 // 成功，把用户信息赋值 req.user
 // 失败，直接报错
@@ -37,11 +39,11 @@ app.use(expressJwt({
   path: [
     { url: '/', method: ['GET'] },
     { url: '/favicon.ico', method: ['GET'] },
-    { url: '/auth/register', methods: ['POST'] },
-    { url: '/auth/login', methods: ['POST'] },
+    { url: '/auth/register', methods: ['POST', 'OPTIONS'] },
+    { url: '/auth/login', methods: ['POST', 'OPTIONS'] },
     { url: /^\/article\/\d+$/, methods: ['GET'] },
     { url: /^\/article\/page\/\d+$/, methods: ['GET'] },
-    { url: /^\/comment$/, methods: ['POST'] },
+    { url: '/comment', methods: ['POST', 'OPTIONS'] },
     { url: /^\/comment\/\d+$/, methods: ['GET'] },
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
     { url: '/tags/page', methods: ['GET'] },

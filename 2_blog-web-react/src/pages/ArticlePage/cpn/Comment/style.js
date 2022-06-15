@@ -35,14 +35,7 @@ export const CommentWrapper = styled.div`
         font-size: .875em;
         padding: 10px 5px;
         color: #555;
-        :focus {
-          outline: none;
-        }
-        /* 允许编辑&为空&未被选中，添加伪元素 */
-        &[contenteditable=true]:empty:not(:focus)::before {
-          /* 从html标签取数据data-* */
-          content: attr(data-text);
-        }
+        
       }
     }
     .bottom {
@@ -59,7 +52,7 @@ export const CommentWrapper = styled.div`
         border-radius: 4px;
         vertical-align: middle;
         cursor: pointer;
-        :hover {
+        :hover:not([disabled]) {
           color: #fff;
           background: #3f51b5;
           border-color: #3f51b5;
