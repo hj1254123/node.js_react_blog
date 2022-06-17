@@ -31,11 +31,10 @@ export const CommentWrapper = styled.div`
       padding-top: 10px;
       .content {
         width: 100%;
-        min-height: 123px;
+        height: 200px;
         font-size: .875em;
         padding: 10px 5px;
         color: #555;
-        
       }
     }
     .bottom {

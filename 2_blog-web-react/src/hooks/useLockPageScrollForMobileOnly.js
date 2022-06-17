@@ -24,5 +24,5 @@ export default function useLockPageScrollForMobileOnly(lock) {
       document.body.removeEventListener('touchmove', fn);
     }
 
-  }, [lock, isLargeScreenWidth])
+  }, [lock, isLargeScreenWidth, fn])
 }

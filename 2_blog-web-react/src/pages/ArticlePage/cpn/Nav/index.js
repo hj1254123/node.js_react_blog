@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { NavWrapper } from './style'
 
 const Nav = memo((props) => {
-  {/* 由于前端展示文章为倒序，按钮需要颠倒 prevTitle 与 nextTitle */ }
+  // 由于前端展示文章为倒序，按钮需要颠倒 prevTitle 与 nextTitle
   const { prevID, nextID, prevTitle, nextTitle } = props.data
   console.log(prevID, nextID)
   console.log(prevTitle, nextTitle)

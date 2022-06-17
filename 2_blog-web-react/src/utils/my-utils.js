@@ -58,7 +58,7 @@ export function goTop() {
 export const formatDate = function(d) {
   // 没传参数，返回当前时间
   if (!d) {
-      d = new Date
+      d = new Date()
   }
   let date = new Date(d)
   let Y = date.getFullYear() + '年';

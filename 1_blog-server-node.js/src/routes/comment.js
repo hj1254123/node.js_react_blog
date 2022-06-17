@@ -16,7 +16,9 @@ router.post('/', (req, res) => {
     
     // 限制单个ip评论频率
     if(ipSet.has(ip)) {
-      return res.json('技能冷却中')
+      return res.json({
+        message: '评论太频繁了，请歇一会~'
+      })
     }
     ipSet.add(ip)
     setTimeout(() => {
@@ -25,7 +27,11 @@ router.post('/', (req, res) => {
 
     // 添加评论
     const data = commentModel.addCommentByArticleID(commentData)
-    res.json(data)
+    // res.json(data)
+
+    setTimeout(() => {
+      res.json(data)
+    }, 2000);
   } catch(error) {
     console.log(error)
     res.status(500).json('添加评论出错,注意处理')

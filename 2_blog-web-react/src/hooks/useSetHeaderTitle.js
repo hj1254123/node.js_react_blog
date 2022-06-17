@@ -6,5 +6,5 @@ export function useSetHeaderTitle(title = '') {
   useEffect(() => {
     document.documentElement.scrollTop = 0
     setTitle(title)
-  }, [])
+  }, [title, setTitle])
 }

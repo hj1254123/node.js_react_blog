@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import { useState } from 'react'
 import useSWR from 'swr'
+import toast, { Toaster } from 'react-hot-toast';
 
 import defaultImg from '../../../../assets/img/default-icon.png'
 import hjRequest from '../../../../services/request'
@@ -19,7 +20,6 @@ const Comment = memo(({ articleID }) => {
   const { data, mutate } = useSWR(`/comment/${articleID}`, (url) => {
     return hjRequest.get(url).then(d => d)
   })
-  console.log(data)
 
   function renderCommentList(data) {
     return data.map(item => {
@@ -36,10 +36,10 @@ const Comment = memo(({ articleID }) => {
     })
   }
 
-  function submitComment(e) {
+  async function submitComment(e) {
     e.preventDefault()
+    // 1.拿到并校验，评论表单所需数据
     const formObj = {}
-    console.log(panel.userName)
     // 用户名
     if(panel.userName.length === 0) {
       formObj.userName = 'default'
@@ -47,32 +47,60 @@ const Comment = memo(({ articleID }) => {
       formObj.userName = panel.userName
     }
     // 邮箱
-    const regexp = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+    const regexp = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/
     const checkEmail = regexp.test(panel.email)
     if(!checkEmail) {
-      alert('邮箱格式不正确')
+      toast.error("邮箱格式不正确")
       return
     }
     formObj.email = panel.email
     // 内容校验
     if(panel.content.length > 1000) {
-      alert('评论字数大于1000，请删减！')
+      toast.error('评论字数大于1000，请删减！')
+      return
     }
     formObj.content = panel.content
     // 文章id
     formObj.articleID = articleID
 
-    // 提交数据
-    console.log(formObj)
-    console.log(data)
-    // data.data.push(formObj)
-    // const options = { optimisticData: data, rollbackOnError: true }
-    // mutate(async (formObj) => {
-    //   const newData = await hjRequest.post('/comment', {
-    //     data: formObj
-    //   })
-    //   return newData
-    // }, options);
+    // 2.提交数据，并采用乐观更新
+    // 该item用于乐观更新，在异步请求完成后会被替换
+    const newItem = { 
+      id: data.data.length + 1,
+      time: new Date().getTime(),
+      content: formObj.content,
+      userName: formObj.userName
+    }
+    // swr乐观更新配置项
+    const options = {
+      // 临时的新data，按照它更新评论列表，以实现乐观更新
+      // 在请求数据返回会更新真正的评论item，详情见下方mutate函数
+      optimisticData: { data: [newItem, ...data.data] }, 
+      rollbackOnError: true, //请求出错回退
+      revalidate: false, //异步请求结束后，不重新请求
+    }
+    // swr提供的mutate函数直接修改data得到拷贝，根据拷贝render页面，提高用户体验；
+    // 在异步请求完成后，通过返回值更新真正的data；
+    // 这意味着可以在失败后方便的回退；
+    await mutate(async () => {
+      const response = await hjRequest.post('/comment', {
+        data: formObj
+      })
+
+      if(!response.message) {
+        toast.error('未知错误')
+      }
+
+      if(response.message === '添加评论成功') {
+        const resData = { data: [ response.data, ...data.data] }
+        // 这个数据会被用于更新真正的data
+        return resData
+      } else {
+        toast.error(response.message)
+        // 失败回退状态（data没有还被修改，乐观更新用的是另一个data拷贝）
+        return data
+      }
+    }, options)
   }
 
   return (
@@ -99,6 +127,7 @@ const Comment = memo(({ articleID }) => {
         <div className="edit">
           <textarea
             className="content"
+            placeholder='要不要说点什么？'
             value={panel.content}
             onChange={(e => {
               setPanel({ ...panel, content: e.target.value })
@@ -122,6 +151,8 @@ const Comment = memo(({ articleID }) => {
           data ? renderCommentList(data.data) : '加载中...'
         }
       </div>
+
+      <Toaster />
     </CommentWrapper>
   )
 })

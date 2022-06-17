@@ -142,6 +142,7 @@ commentModel.getCommentByArticleID = function(articleID) {
   }
   // 返回数据
   data.message = '获取评论成功'
+  data.data = data.data.reverse()
   return data
 }
 /**
