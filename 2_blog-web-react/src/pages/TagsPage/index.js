@@ -11,11 +11,16 @@ import hjRequest from '../../services/request'
 import classNames from 'classnames'
 
 const TagsPage = memo(() => {
-  useSetHeaderTitle("Tags")
   const [isUnfold, setIsUnfold] = useState(false) //控制展开tagNav
 
   const navigate = useNavigate()
+  
   const { tagName = '全部' } = useParams()
+  let headerTitle = 'Tags'
+  if(tagName !== '全部') {
+    headerTitle = 'Tags: ' + tagName
+  }
+  useSetHeaderTitle(headerTitle)
 
   const { data } = useSWRImmutable(`/tags/page`, (url) => {
     return hjRequest.get(url).then(d => d)
@@ -56,7 +61,10 @@ const TagsPage = memo(() => {
             return <li
               key={item.id}
               className={classNames({ 'active': tagName === item.tagName })}
-              onClick={() => navigate('/tags/page/' + item.tagName)}
+              onClick={() => {
+                navigate('/tags/page/' + item.tagName)
+                setIsUnfold(false)
+              }}
             >{item.tagName}</li>
           })
         }

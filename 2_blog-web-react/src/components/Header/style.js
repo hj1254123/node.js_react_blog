@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const HeaderWrapper = styled.header`
   position: relative;
   width: 100%;
-  padding: 104px 16px 48px 16px;
+  padding: 104px 16px 42px 16px;
   background-color: #3f51b5;
   color: #fff;
   text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
@@ -13,7 +13,7 @@ export const HeaderWrapper = styled.header`
     transition: all .4s;
     h1 {
       font-size: 44px;
-      line-height: 48px;
+      line-height: 54px;
       font-weight: 500;
       white-space: nowrap;
       text-overflow: ellipsis; 
@@ -64,7 +64,7 @@ export const HeaderWrapper = styled.header`
     width: 100%;
     height: 48px;
     position: relative;
-    margin-bottom: -48px;
+    margin-bottom: -42px;
   }
  
 `

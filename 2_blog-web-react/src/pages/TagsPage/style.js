@@ -21,8 +21,21 @@ export const TagNameNavWrapper = styled.nav`
     background-color: #3f51b5;
     color: rgba(255, 255, 255, 0.8);
     overflow: hidden;
+    z-index: 1;
     @media screen and (max-width: 1040px) {
       width: 100%;
+    }
+    /* 小屏对导航栏做处理 */
+    @media screen and (max-width: 760px) {
+      width: 100%;
+      overflow-x: auto;
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      /* 展开按钮不需要，采用左右滑动方式查看列表 */
+      button { 
+        display: none !important;
+      }
     }
     li {
       position: relative;

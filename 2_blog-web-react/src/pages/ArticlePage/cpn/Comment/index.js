@@ -36,6 +36,9 @@ const Comment = memo(({ articleID }) => {
     })
   }
 
+  // 做两件事：
+  //  1.获取并校验待添加评论数据 
+  //  2.添加评论，并通过swr实现乐观更新
   async function submitComment(e) {
     e.preventDefault()
     // 1.拿到并校验，评论表单所需数据
@@ -62,10 +65,10 @@ const Comment = memo(({ articleID }) => {
     formObj.content = panel.content
     // 文章id
     formObj.articleID = articleID
-
+    console.log(formObj)
     // 2.提交数据，并采用乐观更新
     // 该item用于乐观更新，在异步请求完成后会被替换
-    const newItem = { 
+    const newItem = {
       id: data.data.length + 1,
       time: new Date().getTime(),
       content: formObj.content,
@@ -75,11 +78,11 @@ const Comment = memo(({ articleID }) => {
     const options = {
       // 临时的新data，按照它更新评论列表，以实现乐观更新
       // 在请求数据返回会更新真正的评论item，详情见下方mutate函数
-      optimisticData: { data: [newItem, ...data.data] }, 
+      optimisticData: { data: [newItem, ...data.data] },
       rollbackOnError: true, //请求出错回退
       revalidate: false, //异步请求结束后，不重新请求
     }
-    // swr提供的mutate函数直接修改data得到拷贝，根据拷贝render页面，提高用户体验；
+    // swr提供的mutate函数拷贝data再修改，根据拷贝render页面，提高用户体验；
     // 在异步请求完成后，通过返回值更新真正的data；
     // 这意味着可以在失败后方便的回退；
     await mutate(async () => {
@@ -92,12 +95,15 @@ const Comment = memo(({ articleID }) => {
       }
 
       if(response.message === '添加评论成功') {
-        const resData = { data: [ response.data, ...data.data] }
+        const resData = { data: [response.data, ...data.data] }
         // 这个数据会被用于更新真正的data
         return resData
       } else {
         toast.error(response.message)
         // 失败回退状态（data没有还被修改，乐观更新用的是另一个data拷贝）
+        // （配置项设置了rollbackOnError: true，
+        //  服务端返回错误状态码会自动回退，
+        //  这里为了处理状态码正确的错误。）
         return data
       }
     }, options)
