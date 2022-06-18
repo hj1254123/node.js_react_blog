@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
 export const TOCWrapper = styled.aside`
-  width: 180px;
-  margin-left: 60px;
+  width: 20%;
   @media screen and (max-width: 1040px) {
     display: none;
   }
@@ -10,6 +9,7 @@ export const TOCWrapper = styled.aside`
     width: inherit;
     position: fixed;
     max-height: calc(100vh - 300px);
+    padding-left: 60px;
     overflow-y: auto;
     /* position: sticky;
     top: 80px; */

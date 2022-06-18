@@ -14,11 +14,14 @@ export const ArticleWrapper = styled.div`
     padding: 0;
   }
   .content {
-    width: 100%;
+    width: 80%;
+    @media screen and (max-width: 1040px) {
+      width: 100%;
+    }
   }
   /* 文章内容 */
   .markdown-body {
-    flex: 1;
+    width: 100%;
     position: relative;
     margin-top: -150px;
     padding: 35px;
@@ -37,6 +40,7 @@ export const ArticleWrapper = styled.div`
       font-weight: bold;
       color: #727272;
     }
+
     /* 覆盖一些默认样式 */
     h2, h3, h4, h5, h6 {
       color: #3f51b5;
@@ -66,7 +70,7 @@ export const ArticleWrapper = styled.div`
     }
     /* 中小屏适配 */
     @media screen and (max-width: 1040px) {
-      width: 100%;
+      /* width: 100%; */
     }
     
     @media screen and (max-width: 760px) {
