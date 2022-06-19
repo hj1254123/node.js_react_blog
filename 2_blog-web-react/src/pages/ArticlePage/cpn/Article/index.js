@@ -16,7 +16,6 @@ import Comment from '../Comment';
 const MyCode = ({ children }) => (<code>{children}</code>)
 
 const Article = memo((props) => {
-  // console.log('Article render')
   const { articleData, tocData } = props
 
   // 代码高亮

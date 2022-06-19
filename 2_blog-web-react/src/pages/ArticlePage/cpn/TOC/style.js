@@ -1,15 +1,15 @@
 import styled from 'styled-components'
 
 export const TOCWrapper = styled.aside`
-  width: 20%;
-  @media screen and (max-width: 1040px) {
+  width: 240px;
+  padding-left: 60px;
+  @media screen and (max-width: 1440px) {
     display: none;
   }
   nav {
-    width: inherit;
     position: fixed;
+    width: 180px;
     max-height: calc(100vh - 300px);
-    padding-left: 60px;
     overflow-y: auto;
     /* position: sticky;
     top: 80px; */
@@ -33,6 +33,8 @@ export const TOCWrapper = styled.aside`
           width: 100%;
           height: 100%;
           padding-left: 10px;
+          padding-right: 10px;
+
         }
         a::after {
           content: '';

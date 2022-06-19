@@ -14,7 +14,7 @@ export const ArticleWrapper = styled.div`
     padding: 0;
   }
   .content {
-    width: 80%;
+    flex: 1;
     @media screen and (max-width: 1040px) {
       width: 100%;
     }
