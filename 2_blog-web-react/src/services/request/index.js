@@ -45,7 +45,6 @@ class HjRequest {
         requestNumber--
         EmitRequestNumberChange(requestNumber)
       }
-      // TODO:根据状态码设置 message
       return Promise.reject({
         data: err.response.data,
         status: err.response.status,

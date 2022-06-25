@@ -5,13 +5,16 @@ import 'normalize.css' //样式规范化
 import './assets/global.css' //样式重置、全局样式
 import './assets/iconfont/iconfont.css' //图标
 
+import { ErrorBoundary } from './components'
 import App from './App';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <AppProviders>
-      <App />
-    </AppProviders>
-  </BrowserRouter>,
+  <ErrorBoundary>
+    <BrowserRouter>
+      <AppProviders>
+        <App />
+      </AppProviders>
+    </BrowserRouter>
+  </ErrorBoundary>,
   document.getElementById('root')
 );

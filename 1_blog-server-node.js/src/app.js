@@ -17,7 +17,7 @@ const port = 3001
 
 // 允许跨域
 app.use((req, res, next) => {
-  console.log(req.headers.origin)
+  // console.log(req.headers.origin)
   res.header('Access-Control-Allow-Origin', req.headers.origin)
   res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
@@ -47,8 +47,7 @@ app.use(expressJwt({
     { url: /^\/comment\/\d+$/, methods: ['GET'] },
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
     { url: '/tags/page', methods: ['GET'] },
-    { url: '/test', methods: ['GET'] },
-    { url: '/test2', methods: ['GET'] },
+    { url: '/test', methods: ['GET', 'OPTIONS'] },
   ]
 }))
 
@@ -66,15 +65,16 @@ app.use('/tags', tagsRouter)
 app.use('/comment', commentRouter)
 app.use('/archive', archiveRouter)
 // 测试接口
-const xss = require('xss')
-app.post('/test', function(req, res) {
-  let cleanData = xss(req.body.data)
-  console.log('cleanData', cleanData)
-  res.status(200).send(cleanData);
+app.get('/test', function(req, res) {
+  res.status(200).send('hi');
+  // res.status(404).send('Not Found');
+  // res.status(500).send('服务端错误');
+  // res.status(301).send('');
+
 })
 
 app.get('*', function(req, res) {
-  res.status(404).send();
+  res.status(404).send('该接口未定义');
 })
 // 错误处理
 app.use(function(err, req, res, next) {

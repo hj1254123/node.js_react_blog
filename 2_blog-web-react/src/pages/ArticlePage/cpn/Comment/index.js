@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { useState } from 'react'
 import useSWR from 'swr'
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 import defaultImg from '../../../../assets/img/default-icon.png'
 import hjRequest from '../../../../services/request'
@@ -60,6 +60,10 @@ const Comment = memo(({ articleID }) => {
     // 内容校验
     if(panel.content.length > 1000) {
       toast.error('评论字数大于1000，请删减！')
+      return
+    }
+    if(panel.content.length <= 0) {
+      toast.error('评论内容不能为空')
       return
     }
     formObj.content = panel.content
@@ -158,7 +162,6 @@ const Comment = memo(({ articleID }) => {
         }
       </div>
 
-      <Toaster />
     </CommentWrapper>
   )
 })

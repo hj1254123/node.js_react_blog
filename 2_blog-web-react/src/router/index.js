@@ -3,6 +3,7 @@ import ArchivePage from '../pages/ArchivePage'
 import TagsPage from '../pages/TagsPage'
 import ArticlePage from '../pages/ArticlePage'
 import { Error404 } from '../components'
+import Test from '../pages/Test'
 
 const router = [
   {
@@ -36,6 +37,10 @@ const router = [
   {
     path: '/404',
     element: <Error404 />
+  },
+  {
+    path: '/test',
+    element: <Test />
   },
   {
     path: '*',

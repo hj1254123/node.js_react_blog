@@ -2,6 +2,7 @@ import { useRoutes } from 'react-router-dom'
 import router from './router'
 import classNames from 'classnames'
 
+import { Toaster } from 'react-hot-toast'
 import { useIsShowContext } from './context/IsShow-context'
 
 import {
@@ -31,6 +32,7 @@ export default function App() {
       <GoTopBtn />
       <Mask className={on} onClick={toggleIsShow} /> {/* 中小屏下使用的遮罩 */}
       <Loading />
+      <Toaster />
     </div>
   )
 }
