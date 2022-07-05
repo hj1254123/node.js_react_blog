@@ -18,6 +18,7 @@ export const HeaderWrapper = styled.header`
       white-space: nowrap;
       text-overflow: ellipsis; 
       overflow: hidden;
+      visibility: ${props => props.isShowTitle ? '' : 'hidden'};
     }
     span {
       display: block;

@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { useRoutes } from 'react-router-dom'
 import router from './router'
 import classNames from 'classnames'
@@ -25,7 +26,9 @@ export default function App() {
       <Main className={on}>
         <TopHeader />
         <div className="content-wrapper">
-          {element}  {/* 注册路由(页面主体) */}
+          <Suspense fallback={<div style={{ minHeight: 'calc(100vh)' }} />}>
+            {element}  {/* 注册路由(页面主体) */}
+          </Suspense>
         </div>
         <Footer />
       </Main >
@@ -33,6 +36,6 @@ export default function App() {
       <Mask className={on} onClick={toggleIsShow} /> {/* 中小屏下使用的遮罩 */}
       <Loading />
       <Toaster />
-    </div>
+    </div >
   )
 }

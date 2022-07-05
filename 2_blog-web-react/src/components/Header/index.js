@@ -9,7 +9,7 @@ const Header = memo(({ children, isShowTitle = true }) => {
   const { title } = useTitleContext()
   const isShowSpan = (title === "HouJi's Blog")
   return (
-    <HeaderWrapper isShowSpan={isShowSpan}>
+    <HeaderWrapper isShowSpan={isShowSpan} isShowTitle={isShowTitle}>
       <CSSTransition
         in={true}
         timeout={500}
@@ -17,9 +17,7 @@ const Header = memo(({ children, isShowTitle = true }) => {
         appear
       >
         <div className="content">
-          <h1 style={{visibility: isShowTitle ? '' : 'hidden'}}>
-            {title}
-          </h1>
+          <h1>{title}</h1>
           <span>练习用，暂不运营 ;-)</span>
         </div>
       </CSSTransition>

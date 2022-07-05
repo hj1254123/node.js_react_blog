@@ -1,8 +1,17 @@
+import { lazy } from 'react'
+
+// const HomePage = lazy(() => import('../pages/HomePage'))
+// const ArchivePage = lazy(() => import('../pages/ArchivePage'))
+// const TagsPage = lazy(() => import('../pages/TagsPage'))
+// const ArticlePage = lazy(() => import('../pages/ArticlePage'))
+// const Error404 = lazy(() => import('../components/Error404'))
+// const Test = lazy(() => import('../pages/Test'))
+
 import HomePage from '../pages/HomePage'
 import ArchivePage from '../pages/ArchivePage'
 import TagsPage from '../pages/TagsPage'
 import ArticlePage from '../pages/ArticlePage'
-import { Error404 } from '../components'
+import Error404 from '../components/Error404'
 import Test from '../pages/Test'
 
 const router = [

@@ -1,11 +1,12 @@
 import React, { memo } from 'react'
+import { useTransition } from 'react'
 import { Link } from 'react-router-dom'
 import { formatDate } from '../../../../utils/my-utils'
 
 import { ArticleListWrapper } from './style'
 
 const ArticleList = memo((props) => {
-
+  
   const { data } = props
 
   function getTagsJSX(tags) {
