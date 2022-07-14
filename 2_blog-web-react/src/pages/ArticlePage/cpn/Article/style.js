@@ -74,6 +74,7 @@ export const ArticleWrapper = styled.div`
     }
     
     @media screen and (max-width: 760px) {
+      font-size: 14px;
       margin-top: 0;
       padding: 16px;
       h1 {

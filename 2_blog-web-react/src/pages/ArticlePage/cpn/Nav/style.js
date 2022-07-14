@@ -8,9 +8,10 @@ export const NavWrapper = styled.nav`
   > div {
     flex: 1;
     @media screen and (max-width: 760px){
-      background: #fff;
-      border-bottom: 1px solid #dadada;
-      box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+      padding: 0 5px;
+      /* background: #fff; */
+      /* border-bottom: 1px solid #dadada; */
+      /* box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%); */
     }
   }
   i {

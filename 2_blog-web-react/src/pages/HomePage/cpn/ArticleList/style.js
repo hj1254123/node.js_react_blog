@@ -107,4 +107,15 @@ export const ArticleListWrapper = styled.div`
       }
     }
   }
+  @media screen and (max-width: 760px) {
+    .item {
+      border-radius: 0px;
+      box-shadow: none;
+      margin-bottom: 16px;
+      h3 {
+        font-size: 20px;
+        line-height: 24px;
+      }
+    }
+  }
 `

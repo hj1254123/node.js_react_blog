@@ -7,6 +7,10 @@ export const CommentWrapper = styled.div`
   margin-top: 40px;
   box-shadow: 0 0 4px rgb(0 0 0 / 20%);
   border-radius: 4px;
+  font-size: 16px;
+  @media screen and (max-width: 760px){
+    font-size: 14px;
+  }
   .panel {
     border: 1px solid #f0f0f0;
     border-radius: 4px;
@@ -66,7 +70,7 @@ export const CommentWrapper = styled.div`
     .number-of-comments {
       width: 100%;
       height: 37px;
-      font-size: 15px;
+      font-size: .875em;
       margin: 25px 0;
       color: #555;
       span {
@@ -82,8 +86,8 @@ export const CommentWrapper = styled.div`
       border-bottom: 1px dashed #f5f5f5;
       margin: 20px 0;
       .icon {
-        width: 46px;
-        height: 46px;
+        width: 3em;
+        height: 3em;
         border-radius: 50%;
         overflow: hidden;
         img {
@@ -102,13 +106,13 @@ export const CommentWrapper = styled.div`
         }
         .time {
           color: #b3b3b3;
-          font-size: 14px;
+          font-size: .875em;
           line-height: 17px;
         }
         .comment-content {
           color: #4a4a4a;
           line-height: 26px;
-          font-size: 14px;
+          font-size: .875em;
         }
       }
     }
