@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useDeferredValue } from 'react'
 import { useRoutes } from 'react-router-dom'
 import router from './router'
 import classNames from 'classnames'
@@ -17,6 +17,7 @@ import { Main, Mask } from './app.style'
 
 export default function App() {
   const element = useRoutes(router)
+
   const { isShow, toggleIsShow } = useIsShowContext() // isShow 控制各元素的显示/隐藏，以及移动端的滚动锁定
   const on = classNames({ 'on': isShow })
 
@@ -27,7 +28,7 @@ export default function App() {
         <TopHeader />
         <div className="content-wrapper">
           <Suspense fallback={<div style={{ minHeight: 'calc(100vh)' }} />}>
-            {element}  {/* 注册路由(页面主体) */}
+            {useDeferredValue(element)}
           </Suspense>
         </div>
         <Footer />

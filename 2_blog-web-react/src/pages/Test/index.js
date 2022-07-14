@@ -1,16 +1,10 @@
-import React, { memo, useState } from 'react'
+import { memo } from 'react';
 
 const Test = memo(() => {
-  const [data, setData] = useState(0)
-  if(data > 1) {
-    throw 'test出错'
-  }
+
   return (
-    <div style={{ height: '90vh', width: '100%', paddingTop: '100px' }}>
-      <h2>---开发用,测试页面---</h2>
-      <button onClick={() => {
-        setData(data + 1)
-      }}>{data}</button>
+    <div style={{minHeight: '90vh', paddingTop: '80px'}}>
+      <h2>测试页面</h2>
     </div>
   )
 })
