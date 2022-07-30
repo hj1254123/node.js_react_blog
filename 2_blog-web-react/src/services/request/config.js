@@ -7,7 +7,8 @@ const TIMEOUT = 10000;
 if(process.env.NODE_ENV === 'development') {
   BASE_URL = 'http://192.168.3.42:3001'
 } else {
-  BASE_URL = 'http://192.168.3.42:3001'
+  // BASE_URL = 'http://192.168.3.42:3001'
+  BASE_URL = 'http://150.158.168.128:3001'
 }
 
 export {

@@ -1,4 +1,4 @@
-import { Suspense, useDeferredValue } from 'react'
+import { Suspense } from 'react'
 import { useRoutes } from 'react-router-dom'
 import router from './router'
 import classNames from 'classnames'
@@ -27,9 +27,7 @@ export default function App() {
       <Main className={on}>
         <TopHeader />
         <div className="content-wrapper">
-          <Suspense fallback={<div style={{ minHeight: 'calc(100vh)' }} />}>
-            {useDeferredValue(element)}
-          </Suspense>
+          {element}
         </div>
         <Footer />
       </Main >

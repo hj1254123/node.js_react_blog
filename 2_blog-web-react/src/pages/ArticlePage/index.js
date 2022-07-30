@@ -19,13 +19,13 @@ const ArticlePage = memo(() => {
   const isShowHeaderTitle = useMedia(SmallScreenWidth)
 
   const { id } = useParams() // 从url取文章id
+  const [tocData, setTocData] = useState([]) //存储 h2、h3 元素信息，用于 toc 渲染
+  const { setTitle } = useTitleContext() //全局title
 
   useEffect(() => {
     document.documentElement.scrollTop = 0
+    setTitle('文章页') //这里先设置一下，是为了隐藏 Header 副标题（详情见 Header 组件）
   }, [id])
-
-  const [tocData, setTocData] = useState([]) //存储 h2、h3 元素信息，用于 toc 渲染
-  const { setTitle } = useTitleContext() //全局title
 
   const { data } = useSWRImmutable(`/article/${id}`, (url) => {
     return hjRequest.get(url).then(d => d)
@@ -35,7 +35,7 @@ const ArticlePage = memo(() => {
       setTocData(buildToc(data))
     }
   })
-  
+
   // 解析返回用于渲染 TOC 的数据结构
   function buildToc(data) {
     const toc = [] // 最终处理好的标题数据
@@ -71,18 +71,16 @@ const ArticlePage = memo(() => {
 
   return (
     <ArticleWrapper>
+      <Header isShowTitle={isShowHeaderTitle} />
       {
-        data && <>
-          <Header isShowTitle={isShowHeaderTitle} />
-          <CSSTransition
-            in={true}
-            timeout={500}
-            classNames='context'
-            appear
-          >
-            <Article articleData={data.data} tocData={tocData} />
-          </CSSTransition>
-        </>
+        data && <CSSTransition
+          in={true}
+          timeout={500}
+          classNames='context'
+          appear
+        >
+          <Article articleData={data.data} tocData={tocData} />
+        </CSSTransition>
       }
     </ArticleWrapper>
   )

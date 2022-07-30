@@ -8,6 +8,8 @@ import { HeaderWrapper } from './style'
 const Header = memo(({ children, isShowTitle = true }) => {
   const { title } = useTitleContext()
   const isShowSpan = (title === "HouJi's Blog")
+  console.log('title', title)
+  console.log('isShowSpan', isShowSpan)
   return (
     <HeaderWrapper isShowSpan={isShowSpan} isShowTitle={isShowTitle}>
       <CSSTransition
