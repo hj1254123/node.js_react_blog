@@ -63,7 +63,7 @@ export const HeaderWrapper = styled.header`
 
   .solt {
     width: 100%;
-    height: 48px;
+    height: 42px;
     position: relative;
     margin-bottom: -42px;
   }

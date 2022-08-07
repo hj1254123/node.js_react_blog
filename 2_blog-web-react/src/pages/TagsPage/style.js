@@ -40,8 +40,8 @@ export const TagNameNavWrapper = styled.nav`
     li {
       position: relative;
       font-size: 16px;
-      height: 40px;
-      line-height: 40px;
+      height: 42px;
+      line-height: 42px;
       padding: 0 16px;
       cursor: pointer;
       transition: all .4s;
@@ -111,11 +111,13 @@ export const Main = styled.div`
   padding: 30px 0 40px;
   @media screen and (max-width: 1040px) {
     width: 100%;
-    padding: 20px 16px
+    padding: 20px 16px;
   }
   @media screen and (max-width: 760px) {
     width: 100%;
-    padding: 20px 0;
+    /*这里把padding-top多设置了42是因为header组件在小于760的移动端，
+    padding-bottom不再为42，而被设置为了0，故为了美观 solt 设置了-42px，所以这里需要自行挤开 */
+    padding: 62px 0 20px;
   }
 `
 

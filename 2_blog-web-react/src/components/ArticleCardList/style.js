@@ -3,6 +3,9 @@ import styled from 'styled-components';
 export const ArticleCardListWrapper = styled.div`
   width: 100%;
   margin-bottom: 35px;
+  @media screen and (max-width: 760px) {
+    margin-bottom: 0px;
+  }
   h3 {
     color: #3f51b5;
     font-size: 16px;
@@ -27,5 +30,6 @@ export const ArticleCardListWrapper = styled.div`
       }
     }
   }
+
 `
 

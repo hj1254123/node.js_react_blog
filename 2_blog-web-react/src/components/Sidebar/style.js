@@ -65,19 +65,24 @@ export const NavWrapper = styled.div`
       line-height: 44px;
       padding: 0 20px;
       font-weight: 500;
-      &.active {
-        background-color: rgba(0,0,0,0.05);
-      }
-      &:hover {
-        text-decoration: none;
-        background-color: rgba(0,0,0,0.05);
-      }
       i {
         display: inline-block;
         font-size: 22px;
         color: #666;
         margin-right: 20px;
       }
+      &.active {
+        background-color: rgba(0,0,0,0.05);
+        color: #3f51b5;
+        i {
+          color: #3f51b5;
+        }
+      }
+      &:hover {
+        text-decoration: none;
+        background-color: rgba(0,0,0,0.05);
+      }
+
     }
   }
 `
