@@ -52,8 +52,8 @@ app.use(expressJwt({
 }))
 
 // 日志
-// create a write stream (in append mode)
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' })
+// TODO：上线时开启日志功能
+// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' })
 
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }))
