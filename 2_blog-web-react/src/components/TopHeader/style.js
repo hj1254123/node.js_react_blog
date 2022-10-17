@@ -54,9 +54,9 @@ export const TopHeaderWrapper = styled.header`
   @media screen and (max-width: 1240px) {
     .top-button {
       width: 56px;
-      button {
+      /* button {
         position: static;
-      }
+      } */
     }
     .top-title {
       white-space: nowrap;
