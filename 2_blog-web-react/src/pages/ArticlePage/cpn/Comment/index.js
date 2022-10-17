@@ -5,10 +5,11 @@ import toast from 'react-hot-toast';
 
 import defaultImg from '../../../../assets/img/default-icon.png'
 import hjRequest from '../../../../services/request'
-import { formatDate } from '../../../../utils/my-utils'
+import { debounce, formatDate, throttle } from '../../../../utils/my-utils'
 
 
 import { CommentWrapper } from './style'
+import { useEffect } from 'react';
 
 const Comment = memo(({ articleID }) => {
   const [panel, setPanel] = useState({
@@ -16,6 +17,15 @@ const Comment = memo(({ articleID }) => {
     email: '',
     content: ''
   })
+  // 提交按钮允许点击与否
+  const [isDisabledBtn, setIsDisabledBtn] = useState(true)
+  useEffect(() => {
+    if(panel.content === '') {
+      setIsDisabledBtn(true)
+    } else {
+      setIsDisabledBtn(false)
+    }
+  }, [panel])
 
   const { data, mutate } = useSWR(`/comment/${articleID}`, (url) => {
     return hjRequest.get(url).then(d => d)
@@ -37,39 +47,15 @@ const Comment = memo(({ articleID }) => {
   }
 
   // 做两件事：
-  //  1.获取并校验待添加评论数据 
-  //  2.添加评论，并通过swr实现乐观更新
-  async function submitComment(e) {
-    e.preventDefault()
-    // 1.拿到并校验，评论表单所需数据
-    const formObj = {}
-    // 用户名
-    if(panel.userName.length === 0) {
-      formObj.userName = 'default'
-    } else {
-      formObj.userName = panel.userName
-    }
-    // 邮箱
-    const regexp = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/
-    const checkEmail = regexp.test(panel.email)
-    if(!checkEmail) {
-      toast.error("邮箱格式不正确")
-      return
-    }
-    formObj.email = panel.email
-    // 内容校验
-    if(panel.content.length > 1000) {
-      toast.error('评论字数大于1000，请删减！')
-      return
-    }
-    if(panel.content.length <= 0) {
-      toast.error('评论内容不能为空')
-      return
-    }
-    formObj.content = panel.content
-    // 文章id
-    formObj.articleID = articleID
-    console.log(formObj)
+  //  1.获取并校验待发送评论数据 
+  //  2.发送评论数据，并通过swr实现乐观更新
+  async function submitComment() {
+    // 0.禁止点击提交按钮,指定毫秒后恢复
+    prohibitSumitBtn(5000)
+    // 1.拿到并校验评论表单所需数据
+    const formObj = checkComment()
+    if(!formObj) return
+
     // 2.提交数据，并采用乐观更新
     // 该item用于乐观更新，在异步请求完成后会被替换
     const newItem = {
@@ -104,18 +90,60 @@ const Comment = memo(({ articleID }) => {
         return resData
       } else {
         toast.error(response.message)
-        // 失败回退状态（data没有还被修改，乐观更新用的是另一个data拷贝）
+        // 失败回退状态（data还没有被修改，乐观更新用的是另一个data拷贝）
         // （配置项设置了rollbackOnError: true，
         //  服务端返回错误状态码会自动回退，
         //  这里为了处理状态码正确的错误。）
         return data
       }
     }, options)
+
+  }
+
+  function checkComment() {
+    const formObj = {}
+    // 用户名
+    if(panel.userName.length === 0) {
+      formObj.userName = 'default'
+    } else {
+      formObj.userName = panel.userName
+    }
+    // 邮箱
+    const regexp = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/
+    const checkEmail = regexp.test(panel.email)
+    if(!checkEmail) {
+      toast.error("邮箱格式不正确")
+      return false
+    }
+    formObj.email = panel.email
+    // 内容校验
+    if(panel.content.length > 1000) {
+      toast.error('评论字数大于1000，请删减！')
+      return false
+    }
+    if(panel.content.length <= 0) {
+      toast.error('评论内容不能为空')
+      return false
+    }
+    formObj.content = panel.content
+    // 文章id
+    formObj.articleID = articleID
+    return formObj
+  }
+
+  function prohibitSumitBtn(msec) {
+    setIsDisabledBtn(true)
+    setTimeout(() => {
+      setIsDisabledBtn(false)
+    }, msec)
   }
 
   return (
     <CommentWrapper>
-      <form className="panel" onSubmit={submitComment}>
+      <form className="panel" onSubmit={e => {
+        e.preventDefault()
+        submitComment()
+      }}>
         <div className="header">
           <input
             type="text"
@@ -147,7 +175,7 @@ const Comment = memo(({ articleID }) => {
         <div className="bottom">
           <button
             className="submit"
-            disabled={panel.content ? '' : 'disabled'}
+            disabled={isDisabledBtn}
           >提交</button>
         </div>
       </form>
