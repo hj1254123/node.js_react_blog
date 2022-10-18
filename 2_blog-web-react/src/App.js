@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { useRoutes } from 'react-router-dom'
 import router from './router'
 import classNames from 'classnames'
@@ -13,6 +14,7 @@ import {
   Loading,
 } from './components'
 import { Main, Mask } from './app.style'
+import LoadingLazy from './components/LoadingLazy'
 
 export default function App() {
   const element = useRoutes(router)
@@ -26,7 +28,9 @@ export default function App() {
       <Main className={on}>
         <TopHeader />
         <div className="content-wrapper">
-          {element}
+          <Suspense fallback={<LoadingLazy />}>
+            {element}
+          </Suspense>
         </div>
         <Footer />
       </Main >

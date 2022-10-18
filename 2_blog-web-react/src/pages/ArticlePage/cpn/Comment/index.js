@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 import defaultImg from '../../../../assets/img/default-icon.png'
 import hjRequest from '../../../../services/request'
-import { debounce, formatDate, throttle } from '../../../../utils/my-utils'
+import { formatDate } from '../../../../utils/my-utils'
 
 
 import { CommentWrapper } from './style'

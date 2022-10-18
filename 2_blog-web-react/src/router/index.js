@@ -1,9 +1,13 @@
+import { lazy } from 'react'
+
 import HomePage from '../pages/HomePage'
 import ArchivePage from '../pages/ArchivePage'
 import TagsPage from '../pages/TagsPage'
-import ArticlePage from '../pages/ArticlePage'
 import Error404 from '../components/Error404'
 import Test from '../pages/Test'
+
+// 其他页面很小没必要做懒加载
+const ArticlePage = lazy(() => import('../pages/ArticlePage'))
 
 const router = [
   {

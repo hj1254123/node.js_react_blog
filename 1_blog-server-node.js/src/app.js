@@ -56,7 +56,7 @@ app.use(expressJwt({
 // const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' })
 
 // setup the logger
-app.use(morgan('combined', { stream: accessLogStream }))
+// app.use(morgan('combined', { stream: accessLogStream }))
 
 // 路由
 app.use('/auth', authRouter)
