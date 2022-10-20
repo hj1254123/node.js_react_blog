@@ -219,12 +219,14 @@ articleModel.getPage = function(pageN) {
   // 切割下需要的文章
   const cutArticleArr = articlesDB.slice(start, end)
 
-  // 给每一篇文章添加对应的标签数据
+  // 给每一篇文章添加对应的标签数据、删除不需要的 content
   for(const item of cutArticleArr) {
     // 根据文章id拿到所有标签id
     const tags = tagsModel.getTagsArrBasedOnTheArticleID(item.id)
     // 给文章添加标签数据
     item.tags = tags
+    // 删除文章内容
+    delete item.content
   }
   // 返回
   data.message = '获取文章列表成功'

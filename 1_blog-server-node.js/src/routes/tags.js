@@ -77,9 +77,11 @@ router.get('/page', function(req, res) {
       const articleIDArr = tagAndArticleModel.getArticleIDArrBasedOnTagID(tagID)
       // 根据文章id数组拿到对应数据arr
       const articleArr = articleModel.getArticleArrBasedOnTheArticleIDArr(articleIDArr)
-      // 给文章数组添加标签数组
+      // 给每篇文章追加标签数据，并删除不需要的文章内容、简介
       for(const item of articleArr) {
         item.tags = tagsModel.getTagsArrBasedOnTheArticleID(item.id)
+        delete item.content
+        delete item.intro
       }
       // 拿到标签名称
       const tag = tagsArr.find(item => {

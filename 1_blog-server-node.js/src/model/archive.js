@@ -33,8 +33,9 @@ archiveModel.getPage = function(pageNumber) {
     const tags = tagsModel.getTagsArrBasedOnTheArticleID(item.id)
     item.tags = tags
 
-    // 不要 intro
+    // 不要 intro、content
     delete item.intro
+    delete item.content
 
     // 拿到 key 对应的数组，并 push 文章
     // （这里是在直接对 yearMonthObj 操作，其实不便于理解，以后开发注意。 2022-4-23留）
