@@ -60,38 +60,27 @@ router.put('/', function(req, res) {
 // TODO: 该接口时间复杂度太高了，待优化。
 router.get('/page', function(req, res) {
   try {
+    console.time('tags')
     // - 拿到标签数据
     const tagsArr = tagsModel.getTagsArr()
 
-    // - 拿到标签id对应文章数据
-    // 遍历得到所有标签id
-    const tagIDArr = []
-    for(const item of tagsArr) {
-      tagIDArr.push(item.id)
-    }
-    // 用于存标签id对应文章数据
+    // 该对象用于存放 tagName 映射对应的文章数组
     const tagNameMapsToArticleArrObj = {}
     // 添加映射数据
-    for(const tagID of tagIDArr) {
-      // 根据标签拿到文章id数组
-      const articleIDArr = tagAndArticleModel.getArticleIDArrBasedOnTagID(tagID)
-      // 根据文章id数组拿到对应数据arr
-      const articleArr = articleModel.getArticleArrBasedOnTheArticleIDArr(articleIDArr)
-      // 给每篇文章追加标签数据，并删除不需要的文章内容、简介
-      for(const item of articleArr) {
+    for(const tag of tagsArr) {
+      // 根据 tagID 拿到其对应的 articleIDArr
+      const articleIDArr = tagAndArticleModel.getArticleIDArrBasedOnTagID(tag.id)
+      // 根据 articleIDArr 拿到其对应的 articleDataArr
+      const articleDataArr = articleModel.getArticleArrBasedOnTheArticleIDArr(articleIDArr)
+      // 给每篇文章追加 tagsData，并删除不需要的文章内容、简介
+      for(const item of articleDataArr) {
         item.tags = tagsModel.getTagsArrBasedOnTheArticleID(item.id)
         delete item.content
         delete item.intro
       }
-      // 拿到标签名称
-      const tag = tagsArr.find(item => {
-        return item.id === tagID
-      })
-      const key = tag.tagName
-      // 添加映射关系
-      tagNameMapsToArticleArrObj[key] = articleArr
+      tagNameMapsToArticleArrObj[tag.tagName] = articleDataArr
     }
-
+    console.timeEnd('tags')
     // - 返回
     res.json([tagsArr, tagNameMapsToArticleArrObj])
   } catch(error) {

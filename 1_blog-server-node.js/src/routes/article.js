@@ -45,6 +45,7 @@ router.get('/:id', function(req, res) {
 
 router.get('/page/:id', function(req, res) {
   try {
+    console.time('home')
     const pageN = parseInt(req.params.id)
     const data = articleModel.getPage(pageN)
     
@@ -53,6 +54,8 @@ router.get('/page/:id', function(req, res) {
     } else {
       res.json(data)
     }
+    console.timeEnd('home')
+
   } catch (error) {
     res.status(500).json('获取某页文章列表出错，注意处理')
   }
