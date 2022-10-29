@@ -1,0 +1,23 @@
+// 借助 memory-cache 库，实现接口缓存中间件
+const { get, put } = require('memory-cache')
+
+// 参数单位：秒
+const cacheMiddleware = (duration) => {
+  return (req, res, next) => {
+    let key = '__express__' + req.originalUrl || req.url
+    let cachedBody = get(key)
+    if(cachedBody) {
+      res.send(cachedBody)
+      return
+    } else {
+      res.sendResponse = res.send
+      res.send = (body) => {
+        put(key, body, duration * 1000);
+        res.sendResponse(body)
+      }
+      next()
+    }
+  }
+}
+
+module.exports = cacheMiddleware

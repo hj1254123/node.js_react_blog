@@ -1,10 +1,10 @@
 const express = require('express')
+const cacheMiddleware = require('../middleware/cache')
 const archiveModel = require('../model/archive')
 const router = express.Router()
 
-router.get('/:page', (req, res) => {
+router.get('/:page', cacheMiddleware(20), (req, res) => {
   try {
-    console.time('archive')
     const pageNumber = parseInt(req.params.page)
     const data = archiveModel.getPage(pageNumber)
     if(data.data.length <= 0) { // 没有数据返回404
@@ -12,8 +12,7 @@ router.get('/:page', (req, res) => {
     } else {
       res.json(data)
     }
-    console.timeEnd('archive')
-  } catch (error) {
+  } catch(error) {
     console.log(error);
     res.status(500).json('获取归档文章列表出错，注意处理')
   }

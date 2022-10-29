@@ -1,5 +1,8 @@
 const express = require('express')
 const articleModel = require('../model/article')
+
+const cacheMiddleware = require('../middleware/cache')
+
 const router = express.Router()
 
 router.post('/', function(req, res) {
@@ -28,8 +31,8 @@ router.put('/', function(req, res) {
   try {
     const data = articleModel.putArticle(articleData)
     res.json(data)
-  } catch (error) {
-    res.status(500).json('修改文章出错，注意处理')  
+  } catch(error) {
+    res.status(500).json('修改文章出错，注意处理')
   }
 })
 
@@ -38,25 +41,22 @@ router.get('/:id', function(req, res) {
     const articleID = parseInt(req.params.id)
     const data = articleModel.getArticle(articleID)
     res.json(data)
-  } catch (error) {
-    res.status(500).json('获取文章出错，注意处理')  
+  } catch(error) {
+    res.status(500).json('获取文章出错，注意处理')
   }
 })
 
-router.get('/page/:id', function(req, res) {
+router.get('/page/:id', cacheMiddleware(10), function(req, res) {
   try {
-    console.time('home')
     const pageN = parseInt(req.params.id)
     const data = articleModel.getPage(pageN)
-    
+
     if(data.data.length <= 0) { // 没有数据返回404
       res.status(404).send('该页没有数据')
     } else {
       res.json(data)
     }
-    console.timeEnd('home')
-
-  } catch (error) {
+  } catch(error) {
     res.status(500).json('获取某页文章列表出错，注意处理')
   }
 })

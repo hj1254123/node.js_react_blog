@@ -3,7 +3,10 @@ const articleModel = require('../model/article.js')
 const tagAndArticleModel = require('../model/tag&article.js')
 const tagsModel = require('../model/tags.js')
 
+const cacheMiddleware = require('../middleware/cache')
+
 const router = express.Router()
+
 
 // 向某篇文章追加单个标签
 router.post('/article', function(req, res) {
@@ -57,10 +60,8 @@ router.put('/', function(req, res) {
 })
 
 // 标签页 - 获取所有标签和标签对应文章
-// TODO: 该接口时间复杂度太高了，待优化。
-router.get('/page', function(req, res) {
+router.get('/page', cacheMiddleware(60), function(req, res) {
   try {
-    console.time('tags')
     // - 拿到标签数据
     const tagsArr = tagsModel.getTagsArr()
 
@@ -80,7 +81,6 @@ router.get('/page', function(req, res) {
       }
       tagNameMapsToArticleArrObj[tag.tagName] = articleDataArr
     }
-    console.timeEnd('tags')
     // - 返回
     res.json([tagsArr, tagNameMapsToArticleArrObj])
   } catch(error) {
