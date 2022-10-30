@@ -1,14 +1,16 @@
 import React, { memo, useState } from 'react'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useNavigate, useParams } from 'react-router-dom'
-
-import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
-
-import { ArticleCardList, Header } from '../../components'
-import { TagsWrapper, Main, TagNameNavWrapper } from './style'
 import useSWRImmutable from 'swr'
 import hjRequest from '../../services/request'
 import classNames from 'classnames'
+import { useMedia } from 'react-use'
+
+import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle'
+import { SmallScreenWidth } from '../../common/constant'
+
+import { ArticleCardList, Header } from '../../components'
+import { TagsWrapper, Main, TagNameNavWrapper } from './style'
 
 const TagsPage = memo(() => {
   const [isUnfold, setIsUnfold] = useState(false) //控制展开tagNav
@@ -29,6 +31,11 @@ const TagsPage = memo(() => {
   let titleNameArr = data ? data[0] : []
   const tagMapArticleObj = data ? data[1] : {}
 
+  const isSmallScreen = useMedia(SmallScreenWidth)
+  if(!isSmallScreen) { //只要不是小屏，就重排序标题名数组。
+    sortTitleNameArr()
+  }
+
   // 调整被高亮度titleName位置到数组头部
   function sortTitleNameArr() {
     if(tagName === '全部') return
@@ -41,7 +48,6 @@ const TagsPage = memo(() => {
       }
     }
   }
-  sortTitleNameArr()
 
   function renderTagNameNavJSX() {
     const tagnameListClass = classNames('tagname-list', {

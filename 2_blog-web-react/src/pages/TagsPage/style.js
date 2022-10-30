@@ -44,7 +44,6 @@ export const TagNameNavWrapper = styled.nav`
       line-height: 42px;
       padding: 0 16px;
       cursor: pointer;
-      transition: all .4s;
       &:hover {
         color: #fff;
       }
