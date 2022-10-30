@@ -10,8 +10,8 @@ import { LargeScreenWidth } from '../common/constant'
 export default function useResponsiveLayout() {
   // 媒体查询，控制大屏与中小屏的排版逻辑
   const isLargeScreenWidth = useMedia(LargeScreenWidth)
-  // 控制页面整体是否移动
-  const [isShow, setIsShow] = useState(true)
+  // 控制页面整体是否移动；初始值是为了大屏默认显示侧边栏、中小屏反之
+  const [isShow, setIsShow] = useState(() => (isLargeScreenWidth ? false : true))
 
   // 通过 isShow 控制页面元素的显示/隐藏
   const toggleIsShow = useCallback(() => {

@@ -20,7 +20,6 @@ const Sidebar = memo(() => {
       toggleIsShow()
     }
   }
-
   return (
     <SlidebarWrapper isShow={isShow}>
       <BrandWrapper>
