@@ -1,9 +1,8 @@
 import styled from 'styled-components'
 
 export const HeaderWrapper = styled.header`
-  position: relative;
-  width: 100%;
-  padding: 104px 16px 42px 16px;
+  margin-left: -240px;
+  padding: 104px 16px 42px 256px;
   background-color: #3f51b5;
   color: #fff;
   text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
