@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { EmitRequestNumberChange } from '../../utils/eventBus'
+import eventBus from '../../utils/eventBus'
 import { BASE_URL, TIMEOUT } from './config'
 
 
@@ -23,7 +23,7 @@ class HjRequest {
       // - 请求数加一，并发布出去
       if(config.isLoading) { //如果为false则不计数
         requestNumber++
-        EmitRequestNumberChange(requestNumber)
+        eventBus.emit('countChange', requestNumber)
       }
       return config
     }, err => {
@@ -34,7 +34,7 @@ class HjRequest {
       // - 请求数减一，并发布出去
       if(res.config.isLoading) {
         requestNumber--
-        EmitRequestNumberChange(requestNumber)
+        eventBus.emit('countChange', requestNumber)
       }
 
       return res.data
@@ -43,7 +43,7 @@ class HjRequest {
       // - 请求数减一，并发布出去
       if(err.config.isLoading) {
         requestNumber--
-        EmitRequestNumberChange(requestNumber)
+        eventBus.emit('countChange', requestNumber)
       }
       return Promise.reject({
         data: err.response.data,
