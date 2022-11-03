@@ -15,13 +15,16 @@ const archiveRouter = require('./routes/archive.js')
 const app = express()
 const port = 3001
 
-// 允许跨域
+// 允许信任url跨域
 app.use((req, res, next) => {
-  // console.log(req.headers.origin)
-  res.header('Access-Control-Allow-Origin', req.headers.origin)
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
-  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
-  res.header('Content-Type', 'application/json; charset=utf-8')
+  const trustList = ['http://localhost:3000', 'http://localhost:3001']
+  const origin = req.headers.origin
+  if(trustList.indexOf(origin) > -1) {
+    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
+    res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
+    res.header('Content-Type', 'application/json; charset=utf-8')
+  }
   next()
 })
 

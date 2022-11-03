@@ -14,11 +14,11 @@ const visitorIp = {}
 
 // 限制单个ip单日密码尝试次数
 function preventViolentCrackPassword(ip) {
-  const max = 10 // 密码单日最多尝试次数
   // ip未记录，直接通过
   if(!visitorIp[ip]) {
     return '通过'
   }
+  const max = visitorIp[ip].max// 密码单日最多尝试次数
   // 检查记录的时间是否是今天
   const oldTime = new Date(visitorIp[ip].time)
   const oldDate = oldTime.getFullYear() + '/' + (oldTime.getMonth() + 1) + '/' + oldTime.getDay()
@@ -27,7 +27,7 @@ function preventViolentCrackPassword(ip) {
   // 如果是同一天检查错误次数
   const o = visitorIp[ip]
   if(oldDate === date) {
-    if(!o.count || o.count >= max) {
+    if(!o.count || o.count + 1 >= max) {
       return '未通过'
     }
   } else {
@@ -144,17 +144,18 @@ authModel.userNamePasswordAuth = async (userName, password, ip) => {
           o.count = 0
         }
       } else {
-        message = '密码错误'
         // - 密码错误，记录访问者ip和时间戳，错误次数+1
         // 没有记录初始化
         if(!visitorIp[ip]) {
           visitorIp[ip] = {
             time: new Date(),
-            count: 1
+            max: 5, //最大密码错误尝试次数
+            count: 0
           }
         }
         const o = visitorIp[ip]
         o.count = o.count + 1
+        message = `密码错误，今日还可尝试${o.max - o.count}`
       }
       break
     }
