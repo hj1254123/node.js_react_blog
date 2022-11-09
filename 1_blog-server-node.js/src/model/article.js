@@ -244,6 +244,9 @@ articleModel.getArticle = function(articleID) {
   data.data.tags = tags
   data.message = '成功'
 
+  // 3.文章阅读数+1
+  articlesDB[index].views += 1
+  save(articlesDB)
   // 返回
   return data
 }
@@ -345,7 +348,8 @@ function saveNewArticle(title, intro, content) {
     time: 1,
     title: title,
     intro: intro,
-    content: content
+    content: content,
+    views: 0
   }
 
   // 查询数据库，读取文章数据
@@ -381,7 +385,7 @@ function addArticleVerification(articleData) {
   // 长度控制
   if(title.length > 60) {
     checkTitle = true
-  } else if(intro.length > 300) {
+  } else if(intro.length > 200) {
     checkIntro = true
   } else if(content.length > 30000) {
     checkContent = true
