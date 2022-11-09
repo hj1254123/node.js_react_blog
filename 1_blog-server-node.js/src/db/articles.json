@@ -1,1 +1,1 @@
-[{"id":1,"time":1668001562815,"title":"Test 1","intro":"测试评论延迟功能","content":"## test 1","views":0},{"id":2,"time":1668004638006,"title":"Test 2","intro":"","content":"## test 1","views":14,"nav":{"prevID":1,"nextID":-1,"prevTitle":"Test 1","nextTitle":""},"tags":[{"id":1,"tagName":"test","time":1668001401419}]}]
+[{"id":1,"time":1668001562815,"title":"Test 1","intro":"测试评论延迟功能","content":"## test 1","views":2},{"id":2,"time":1668004638006,"title":"Test 2","intro":"","content":"## test 1","views":17}]

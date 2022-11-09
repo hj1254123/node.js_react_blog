@@ -212,9 +212,12 @@ articleModel.getArticle = function(articleID) {
     data.message = '没有该文章'
     return data
   }
-  // 文章数据
+  // 待返回的文章数据(注意：这里拷贝的是引用)
   data.data = articlesDB[index]
-  // nav数据（上/下 一篇文章）
+  // 2. 文章阅读数+1
+  data.data.views += 1
+  save(articlesDB) //先保存了，避免保存下面的无用数据
+  // nav数据（客户端用：上/下 一篇文章）
   let prev = articlesDB[index - 1]
   let next = articlesDB[index + 1]
   let prevID = -1 // 默认-1，表示没有该文章
@@ -238,15 +241,12 @@ articleModel.getArticle = function(articleID) {
     nextTitle
   }
 
-  // 2.拿到对应的标签数据
+  // 3.拿到对应的标签数据
   const tags = tagsModel.getTagsArrBasedOnTheArticleID(articleID)
   // 添加标签数据
   data.data.tags = tags
   data.message = '成功'
 
-  // 3.文章阅读数+1
-  articlesDB[index].views += 1
-  save(articlesDB)
   // 返回
   return data
 }
