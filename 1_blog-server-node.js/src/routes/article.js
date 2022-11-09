@@ -26,6 +26,15 @@ router.delete('/', function(req, res) {
   }
 })
 
+router.delete('/batch', function(req, res) {
+  try {
+    const data = articleModel.delArticles(req.body.articlesID)
+    res.json(data)
+  } catch(error) {
+    res.status(500).json('批量删除文章出错，注意处理')
+  }
+})
+
 router.put('/', function(req, res) {
   const articleData = req.body
   try {

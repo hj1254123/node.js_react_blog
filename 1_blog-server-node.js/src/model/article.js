@@ -110,6 +110,53 @@ articleModel.delArticle = function(articleID) {
   return data
 }
 
+articleModel.delArticles = function(articlesID) {
+  // 初始化待返回给客户端的数据
+  const data = {
+    message: "",
+    data: {
+      articlesID: []
+    }
+  }
+  // - 数据校验
+  if(!Array.isArray(articlesID)) return '文章id必须为数组'
+
+  for(const item of articlesID) {
+    if(typeof item !== 'number') {
+      data.message = '文章ID只能为数字'
+      return data
+    }
+  }
+  // - 读取文章数据
+  const articlesDB = getArticlesData()
+  // - 批量删除文章
+  const articlesIDIndex = [] // 待删除的文章ID下标
+
+  for(const articleID of articlesID) { // 只要有一个文章id找不到，就返回失败
+    // 找到文章下标
+    const result = articlesDB.findIndex(item => {
+      return item.id === articleID
+    })
+    // 没找到返回结果
+    if(result === -1) {
+      data.message = `没有ID为${articleID}的文章`
+      return data
+    } else {
+      articlesIDIndex.push(result)
+    }
+    // 批量删除
+    for(const index of articlesIDIndex) {
+      articlesDB.splice(index, 1)
+    }
+    // 保存文章数据
+    save(articlesDB)
+  }
+  // - 返回结果
+  data.message = '批量删除文章成功'
+  data.articlesID = articlesID
+  return data
+}
+
 articleModel.putArticle = function(articleData) {
   // 初始化待返回给客户端的数据
   const data = {
@@ -196,7 +243,7 @@ articleModel.getArticle = function(articleID) {
   // 添加标签数据
   data.data.tags = tags
   data.message = '成功'
-  
+
   // 返回
   return data
 }
