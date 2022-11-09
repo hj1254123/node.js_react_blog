@@ -1,10 +1,10 @@
 const fs = require("fs")
 const path = require("path")
 
-const tag_articleDBPath = path.resolve(__dirname, '../db/tag&article.json')
-
-
 const tagAndArticleModel = {}
+module.exports = tagAndArticleModel
+
+const tag_articleDBPath = path.resolve(__dirname, '../db/tag&article.json')
 
 // 根据文章ID和标签ID数组，添加关联项
 tagAndArticleModel.addTagArticle = function(articleID, tagsIDArr) {
@@ -77,6 +77,29 @@ tagAndArticleModel.delItemsBasedOnTheTagID = function(tagID) {
   return true
 }
 
+// 过滤掉包含给定tagsIDArr的项，并覆盖保存数据文档。
+tagAndArticleModel.delItemsBasedOnTheTagsIDArr = function(tagsIDArr) {
+  const tagArticleDB = getTagArticleData()
+
+  const newArr = tagArticleDB.filter(item => {
+    let result = true
+    // 包含任一 tagID 就过滤
+    for (const tagID of tagsIDArr) {
+      result = (item.tagID !== tagID)
+      if(result === false) {
+        // 找到了过滤该项
+        return result
+      }
+    }
+    // 没找到保存该项
+    return result
+  })
+
+  save(newArr)
+
+  return true
+}
+
 // 根据文章ID返回所有包含该ID的项（数组）
 tagAndArticleModel.returnItemsBasedOnTheArticleID = function(articleID) {
   const tagArticleDB = getTagArticleData()
@@ -142,5 +165,3 @@ function save(data) {
   fs.writeFileSync(tag_articleDBPath, JSON.stringify(data))
 }
 
-
-module.exports = tagAndArticleModel

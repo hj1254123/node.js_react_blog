@@ -46,7 +46,22 @@ router.delete('/', function(req, res) {
     res.status(500).json('删除标签出错，注意处理')
   }
 })
-
+// 批量删除某个标签（有这些标签的所有文章，都删除该标签）
+router.delete('/batch', function(req, res) {
+  try {
+    const tagsIDArr = req.body.tagsIDArr
+    // 删除该标签
+    const data = tagsModel.delTags(tagsIDArr)
+    if(data.message === '批量删除标签成功') {
+      // 删除所有包含该tagsIDArr的关系项
+      tagAndArticleModel.delItemsBasedOnTheTagsIDArr(tagsIDArr)
+    }
+    res.json(data)
+  } catch(error) {
+    console.log(error)
+    res.status(500).json('删除标签出错，注意处理')
+  }
+})
 // 修改某个标签名称
 router.put('/', function(req, res) {
   try {

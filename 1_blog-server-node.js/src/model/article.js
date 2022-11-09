@@ -2,13 +2,13 @@ const fs = require("fs")
 const path = require("path")
 const xss = require("xss")
 
+const articleModel = {}
+module.exports = articleModel
+
 const tagsModel = require("./tags.js")
 const tagAndArticleModel = require("./tag&article.js")
 
 const articlesDBPath = path.resolve(__dirname, '../db/articles.json')
-
-
-const articleModel = {}
 
 articleModel.addArticle = function(articleData) {
   /**
@@ -119,7 +119,10 @@ articleModel.delArticles = function(articlesID) {
     }
   }
   // - 数据校验
-  if(!Array.isArray(articlesID)) return '文章id必须为数组'
+  if(!Array.isArray(articlesID)) {
+    data.message = 'articlesID必须为数组'
+    return data
+  }
 
   for(const item of articlesID) {
     if(typeof item !== 'number') {
@@ -128,29 +131,27 @@ articleModel.delArticles = function(articlesID) {
     }
   }
   // - 读取文章数据
-  const articlesDB = getArticlesData()
+  let articlesDB = getArticlesData()
   // - 批量删除文章
-  const articlesIDIndex = [] // 待删除的文章ID下标
-
-  for(const articleID of articlesID) { // 只要有一个文章id找不到，就返回失败
-    // 找到文章下标
-    const result = articlesDB.findIndex(item => {
+  // 只要有一个文章id找不到，就返回失败
+  for(const articleID of articlesID) {
+    const index = articlesDB.findIndex(item => {
       return item.id === articleID
     })
     // 没找到返回结果
-    if(result === -1) {
-      data.message = `没有ID为${articleID}的文章`
+    if(index === -1) {
+      data.message = `没有ID为${articleID}的文章，操作取消`
       return data
-    } else {
-      articlesIDIndex.push(result)
     }
-    // 批量删除
-    for(const index of articlesIDIndex) {
-      articlesDB.splice(index, 1)
-    }
-    // 保存文章数据
-    save(articlesDB)
   }
+  // 批量删除
+  for(const articleID of articlesID) {
+    articlesDB = articlesDB.filter(item => {
+      return item.id !== articleID
+    })
+  }
+  // 保存文章数据
+  save(articlesDB)
   // - 返回结果
   data.message = '批量删除文章成功'
   data.articlesID = articlesID
@@ -459,5 +460,3 @@ function putArticleVerification(articleData) {
   return result
 }
 
-
-module.exports = articleModel

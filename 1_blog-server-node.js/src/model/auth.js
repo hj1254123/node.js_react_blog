@@ -2,12 +2,13 @@ const fs = require("fs")
 const path = require("path")
 const xss = require("xss")
 
-const userDBPath = path.resolve(__dirname, '../db/user.json')
+const authModel = {}
+module.exports = authModel
 
 const { md5password } = require('../utils/auth_handle.js')
 const { REGISTRY_INVITATION_CODE } = require('../constants/config')
 
-const authModel = {}
+const userDBPath = path.resolve(__dirname, '../db/user.json')
 
 // 记录ip，及对应的密码错误次数
 const visitorIp = {}
@@ -162,5 +163,3 @@ authModel.userNamePasswordAuth = async (userName, password, ip) => {
   }
   return { message, data }
 }
-
-module.exports = authModel

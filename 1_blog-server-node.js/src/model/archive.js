@@ -1,7 +1,8 @@
+const archiveModel = {}
+module.exports = archiveModel
+
 const articleModel = require("./article")
 const tagsModel = require('./tags.js')
-
-const archiveModel = {}
 
 
 // 获取某页的文章列表（包含文章的12个月/页） 
@@ -66,5 +67,3 @@ archiveModel.getPage = function(pageNumber) {
   data.total = Math.ceil(yearMonthArr.length / size)
   return data
 }
-
-module.exports = archiveModel

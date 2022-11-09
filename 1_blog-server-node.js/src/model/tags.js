@@ -2,12 +2,13 @@ const fs = require('fs')
 const path = require('path')
 const xss = require('xss')
 
+const tagsModel = {}
+module.exports = tagsModel // 提升导出是为了解决循环引用问题
+
 const tagAndArticleModel = require("./tag&article.js")
+const articleModel = require('./article.js')
 
 const tagsDBPath = path.resolve(__dirname, '../db/tags.json')
-
-
-const tagsModel = {}
 
 // 参数 tagsArr 在 ./article.js 中已校验和安全处理
 tagsModel.addTagsFromArticleInterface = function(tagsArr) {
@@ -80,7 +81,12 @@ tagsModel.additionalTag = function(articleID, tagName) {
     data.message = '标签名必须是字符串，且长度20'
     return data
   }
-
+  // - 检查文章id是否存在
+  let s = articleModel.checkIfTheArticleExists(articleID)
+  if(s.boolean === false) {
+    data.message = '文章不存在，操作取消'
+    return data
+  }
   // - 标签名xss过滤
   const cleanTagName = xss(tagName)
 
@@ -88,32 +94,31 @@ tagsModel.additionalTag = function(articleID, tagName) {
   // 拿到标签文档数据
   const tagsDBData = getTagsData()
   // 检查标签是否已经存在
-  for(const i of tagsDBData) {
-    if(cleanTagName === i.tagName) {
-      // 存在直接返回，不再保存
-      data.message = '该标签已存在'
-      return data
+  const index = tagsDBData.findIndex(item => item.tagName === cleanTagName)
+  const newTagID = [] //待添加的标签ID
+  if(index == -1) { //不存在则增加新标签
+    // 待保存标签
+    let newTagData = {}
+    // 计算唯一ID
+    let lastItem = tagsDBData[tagsDBData.length - 1]
+    if(lastItem === undefined) {
+      newTagData.id = 1
+    } else {
+      newTagData.id = lastItem.id + 1
     }
-  }
-  // 待保存标签
-  let newTagData = {}
-  // 计算唯一ID
-  let lastItem = tagsDBData[tagsDBData.length - 1]
-  if(lastItem === undefined) {
-    newTagData.id = 1
+
+    newTagData.tagName = cleanTagName
+    newTagData.time = new Date().getTime()
+    tagsDBData.push(newTagData)
+    // 保存标签数据文档
+    save(tagsDBData)
+    newTagID.push(newTagData.id)
   } else {
-    newTagData.id = lastItem.id + 1
+    newTagID.push(tagsDBData[index].id)
   }
-
-  newTagData.tagName = cleanTagName
-  newTagData.time = new Date().getTime()
-  tagsDBData.push(newTagData)
-  // 保存标签数据文档
-  save(tagsDBData)
-
   // - 添加关系链接
   try {
-    const r = tagAndArticleModel.addTagArticle(articleID, [newTagData.id])
+    const r = tagAndArticleModel.addTagArticle(articleID, newTagID)
     if(r !== '成功') {
       throw '出错'
     }
@@ -170,6 +175,54 @@ tagsModel.delTag = function(tagID) {
   return data
 }
 
+// 批量删除标签
+tagsModel.delTags = function(tagsIDArr) {
+  // 待返回数据
+  const data = {
+    message: '',
+    data: {
+      tag: []
+    }
+  }
+  // 校验数据
+  if(!Array.isArray(tagsIDArr)) {
+    data.message = 'tagsIDArr必须为数组'
+    return data
+  }
+
+  for(const tagID of tagsIDArr) {
+    if(typeof tagID !== 'number') {
+      data.message = '标签ID必须为数字'
+      return data
+    }
+  }
+
+  let tagsDB = getTagsData()
+  // 只要有一个标签id没有找到，就返回失败
+  for(const tagID of tagsIDArr) {
+    const index = tagsDB.findIndex(item => {
+      return item.id === tagID
+    })
+    if(index === -1) {
+      data.message = `没有ID为${tagID}的标签，操作取消`
+      return data
+    } else {
+      data.data.tag.push(tagsDB[index])
+    }
+  }
+  // 批量删除
+  for(const tagID of tagsIDArr) {
+    tagsDB = tagsDB.filter(item => {
+      return item.id !== tagID
+    })
+  }
+  // 覆盖
+  save(tagsDB)
+  // 返回
+  data.message = '批量删除标签成功'
+  return data
+}
+
 // 修改一个标签名
 tagsModel.putTagName = function(tagID, tagName) {
   // 初始化待返回数据
@@ -218,4 +271,3 @@ function save(tagDBData) {
   fs.writeFileSync(tagsDBPath, JSON.stringify(tagDBData))
 }
 
-module.exports = tagsModel

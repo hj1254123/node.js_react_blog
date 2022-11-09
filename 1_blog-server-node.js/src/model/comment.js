@@ -1,12 +1,13 @@
 const fs = require('fs')
 const path = require("path")
 const xss = require("xss")
+
+const commentModel = {}
+module.exports = commentModel
+
 const articleModel = require('./article')
 
 const commentsDBPath = path.resolve(__dirname, '../db/comments.json')
-
-
-const commentModel = {}
 
 // 根据文章id添加评论
 commentModel.addCommentByArticleID = function(commentData) {
@@ -207,5 +208,3 @@ function addCommentToArticleXssFilter(commentData) {
 
   return commentData
 }
-
-module.exports = commentModel
