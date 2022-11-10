@@ -1,6 +1,5 @@
 const fs = require("fs")
 const path = require("path")
-const xss = require("xss")
 
 const articleModel = {}
 module.exports = articleModel
@@ -259,12 +258,12 @@ articleModel.getPage = function(pageN) {
     message: '',
     data: []
   }
+  // 获取文章数据
+  const articlesDB = getArticlesData().reverse() //倒序
   // 计算截取范围
   const size = 10 // 10篇/页
   const start = (pageN - 1) * size
   const end = start + size
-  // 获取文章数据
-  const articlesDB = getArticlesData().reverse() //倒序
   // 总共多少页
   const total = Math.ceil(articlesDB.length / size)
   // 切割下需要的文章
@@ -313,7 +312,6 @@ articleModel.throwArticlesData = function() {
 }
 
 // 获取文章数据数组，基于文章id数组
-
 articleModel.getArticleArrBasedOnTheArticleIDArr = function(articleIDArr) {
   // 待返回数据
   const data = []
@@ -419,7 +417,6 @@ function addArticleVerification(articleData) {
   // 全部校验通过
   return result
 }
-
 
 // 修改文章接口校验是否合法
 function putArticleVerification(articleData) {

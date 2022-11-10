@@ -51,7 +51,7 @@ const Comment = memo(({ articleID }) => {
   //  2.发送评论数据，并通过swr实现乐观更新
   async function submitComment() {
     // 0.禁止点击提交按钮,指定毫秒后恢复
-    prohibitSumitBtn(5000)
+    prohibitSumitBtn(10000)
     // 1.拿到并校验评论表单所需数据
     const formObj = checkComment()
     if(!formObj) return
@@ -76,10 +76,10 @@ const Comment = memo(({ articleID }) => {
     // 在异步请求完成后，通过返回值更新真正的data；
     // 这意味着可以在失败后方便的回退；
     await mutate(async () => {
+      toast.success('评论已发送')
       const response = await hjRequest.post('/comment', {
         data: formObj
       })
-
       if(!response.message) {
         toast.error('未知错误')
       }

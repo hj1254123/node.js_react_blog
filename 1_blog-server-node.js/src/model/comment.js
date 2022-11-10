@@ -45,7 +45,7 @@ commentModel.addCommentByArticleID = function(commentData) {
   }
   // 读取评论db
   const commentDB = getCommentDB()
-  
+
   // 限制评论数量500条
   const commentDataBasedArticleID = commentDB.filter(item => item.articleID === articleID)
   if(commentDataBasedArticleID.length >= 500) {
@@ -118,8 +118,8 @@ commentModel.getCommentByArticleID = function(articleID) {
     message: '',
     data: []
   }
-  const commentDB = getCommentDB()
-  data.data = commentDB.filter(item => item.articleID === articleID)
+  const commentsDB = getCommentDB()
+  data.data = commentsDB.filter(item => item.articleID === articleID)
   data.data = data.data.map(item => {
     delete item.ip
     delete item.email
@@ -128,6 +128,42 @@ commentModel.getCommentByArticleID = function(articleID) {
   // 返回数据
   data.message = '获取评论成功'
   data.data = data.data.reverse()
+  return data
+}
+
+// 获取所有评论，以及评论对应的文章标题
+commentModel.getComments = function(pageN) {
+  // 待返回数据
+  const data = {
+    message: '',
+    total: 1, //共多少个页面
+    data: []
+  }
+  // 获取需要数据
+  const commentsDB = getCommentDB().reverse() //倒序
+  const articlesDB = articleModel.throwArticlesData()
+  // 计算截取范围
+  const size = 20 // 10条/页
+  const start = (pageN - 1) * size
+  const end = start + size
+  // 总共多少页
+  data.total = Math.ceil(commentsDB.length / size)
+  // 切割下需要的评论
+  const cutCommentArr = commentsDB.slice(start, end)
+
+  // 添加评论标题、删除不需要的邮箱、ip
+  for(const comment of cutCommentArr) {
+    delete comment.ip
+    delete comment.email
+    const index = articlesDB.findIndex(article => article.id === comment.articleID)
+    if(index === -1) {
+      comment.articleTitle = `注意：没有ID为${comment.articleID}的文章，注意处理`
+    } else {
+      comment.articleTitle = articlesDB[index].title
+    }
+  }
+  data.message = '获取所有评论成功'
+  data.data = commentsDB
   return data
 }
 /**
@@ -149,11 +185,11 @@ function save(commentsData) {
 function addCommentToArticleVerification(commentData) {
   // 待返回的结果，默认通过
   let result = { message: '校验通过', boolean: true }
-  
+
   // 逐一校验
   let { articleID, userName, email, content } = commentData
   let checkArticleID = typeof articleID === 'number'
-  let checkUserName = (typeof userName === 'string') && (userName.length < 20) &&  (userName.length > 0)
+  let checkUserName = (typeof userName === 'string') && (userName.length < 20) && (userName.length > 0)
   let checkEmail = (typeof email === 'string') && (email.length < 30) && (email.length > 6)
   if(checkEmail) {
     let regexp = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
