@@ -35,6 +35,7 @@ commentModel.addCommentByArticleID = function(commentData) {
   }
   // 待保存对象
   const newComment = {
+    articleID,
     userName,
     email,
     content,
@@ -44,19 +45,15 @@ commentModel.addCommentByArticleID = function(commentData) {
   }
   // 读取评论db
   const commentDB = getCommentDB()
-  // 检查有无该文章key
-  if(!commentDB[articleID]) {
-    commentDB[articleID] = []
-  }
-  // 文章id对应的评论数组
-  const commentArr = commentDB[articleID]
+  
   // 限制评论数量500条
-  if(commentArr.length > 500) {
-    data.message = '评论数量超出限制'
+  const commentDataBasedArticleID = commentDB.filter(item => item.articleID === articleID)
+  if(commentDataBasedArticleID.length >= 500) {
+    data.message = '评论数量超过限制'
     return data
   }
   // 计算唯一ID
-  let lastItem = commentArr[commentArr.length - 1]
+  let lastItem = commentDB[commentDB.length - 1]
   if(lastItem === undefined) {
     newComment.id = 1
   } else {
@@ -65,7 +62,7 @@ commentModel.addCommentByArticleID = function(commentData) {
   // 时间
   newComment.time = new Date().getTime()
   // push并保存
-  commentArr.push(newComment)
+  commentDB.push(newComment)
   save(commentDB)
   // - 返回结果
   data.message = '添加评论成功'
@@ -85,7 +82,10 @@ commentModel.delCommentByArticleIDAndCommentID = function(articleID, commentID) 
   // - 待返回数据
   const data = {
     message: '',
-    data: {}
+    data: {
+      articleID,
+      commentID
+    }
   }
   // - 校验数据
   if(typeof articleID !== 'number' || typeof commentID !== 'number') {
@@ -93,27 +93,21 @@ commentModel.delCommentByArticleIDAndCommentID = function(articleID, commentID) 
     return data
   }
   // - 删除对应评论
-  const comentsDB = getCommentDB()
-  const comentsArr = comentsDB[articleID]
-  // 检查comentsDB中是否有该文章
-  if(!comentsArr) {
-    data.message = '该文章中没有评论'
-    return data
-  }
-  // 检查评论对应下标
-  const index = comentsArr.findIndex(item => {
-    return item.id === commentID
+  const commentsDB = getCommentDB()
+  // 找到下标
+  const index = commentsDB.findIndex(item => {
+    return (item.id === commentID) && (item.articleID === articleID)
   })
   if(index === -1) {
-    data.message = '没有该评论'
+    data.message = '没有该文章评论，操作失败'
     return data
   }
-  comentsArr.splice(index, 1)
+  // 删除
+  commentsDB.splice(index, 1)
   // 保存
-  save(comentsDB)
+  save(commentsDB)
   // - 返回结果
   data.message = '评论删除成功'
-  data.data = { articleID, commentID }
   return data
 }
 
@@ -125,22 +119,7 @@ commentModel.getCommentByArticleID = function(articleID) {
     data: []
   }
   const commentDB = getCommentDB()
-  const commentArr = commentDB[articleID]
-  // 检查是否有该文章
-  if(!commentArr) {
-    data.message = '没有该文章'
-    return data
-  }
-  // 添加数据
-  for(const item of commentArr) {
-    const o = {
-      id: item.id,
-      time: item.time,
-      content: item.content,
-      userName: item.userName
-    }
-    data.data.push(o)
-  }
+  data.data = commentDB.filter(item => item.articleID === articleID)
   // 返回数据
   data.message = '获取评论成功'
   data.data = data.data.reverse()
