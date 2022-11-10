@@ -47,6 +47,17 @@ router.delete('/', (req, res) => {
   }
 })
 
+// 根据文章id和评论id数组，批量删除评论
+router.delete('/batch', (req, res) => {
+  try {
+    const articleIDAndCommentIDArr = req.body.data
+    const data = commentModel.delCommentsByArticlesIDAndcommentIDArr(articleIDAndCommentIDArr)
+    res.json(data)
+  } catch (error) {
+    res.status(500).json('批量删除评论出错,注意处理')
+  }
+})
+
 // 获取所有评论（10条/页）
 router.get('/page/:num', cacheMiddleware(10), (req, res) => {
   try {

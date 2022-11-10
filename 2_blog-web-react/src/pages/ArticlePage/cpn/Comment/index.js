@@ -9,7 +9,6 @@ import { formatDate } from '../../../../utils/my-utils'
 
 
 import { CommentWrapper } from './style'
-import { useEffect } from 'react';
 
 const Comment = memo(({ articleID }) => {
   const [panel, setPanel] = useState({
@@ -17,15 +16,8 @@ const Comment = memo(({ articleID }) => {
     email: '',
     content: ''
   })
-  // 提交按钮允许点击与否
-  const [isDisabledBtn, setIsDisabledBtn] = useState(true)
-  useEffect(() => {
-    if(panel.content === '') {
-      setIsDisabledBtn(true)
-    } else {
-      setIsDisabledBtn(false)
-    }
-  }, [panel])
+  // 提交按钮允许提交表单
+  const [isSubmit, setIsSubmit] = useState(true)
 
   const { data, mutate } = useSWR(`/comment/${articleID}`, (url) => {
     return hjRequest.get(url).then(d => d)
@@ -50,8 +42,12 @@ const Comment = memo(({ articleID }) => {
   //  1.获取并校验待发送评论数据 
   //  2.发送评论数据，并通过swr实现乐观更新
   async function submitComment() {
-    // 0.禁止点击提交按钮,指定毫秒后恢复
-    prohibitSumitBtn(10000)
+    // 0.禁止提交,指定毫秒后恢复
+    if(!isSubmit) {
+      toast.error('请歇会儿~😶')
+      return
+    }
+    prohibitSumit(10000)
     // 1.拿到并校验评论表单所需数据
     const formObj = checkComment()
     if(!formObj) return
@@ -131,10 +127,10 @@ const Comment = memo(({ articleID }) => {
     return formObj
   }
 
-  function prohibitSumitBtn(msec) {
-    setIsDisabledBtn(true)
+  function prohibitSumit(msec) {
+    setIsSubmit(false)
     setTimeout(() => {
-      setIsDisabledBtn(false)
+      setIsSubmit(true)
     }, msec)
   }
 
@@ -175,7 +171,7 @@ const Comment = memo(({ articleID }) => {
         <div className="bottom">
           <button
             className="submit"
-            disabled={isDisabledBtn}
+            disabled={panel.content === ''}
           >提交</button>
         </div>
       </form>

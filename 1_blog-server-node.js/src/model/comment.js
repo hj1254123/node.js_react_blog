@@ -111,6 +111,52 @@ commentModel.delCommentByArticleIDAndCommentID = function(articleID, commentID) 
   return data
 }
 
+// 
+commentModel.delCommentsByArticlesIDAndcommentIDArr = function(articleIDAndCommentIDArr) {
+  const data = {
+    message: "",
+    data: []
+  }
+  // - 校验数据
+  for(const item of articleIDAndCommentIDArr) {
+    const articleID = item.articleID
+    const commentID = item.commentID
+    if(typeof articleID !== 'number' || typeof commentID !== 'number') {
+      data.message = 'id只能为数字'
+      return data
+    }
+  }
+  // - 获取评论数据
+  let commentsDB = getCommentDB()
+  // - 只要有一项没有找到就取消操作
+  for(const item of articleIDAndCommentIDArr) {
+    const index = commentsDB.findIndex(item2 => {
+      const a = item.articleID === item2.articleID
+      const b = item.commentID === item2.id
+      if(a && b) {
+        return true
+      }
+    })
+    if(index === -1) {
+      data.message = `操作取消：commentID:${item.commentID}，不存在`
+      return data
+    }
+  }
+  // - 批量删除
+  for(const item of articleIDAndCommentIDArr) {
+    commentsDB = commentsDB.filter(item2 => {
+      const a = item.articleID === item2.articleID
+      const b = item.commentID === item2.id
+      return !(a && b)
+    })
+  }
+
+  save(commentsDB)
+  data.message = '评论批量删除成功'
+  data.data = articleIDAndCommentIDArr
+  return data
+}
+
 // 根据文章id获取评论
 commentModel.getCommentByArticleID = function(articleID) {
   // 待返回数据
