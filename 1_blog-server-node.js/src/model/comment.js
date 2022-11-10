@@ -120,6 +120,11 @@ commentModel.getCommentByArticleID = function(articleID) {
   }
   const commentDB = getCommentDB()
   data.data = commentDB.filter(item => item.articleID === articleID)
+  data.data = data.data.map(item => {
+    delete item.ip
+    delete item.email
+    return item
+  })
   // 返回数据
   data.message = '获取评论成功'
   data.data = data.data.reverse()
