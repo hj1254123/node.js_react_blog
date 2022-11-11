@@ -1,6 +1,5 @@
 const express = require('express')
 const cacheMiddleware = require('../middleware/cache')
-const unreadCommentMiddleware = require('../middleware/unreadComment')
 const commentModel = require('../model/comment')
 
 const router = express.Router()
