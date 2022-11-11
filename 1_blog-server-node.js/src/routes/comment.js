@@ -1,6 +1,6 @@
 const express = require('express')
 const cacheMiddleware = require('../middleware/cache')
-const { getComments } = require('../model/comment')
+const unreadCommentMiddleware = require('../middleware/unreadComment')
 const commentModel = require('../model/comment')
 
 const router = express.Router()
@@ -10,7 +10,6 @@ const ipSet = new Set()
 
 // 根据文章id添加评论
 router.post('/', (req, res) => {
-
   try {
     const ip = req.ip
     const commentData = { ...req.body, ip }

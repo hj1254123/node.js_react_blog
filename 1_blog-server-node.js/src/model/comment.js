@@ -68,7 +68,7 @@ commentModel.addCommentByArticleID = function(commentData) {
   data.message = '添加评论成功'
   data.data = {
     id: newComment.id,
-    tiem: newComment.time,
+    time: newComment.time,
     articleID,
     userName,
     email,
