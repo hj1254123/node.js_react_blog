@@ -17,7 +17,7 @@ const port = 3001
 
 // 允许信任url跨域
 app.use((req, res, next) => {
-  const trustList = ['http://localhost:3000', 'http://localhost:3001']
+  const trustList = ['http://localhost:3000', 'http://localhost:3002']
   const origin = req.headers.origin
   if(trustList.indexOf(origin) > -1) {
     res.header('Access-Control-Allow-Origin', origin)

@@ -1,9 +1,11 @@
-import { Button } from 'antd'
+import { useRoutes } from 'react-router-dom'
+import router from './router'
 
 function App() {
+  const element = useRoutes(router)
   return (
     <div className="App">
-      <Button type="primary">Button</Button>
+      {element}
     </div>
   )
 }
