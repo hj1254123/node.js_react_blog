@@ -6,15 +6,14 @@ import ErrorBoundary from './components/ErrorBoundary'
 import App from './App'
 
 import 'normalize.css'
+import './assets/global.css'
 import 'antd/dist/antd.min.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <ErrorBoundary>
-    <React.StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </ErrorBoundary>
 )
