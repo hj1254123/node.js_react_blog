@@ -73,9 +73,7 @@ const Comment = memo(({ articleID }) => {
     // 这意味着可以在失败后方便的回退；
     await mutate(async () => {
       toast.success('评论已发送')
-      const response = await hjRequest.post('/comment', {
-        data: formObj
-      })
+      const response = await hjRequest.post('/comment', formObj)
       if(!response.message) {
         toast.error('未知错误')
       }

@@ -46,95 +46,103 @@ authModel.save = (usersData) => {
   fs.writeFileSync(userDBPath, JSON.stringify(usersData))
 }
 
-authModel.cleanUserNameAndPassword = (userName, password) => {
-  // TODO：用户名的非法字符过滤
-  let cleanUserName = xss(userName)
-  let cleanPassword = password
-  // 长度控制
-  let checkUserName = 6 <= cleanUserName.length && cleanUserName.length < 16
-  let checkPassword = 6 <= cleanPassword.length && cleanPassword.length < 16
-  return { cleanUserName, cleanPassword, checkUserName, checkPassword }
-}
-
-authModel.createUser = async (userName, password, invitationCode) => {
-  let message = '注册成功'
-  let data = null
-  let {
-    cleanUserName,
-    cleanPassword,
-    checkUserName,
-    checkPassword
-  } = authModel.cleanUserNameAndPassword(userName, password)
+authModel.createUser = (userName, password, invitationCode) => {
+  const data = {
+    message: '',
+    data: {}
+  }
+  // - 用户名、密码数据类型校验
+  const isCheckUserType = checkUserType(userName, password)
+  if(!isCheckUserType) {
+    data.message = '用户名或密码类型必须为String'
+    return data
+  }
+  // - 长度、用户名重复、邀请码校验
+  const { checkUserNameLength, checkPasswordLength } = checkUserLength(userName, password)
 
   // 查询数据库，用户名是否重复
   let checkUserRepeat = true
-  let usersData = await authModel.getUsersData()
+  let usersData = authModel.getUsersData()
   usersData.forEach(item => {
     if(item.userName === userName) {
       checkUserRepeat = false
     }
   })
-  // 不同错误状态处理
-  if(!checkUserName) {
-    message = '用户名不合法，长度6-16'
-  } else if(!checkPassword) {
-    message = '密码不合法，长度6-16'
-  } else if(!checkUserRepeat) {
-    message = '用户名已存在'
-  } else if(invitationCode !== REGISTRY_INVITATION_CODE) {
-    message = '邀请码错误'
-  } else {
-    // 以上校验通过，注册新用户
-    let newUser = {}
-    // 计算唯一id
-    let lastItem = usersData[usersData.length - 1]
-    if(lastItem === undefined) {
-      newUser.id = 1
-    } else {
-      newUser.id = lastItem.id + 1
-    }
-    // 用户名
-    newUser.userName = cleanUserName
-    // hash密码
-    newUser.hashPassword = md5password(cleanPassword)
-    // 当前时间戳
-    newUser.time = new Date().getTime()
-    // push并写入
-    usersData.push(newUser)
-    authModel.save(usersData)
-    // 待返回给客户端的数据
-    message = '注册成功'
-    data = {
-      id: newUser.id,
-      userName: newUser.userName
-    }
+  // 检查邀请码
+  let checkInvitationCode = invitationCode === REGISTRY_INVITATION_CODE
+  // 校验失败的响应消息
+  if(!checkUserNameLength) {
+    data.message += '用户名长度必须在6-15 '
+  }
+  if(!checkPasswordLength) {
+    data.message += '密码长度必须在6-15 '
+  }
+  if(!checkUserRepeat) {
+    data.message += '用户名已存在 '
+  }
+  if(!checkInvitationCode) {
+    data.message += '邀请码错误 '
+  }
+  const c = checkUserNameLength && checkPasswordLength
+    && checkUserRepeat && checkInvitationCode
+  if(!c) {
+    return data
   }
 
-  return { message, data }
+  // - 以上校验通过，注册新用户
+  let newUser = {}
+  // 计算唯一id
+  let lastItem = usersData[usersData.length - 1]
+  if(lastItem === undefined) {
+    newUser.id = 1
+  } else {
+    newUser.id = lastItem.id + 1
+  }
+  // 用户名
+  newUser.userName = xss(userName)
+  // hash密码
+  newUser.hashPassword = md5password(password)
+  // 当前时间戳
+  newUser.time = new Date().getTime()
+  // push并写入
+  usersData.push(newUser)
+  authModel.save(usersData)
+  // 待返回给客户端的数据
+  data.message = '注册成功'
+  data.data = {
+    id: newUser.id,
+    userName: newUser.userName
+  }
+  return data
 }
 
-authModel.userNamePasswordAuth = async (userName, password, ip) => {
-  let {
-    cleanUserName,
-    cleanPassword,
-  } = authModel.cleanUserNameAndPassword(userName, password)
+authModel.userNamePasswordAuth = (userName, password, ip) => {
+  const data = {
+    message: '',
+    data: {}
+  }
+  // - 用户名、密码数据类型校验
+  const isCheckUserType = checkUserType(userName, password)
+  if(!isCheckUserType) {
+    data.message = '用户名或密码类型必须为String'
+    return data
+  }
 
-  let message = '没有该用户'
-  let data = {}
   // 根据访问者ip，检查密码错误次数是否通过
   const result = preventViolentCrackPassword(ip)
   if(result === '未通过') {
-    return { message: '密码错误次数过多，请明日再试！', data }
+    data.message = '密码错误次数过多，请明日再试！'
+    return data
   }
   // 读取用户数据
-  const usersData = await authModel.getUsersData()
+  const usersData = authModel.getUsersData()
   // 查找用户是否存在，并校验。
   for(let i = 0; i < usersData.length; i++) {
     const item = usersData[i]
-    if(item.userName === cleanUserName) {
-      if(item.hashPassword === md5password(cleanPassword)) {
-        message = '登录成功'
-        data = {
+    if(item.userName === userName) {
+      if(item.hashPassword === md5password(password)) {
+        data.message = '登录成功'
+        data.data = {
           id: item.id,
           userName: item.userName,
           time: item.time
@@ -144,6 +152,7 @@ authModel.userNamePasswordAuth = async (userName, password, ip) => {
           const o = visitorIp[ip]
           o.count = 0
         }
+        return data
       } else {
         // - 密码错误，记录访问者ip和时间戳，错误次数+1
         // 没有记录初始化
@@ -156,10 +165,29 @@ authModel.userNamePasswordAuth = async (userName, password, ip) => {
         }
         const o = visitorIp[ip]
         o.count = o.count + 1
-        message = `密码错误，今日还可尝试${o.max - o.count}`
+        data.message = `密码错误，今日还可尝试${o.max - o.count}`
+        return data
       }
-      break
     }
   }
-  return { message, data }
+  data.message = '没有该用户'
+  return data
+}
+
+// 工具函数
+
+function checkUserType(userName, password) {
+  const a = (typeof userName) === 'string'
+  const b = (typeof password) === 'string'
+  return a && b
+}
+
+function checkUserLength(userName, password) {
+  // 长度控制
+  const checkUserNameLength = (6 <= userName.length) && (userName.length <= 15)
+  const checkPasswordLength = (6 <= password.length) && (password.length <= 15)
+
+  return {
+    checkUserNameLength, checkPasswordLength
+  }
 }

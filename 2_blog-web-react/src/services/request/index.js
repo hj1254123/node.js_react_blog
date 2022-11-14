@@ -62,14 +62,14 @@ class HjRequest {
     }
     return this.request({ ...config, url, method: 'get' })
   }
-  post(url, config = {}) {
-    return this.request({ ...config, url, method: 'post' })
+  post(url, data = {}, config = {}) {
+    return this.request({ ...config, data, url, method: 'post' })
   }
   delete(url, config = {}) {
     return this.request({ ...config, url, method: 'delete' })
   }
-  put(url, config = {}) {
-    return this.request({ ...config, url, method: 'put' })
+  put(url, data = {}, config = {}) {
+    return this.request({ ...config, data, url, method: 'put' })
   }
 }
 

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from "react-router-dom"
 
 import ErrorBoundary from './components/ErrorBoundary'
+import AppProviders from './context'
 import App from './App'
 
 import 'normalize.css'
@@ -12,8 +13,10 @@ import 'antd/dist/antd.min.css'
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <ErrorBoundary>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <AppProviders>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AppProviders>
   </ErrorBoundary>
 )

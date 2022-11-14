@@ -13,8 +13,8 @@ export default class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     // TODO：上报错误
-    // console.log(error)
-    // console.log(errorInfo.componentStack)
+    console.log('错误边界捕获', error)
+    console.log('错误边界捕获', errorInfo.componentStack)
   }
 
   render() {
