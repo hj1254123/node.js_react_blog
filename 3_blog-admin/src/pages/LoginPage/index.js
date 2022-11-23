@@ -4,7 +4,7 @@ import { useAuthContext } from '../../context/auth-context'
 const LoginPage = memo(() => {
   const { user, login, logout } = useAuthContext()
   const o = {
-    userName: "monkey1",
+    userName: "monkey",
     password: "410526",
   }
   return (

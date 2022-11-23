@@ -8,7 +8,7 @@ import App from './App'
 
 import 'normalize.css'
 import './assets/global.css'
-import 'antd/dist/antd.min.css'
+import 'antd/dist/reset.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
