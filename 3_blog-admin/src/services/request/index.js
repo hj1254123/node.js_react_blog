@@ -1,10 +1,13 @@
+import { message } from 'antd'
 import axios from 'axios'
+import { getUser, logout } from '../../utils/auth'
 import { BASE_URL, TIMEOUT } from './config'
 
 // 如果项目中需要请求多个服务器，多创建几个实例即可。
 const instance = axios.create({
   baseURL: BASE_URL,
-  timeout: TIMEOUT
+  timeout: TIMEOUT,
+
 })
 
 class HjRequest {
@@ -16,6 +19,8 @@ class HjRequest {
     const instance = this.instance
     // 实例请求拦截器
     instance.interceptors.request.use(config => {
+      const token = getUser()?.token
+      config.headers.Authorization = token ? `Bearer ${token}` : ""
       return config
     }, err => {
       return Promise.reject(err)
@@ -24,6 +29,12 @@ class HjRequest {
     instance.interceptors.response.use(res => {
       return res.data
     }, err => { //超出200的状态码会在这里执行
+      console.log(err)
+      if(err.response.status === 401) {
+        message.error('登录已过期，请重新登录')
+        logout() // 删除localStorage中的用户数据
+        window.location.reload()
+      }
       return Promise.reject({
         data: err.response.data,
         status: err.response.status,

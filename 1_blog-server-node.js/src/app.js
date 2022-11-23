@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   const origin = req.headers.origin
   if(trustList.indexOf(origin) > -1) {
     res.header('Access-Control-Allow-Origin', origin)
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
+    res.header('Access-Control-Allow-Headers', 'Authorization,Origin,X-Requested-With,Content-Type,Accept')
     res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
     res.header('Content-Type', 'application/json; charset=utf-8')
   }
@@ -51,7 +51,7 @@ app.use(expressJwt({
     { url: /^\/comment\/page\/\d+$/, methods: ['GET'] },
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
     { url: '/tags/page', methods: ['GET'] },
-    { url: '/test', methods: ['GET', 'OPTIONS'] },
+    // { url: '/test', methods: ['GET', 'OPTIONS'] },
   ]
 }))
 
@@ -70,7 +70,7 @@ app.use('/comment', commentRouter)
 app.use('/archive', archiveRouter)
 // 测试接口
 app.get('/test', function(req, res) {
-  res.status(200).send('hi');
+  res.status(200).send('ok');
   // res.status(404).send('Not Found');
   // res.status(500).send('服务端错误');
   // res.status(301).send('');

@@ -11,7 +11,7 @@ import Error404 from "../components/Error404"
 const router = [
   {
     path: '/',
-    element: <Navigate to='/login' />
+    element: <Navigate to='/home' />
   },
   {
     path: '/login',

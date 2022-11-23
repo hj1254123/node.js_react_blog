@@ -2,14 +2,15 @@ import React, { memo } from 'react'
 import { useAuthContext } from '../../context/auth-context'
 
 const LoginPage = memo(() => {
-  const { user, login } = useAuthContext()
+  const { user, login, logout } = useAuthContext()
   const o = {
-    userName: "monkey",
-    password: "410526"
+    userName: "monkey1",
+    password: "410526",
   }
   return (
     <div>
-      <button onClick={() => login(o)}>请求用户数据</button>
+      <button onClick={() => login(o)}>登录</button>
+      <button onClick={() => logout()}>登出</button>
       <p>
         token:{user?.token}
       </p>

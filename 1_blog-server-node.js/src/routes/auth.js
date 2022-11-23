@@ -14,6 +14,10 @@ router.post('/register', (req, res) => {
     let { userName, password, invitationCode } = req.body
     // - 创建用户
     const data = authModel.createUser(userName, password, invitationCode)
+    if(data.message === '注册成功') {
+      // 颁发token
+      data.data.token = issueToken(data.data)
+    }
     res.json(data)
   } catch(error) {
     console.log(error)
@@ -30,22 +34,22 @@ router.post('/login', (req, res) => {
     const data = authModel.userNamePasswordAuth(userName, password, ip)
     if(data.message === '登录成功') {
       // 颁发token
-      const token = jwt.sign(data.data, PRIVATE_KEY, {
-        expiresIn: 60 * 60 * 24, // 1天过期
-        algorithm: 'RS256',// 设置算法为 RS256
-        issuer: 'Monkey'
-      })
-      data.data.token = token
-      res.json(data)
-    } else {
-      // 登录失败
-      res.json(data)
+      data.data.token = issueToken(data.data)
     }
+    res.json(data)
 
   } catch(error) {
     console.log(error)
     res.status(500).json('登录出错')
   }
 })
+
+function issueToken(data) {
+  return jwt.sign(data, PRIVATE_KEY, {
+    expiresIn: 60 * 60 * 24, // 1天过期
+    algorithm: 'RS256',// 设置算法为 RS256
+    issuer: 'Monkey'
+  })
+}
 
 module.exports = router

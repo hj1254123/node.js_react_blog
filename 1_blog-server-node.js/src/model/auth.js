@@ -111,7 +111,8 @@ authModel.createUser = (userName, password, invitationCode) => {
   data.message = '注册成功'
   data.data = {
     id: newUser.id,
-    userName: newUser.userName
+    userName: newUser.userName,
+    time: newUser.time
   }
   return data
 }
