@@ -3,7 +3,7 @@ import hjRequest from "../services/request"
 
 const authTokenKey = '__auth_token_key__'
 
-const saveUser = (user) => {
+export const saveUser = (user) => {
   window.localStorage.setItem(authTokenKey, JSON.stringify(user) || '')
   return user
 }

@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }) => {
   const logout = () => auth.logout().then(() => {
     setUser(null)
   })
-
   return (
     <AuthContext.Provider
       value={{ user, login, register, logout }}

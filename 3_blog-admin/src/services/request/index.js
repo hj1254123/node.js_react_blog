@@ -19,7 +19,8 @@ class HjRequest {
     const instance = this.instance
     // 实例请求拦截器
     instance.interceptors.request.use(config => {
-      const token = getUser()?.token
+      // 添加token
+      const token = getUser().token
       config.headers.Authorization = token ? `Bearer ${token}` : ""
       return config
     }, err => {
@@ -31,9 +32,14 @@ class HjRequest {
     }, err => { //超出200的状态码会在这里执行
       console.log(err)
       if(err.response.status === 401) {
-        message.error('登录已过期，请重新登录')
-        logout() // 删除localStorage中的用户数据
-        window.location.reload()
+        const user = getUser()
+        if(user === '游客') {
+          message.error('游客账号，无法操作！')
+        } else {
+          message.error('登录已过期，请重新登录')
+          logout() // 删除localStorage中的用户数据
+          window.location.reload()
+        }
       }
       return Promise.reject({
         data: err.response.data,
