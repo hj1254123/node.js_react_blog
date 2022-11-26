@@ -3,7 +3,6 @@ import { Card } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 import { useAuthContext } from '../../context/auth-context'
-import { saveUser } from '../../utils/auth'
 
 import { LoginWrapper } from './style'
 import LoginForm from './LoginForm'
@@ -17,7 +16,7 @@ const LoginPage = memo(() => {
   const goDirectly = useCallback(() => { // 通过演示账号直接进入管理页面
     setDemoUser()
     navigate('/home')
-  }, [])
+  }, [setDemoUser, navigate])
 
   const onLoginFinish = useCallback((values) => {
     const { username, password, remember } = values
@@ -28,7 +27,7 @@ const LoginPage = memo(() => {
     }).then(() => {
       navigate('/home')
     })
-  }, [])
+  }, [login, navigate])
 
   const onRegisterFinish = useCallback((values) => {
     const { username, password, invitationCode, remember } = values
@@ -40,7 +39,7 @@ const LoginPage = memo(() => {
     }).then(() => {
       navigate('/home')
     })
-  }, [])
+  }, [register, navigate])
 
 
   return (

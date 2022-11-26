@@ -66,14 +66,11 @@ const LoginForm = memo(({ onLoginFinish, setPageSwitch, goDirectly }) => {
             <Button block onClick={goDirectly} >
               直接进入
             </Button>
-            <div>
-              Or&nbsp;
-              <a onClick={e => {
-                e.preventDefault = false
-                setPageSwitch('注册')
-              }}>注册</a>
-            </div>
           </Space>
+        </Form.Item>
+        <Form.Item>
+          Or
+          <Button type="link" onClick={() => { setPageSwitch('注册') }}>注册</Button>
         </Form.Item>
       </Form>
     </div>
