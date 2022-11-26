@@ -93,12 +93,6 @@ app.use(function(err, req, res, next) {
     // 管理页面返回401
     status = 401
     msg = 'token已过期，请重新登录！'
-    // 生产页面返回404
-    // TODO:上线后替换来源网址为 https://blog.hou-jian.com
-    if(req.headers.origin === 'http://localhost:3000') {
-      status = 404
-      msg = 'Not Found'
-    }
   }
 
   res.status(status).send(msg)

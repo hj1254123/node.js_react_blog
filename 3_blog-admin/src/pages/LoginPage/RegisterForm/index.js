@@ -1,12 +1,15 @@
 import React, { memo } from 'react'
 import { ApiOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Space } from 'antd'
+import { Button, Form, Input, Space, Checkbox } from 'antd'
 
 const RegisterForm = memo(({ onRegisterFinish, setPageSwitch }) => {
   return (
     <Form
       name="register"
       className="register-form"
+      initialValues={{
+        remember: true,
+      }}
       onFinish={onRegisterFinish}
     >
       <Form.Item
@@ -18,7 +21,10 @@ const RegisterForm = memo(({ onRegisterFinish, setPageSwitch }) => {
           },
         ]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
+        <Input
+          prefix={<UserOutlined className="site-form-item-icon" />}
+          placeholder="用户名（长度6-15位）"
+        />
       </Form.Item>
       <Form.Item
         name="password"
@@ -32,7 +38,7 @@ const RegisterForm = memo(({ onRegisterFinish, setPageSwitch }) => {
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="密码"
+          placeholder="密码（长度6-15位）"
         />
       </Form.Item>
       <Form.Item
@@ -50,8 +56,11 @@ const RegisterForm = memo(({ onRegisterFinish, setPageSwitch }) => {
           placeholder="邀请码"
         />
       </Form.Item>
-
-
+      <Form.Item>
+        <Form.Item name="remember" valuePropName="checked" noStyle>
+          <Checkbox>记住我</Checkbox>
+        </Form.Item>
+      </Form.Item>
       <Form.Item>
         <Space
           direction="vertical"

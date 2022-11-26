@@ -13,7 +13,7 @@ router.post('/register', (req, res) => {
     // // - 拿到用户数据
     let { userName, password, invitationCode } = req.body
     // - 创建用户
-    const data = authModel.createUser(userName, password, invitationCode)
+    const data = authModel.register(userName, password, invitationCode)
     if(data.message === '注册成功') {
       // 颁发token
       data.data.token = issueToken(data.data)
@@ -31,7 +31,7 @@ router.post('/login', (req, res) => {
     const { userName, password } = req.body
     const ip = req.ip
     // 根据用户名、密码，验证登录
-    const data = authModel.userNamePasswordAuth(userName, password, ip)
+    const data = authModel.login(userName, password, ip)
     if(data.message === '登录成功') {
       // 颁发token
       data.data.token = issueToken(data.data)

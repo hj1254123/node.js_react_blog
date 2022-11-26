@@ -28,9 +28,14 @@ export const AuthProvider = ({ children }) => {
   const logout = () => auth.logout().then(() => {
     setUser(null)
   })
+  const setDemoUser = () => {
+    const user = { id: 999999, userName: '演示账号', token: '', time: 1669469520696 }
+    auth.saveUser(user)
+    setUser(user)
+  }
   return (
     <AuthContext.Provider
-      value={{ user, login, register, logout }}
+      value={{ user, login, register, logout, setDemoUser }}
     >
       {children}
     </AuthContext.Provider>

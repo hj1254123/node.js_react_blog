@@ -10,24 +10,38 @@ import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 
 const LoginPage = memo(() => {
-  const { user, login, logout } = useAuthContext()
-
   const [pageSwitch, setPageSwitch] = useState('登录')
-
   const navigate = useNavigate()
+  const { login, register, setDemoUser } = useAuthContext()
+
+  const goDirectly = useCallback(() => { // 通过演示账号直接进入管理页面
+    setDemoUser()
+    navigate('/home')
+  }, [])
 
   const onLoginFinish = useCallback((values) => {
-    console.log('login form: ', values);
+    const { username, password, remember } = values
+    login({
+      userName: username,
+      password,
+      remember
+    }).then(() => {
+      navigate('/home')
+    })
   }, [])
 
   const onRegisterFinish = useCallback((values) => {
-    console.log('Register form: ', values);
+    const { username, password, invitationCode, remember } = values
+    register({
+      userName: username,
+      password,
+      invitationCode,
+      remember
+    }).then(() => {
+      navigate('/home')
+    })
   }, [])
 
-  const goDirectly = useCallback(() => {
-    saveUser('游客') //设置游客账号
-    navigate('/home')
-  }, [])
 
   return (
     <LoginWrapper>
@@ -40,8 +54,13 @@ const LoginPage = memo(() => {
       >
         {
           pageSwitch === '登录'
-            ? <LoginForm onLoginFinish={onLoginFinish} setPageSwitch={setPageSwitch} goDirectly={goDirectly} />
-            : <RegisterForm onRegisterFinish={onRegisterFinish} setPageSwitch={setPageSwitch} />
+            ? <LoginForm
+              onLoginFinish={onLoginFinish}
+              setPageSwitch={setPageSwitch}
+              goDirectly={goDirectly} />
+            : <RegisterForm
+              onRegisterFinish={onRegisterFinish}
+              setPageSwitch={setPageSwitch} />
         }
       </Card>
     </LoginWrapper>

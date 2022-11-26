@@ -20,7 +20,7 @@ class HjRequest {
     // 实例请求拦截器
     instance.interceptors.request.use(config => {
       // 添加token
-      const token = getUser().token
+      const token = getUser()?.token
       config.headers.Authorization = token ? `Bearer ${token}` : ""
       return config
     }, err => {
@@ -33,8 +33,9 @@ class HjRequest {
       console.log(err)
       if(err.response.status === 401) {
         const user = getUser()
-        if(user === '游客') {
-          message.error('游客账号，无法操作！')
+        if(err.response.config.url === '/test') return // 测试接口，不做提示
+        if(user?.userName === '演示账号') {
+          message.error('演示账号，无法操作！')
         } else {
           message.error('登录已过期，请重新登录')
           logout() // 删除localStorage中的用户数据

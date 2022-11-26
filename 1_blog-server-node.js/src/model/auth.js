@@ -46,7 +46,7 @@ authModel.save = (usersData) => {
   fs.writeFileSync(userDBPath, JSON.stringify(usersData))
 }
 
-authModel.createUser = (userName, password, invitationCode) => {
+authModel.register = (userName, password, invitationCode) => {
   const data = {
     message: '',
     data: {}
@@ -117,7 +117,7 @@ authModel.createUser = (userName, password, invitationCode) => {
   return data
 }
 
-authModel.userNamePasswordAuth = (userName, password, ip) => {
+authModel.login = (userName, password, ip) => {
   const data = {
     message: '',
     data: {}
