@@ -19,18 +19,6 @@ ul, ol, li {
   list-style: none;
 }
 
-a {
-  color: #727272;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent; /* 点击透明 */
-}
-
-a:hover {
-  color: #727272;
-  text-decoration: underline;
-  text-decoration-color:#3f51b5;
-}
-
 i, em {
   font-style: normal;
 }
