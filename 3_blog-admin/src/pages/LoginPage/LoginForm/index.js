@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, Space } from 'antd'
 
-const LoginForm = memo(({ onLoginFinish, setPageSwitch, goDirectly }) => {
+const LoginForm = memo(({ onLoginFinish, setPageSwitch, goDirectly, loading }) => {
   return (
     <div>
       <Form
@@ -59,6 +59,7 @@ const LoginForm = memo(({ onLoginFinish, setPageSwitch, goDirectly }) => {
               type="primary"
               htmlType="submit"
               className="login-form-button"
+              loading={loading}
               block
             >
               登录

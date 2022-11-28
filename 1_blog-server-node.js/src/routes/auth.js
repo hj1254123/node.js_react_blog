@@ -12,8 +12,9 @@ router.post('/register', (req, res) => {
     // return res.json('注册接口已关闭！')
     // // - 拿到用户数据
     let { userName, password, invitationCode } = req.body
+    const ip = req.ip
     // - 创建用户
-    const data = authModel.register(userName, password, invitationCode)
+    const data = authModel.register(userName, password, invitationCode, ip)
     if(data.message === '注册成功') {
       // 颁发token
       data.data.token = issueToken(data.data)

@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { ApiOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Space, Checkbox } from 'antd'
 
-const RegisterForm = memo(({ onRegisterFinish, setPageSwitch }) => {
+const RegisterForm = memo(({ onRegisterFinish, setPageSwitch, loading }) => {
   return (
     <Form
       name="register"

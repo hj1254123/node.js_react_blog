@@ -12,31 +12,7 @@ const userDBPath = path.resolve(__dirname, '../db/user.json')
 
 // 记录ip，及对应的密码错误次数
 const visitorIp = {}
-
-// 限制单个ip单日密码尝试次数
-function preventViolentCrackPassword(ip) {
-  // ip未记录，直接通过
-  if(!visitorIp[ip]) {
-    return '通过'
-  }
-  const max = visitorIp[ip].max// 密码单日最多尝试次数
-  // 检查记录的时间是否是今天
-  const oldTime = new Date(visitorIp[ip].time)
-  const oldDate = oldTime.getFullYear() + '/' + (oldTime.getMonth() + 1) + '/' + oldTime.getDay()
-  const time = new Date()
-  const date = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDay()
-  // 如果是同一天检查错误次数
-  const o = visitorIp[ip]
-  if(oldDate === date) {
-    if(!o.count || o.count + 1 >= max) {
-      return '未通过'
-    }
-  } else {
-    // 超过一天清空错误计数
-    o.count = 0
-  }
-  return '通过'
-}
+const max = 5 //密码/邀请码单日最多尝试次数
 
 authModel.getUsersData = () => {
   return usersData = JSON.parse(fs.readFileSync(userDBPath))
@@ -46,18 +22,25 @@ authModel.save = (usersData) => {
   fs.writeFileSync(userDBPath, JSON.stringify(usersData))
 }
 
-authModel.register = (userName, password, invitationCode) => {
+authModel.register = (userName, password, invitationCode, ip) => {
   const data = {
     message: '',
     data: {}
   }
+
   // - 用户名、密码数据类型校验
   const isCheckUserType = checkUserType(userName, password)
   if(!isCheckUserType) {
     data.message = '用户名或密码类型必须为String'
     return data
   }
-  // - 长度、用户名重复、邀请码校验
+  // - 限制单个ip尝试次数，防止暴力破解
+  const result = preventingBruteForceAttacks(ip)
+  if(result === '未通过') {
+    data.message = '尝试次数过多，请明日再试！'
+    return data
+  }
+  // - 长度、用户名重复
   const { checkUserNameLength, checkPasswordLength } = checkUserLength(userName, password)
 
   // 查询数据库，用户名是否重复
@@ -81,7 +64,8 @@ authModel.register = (userName, password, invitationCode) => {
     data.message += '用户名已存在 '
   }
   if(!checkInvitationCode) {
-    data.message += '邀请码错误 '
+    visitorIp[ip].count += 1
+    data.message += `邀请码错误,还可尝试${max - visitorIp[ip].count}次 `
   }
   const c = checkUserNameLength && checkPasswordLength
     && checkUserRepeat && checkInvitationCode
@@ -129,8 +113,8 @@ authModel.login = (userName, password, ip) => {
     return data
   }
 
-  // 根据访问者ip，检查密码错误次数是否通过
-  const result = preventViolentCrackPassword(ip)
+  // 限制单个ip尝试次数，防止暴力破解
+  const result = preventingBruteForceAttacks(ip)
   if(result === '未通过') {
     data.message = '密码错误次数过多，请明日再试！'
     return data
@@ -156,17 +140,9 @@ authModel.login = (userName, password, ip) => {
         return data
       } else {
         // - 密码错误，记录访问者ip和时间戳，错误次数+1
-        // 没有记录初始化
-        if(!visitorIp[ip]) {
-          visitorIp[ip] = {
-            time: new Date(),
-            max: 5, //最大密码错误尝试次数
-            count: 0
-          }
-        }
         const o = visitorIp[ip]
         o.count = o.count + 1
-        data.message = `密码错误，今日还可尝试${o.max - o.count}`
+        data.message = `密码错误，今日还可尝试${max - o.count}`
         return data
       }
     }
@@ -190,5 +166,53 @@ function checkUserLength(userName, password) {
 
   return {
     checkUserNameLength, checkPasswordLength
+  }
+}
+
+// 限制单个ip尝试次数，防止暴力破解
+function preventingBruteForceAttacks(ip) {
+  visitorIpObjMemoryGarbageCleanup(5) // visitorIp对象垃圾清理
+
+  if(!visitorIp[ip]) { // ip未记录，直接通过
+    visitorIp[ip] = {
+      time: new Date().getTime(),
+      count: 0
+    }
+    return '通过'
+  }
+  // 检查记录的时间是否是今天
+  const oldTime = new Date(visitorIp[ip].time)
+  const oldDate = oldTime.getFullYear() + '/' + (oldTime.getMonth() + 1) + '/' + oldTime.getDay()
+  const time = new Date()
+  const date = time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDay()
+  const o = visitorIp[ip]
+  o.time = time.getTime() // 更新time
+  // 如果是同一天检查错误次数
+  if(oldDate === date) {
+    if(o.count >= max) {
+      return '未通过'
+    }
+  } else {
+    // 访问时间超过一天清空错误计数
+    o.count = 0
+    return '通过'
+  }
+}
+
+// visitorIp 对象垃圾清理
+// 参数：天
+function visitorIpObjMemoryGarbageCleanup(day) {
+  const keys = [] //待删除项的key，超过指定天数的项删除
+  for(const key in visitorIp) {
+    const old = new Date(visitorIp[key].time).getTime()
+    const now = new Date().getTime()
+    // 86400000毫秒为一天
+    if(now - old > 86400000 * day) { 
+      keys.push(key)
+    }
+  }
+  // 删除
+  for(const key of keys) {
+    delete visitorIp[key]
   }
 }
