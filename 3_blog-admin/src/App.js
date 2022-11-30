@@ -17,7 +17,9 @@ const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   return (
     <Layout style={{
-      minHeight: '100vh',
+      overflow: 'hidden',
+      width: '100vw',
+      height: '100vh',
     }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div style={{
@@ -76,12 +78,12 @@ const App = () => {
         </Header>
         <Content
           style={{
-            margin: '24px 16px',
             padding: 24,
             minHeight: 280,
+            overflowY: 'auto'
           }}
         >
-          Content
+          <div style={{height: 1200}}>Content</div>
         </Content>
       </Layout>
     </Layout>
