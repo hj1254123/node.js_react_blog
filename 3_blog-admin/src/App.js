@@ -21,7 +21,7 @@ const App = () => {
       width: '100vw',
       height: '100vh',
     }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider trigger={null} collapsible collapsed={collapsed} breakpoint="lg" onBreakpoint={setCollapsed}>
         <div style={{
           backgroundColor: '#fff',
           width: '100%',
