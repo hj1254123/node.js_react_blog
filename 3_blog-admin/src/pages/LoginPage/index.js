@@ -27,7 +27,7 @@ const LoginPage = memo(() => {
       password,
       remember
     }).then(() => {
-      navigate('/home')
+      navigate('/dashboard')
     }).catch(() => {
       setLoading(false)
     })
@@ -42,7 +42,7 @@ const onRegisterFinish = useCallback((values) => {
     invitationCode,
     remember
   }).then(() => {
-    navigate('/home')
+    navigate('/dashboard')
   }).catch(() => {
     setLoading(false)
   })

@@ -5,8 +5,6 @@ import CommentsPage from "../pages/CommentsPage"
 import DashboardPage from "../pages/DashboardPage"
 import TagsPage from "../pages/TagsPage"
 
-import Error404 from "../components/Error404"
-
 const router = [
   {
     path: '/',
