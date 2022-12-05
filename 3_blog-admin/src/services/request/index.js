@@ -33,9 +33,9 @@ class HjRequest {
       console.log(err)
       if(err.response.status === 401) {
         const user = getUser()
-        if(err.response.config.url === '/test') return // 测试接口，不做提示
         if(user?.userName === '演示账号') {
           message.error('演示账号，无法操作！')
+          return
         } else {
           message.error('登录已过期，请重新登录')
           logout() // 删除localStorage中的用户数据

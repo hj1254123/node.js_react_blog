@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 
-
 import ErrorBoundary from './components/ErrorBoundary'
 import AppProviders from './context'
+import LoginPage from './pages/LoginPage'
 import App from './App'
 
 import 'normalize.css'
@@ -19,7 +19,10 @@ root.render(
     <BrowserRouter>
       <AppProviders>
         <ConfigProvider locale={zhCN}>
-          <App />
+          <Routes>
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='*' element={<App />} />
+          </Routes>
         </ConfigProvider>
       </AppProviders>
     </BrowserRouter>
