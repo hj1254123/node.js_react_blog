@@ -2,12 +2,12 @@ import logo from '../../assets/logo.png'
 
 import React, { memo, useState } from 'react'
 import {
+  DashboardOutlined,
   FileTextOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   MessageOutlined,
   TagsOutlined,
-  UserOutlined,
 } from '@ant-design/icons'
 import { Layout, Menu } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -40,9 +40,9 @@ const AppLayout = memo(({ children }) => {
           defaultSelectedKeys={['1']}
           items={[
             {
-              key: '/home',
-              icon: <UserOutlined />,
-              label: '首页',
+              key: '/dashboard',
+              icon: <DashboardOutlined />,
+              label: '仪表盘',
             },
             {
               key: '/articles',

@@ -1,8 +1,7 @@
-import router from './router'
-
 import React from 'react'
 import { useRoutes } from 'react-router-dom'
 
+import router from './router'
 import AppLayout from './components/AppLayout'
 
 const App = () => {
@@ -12,6 +11,7 @@ const App = () => {
     <AppLayout>
       {element}
     </AppLayout>
-  );
-};
-export default App;
+  )
+}
+
+export default App

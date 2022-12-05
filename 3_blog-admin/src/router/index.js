@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom"
 
 import ArticlesPage from "../pages/ArticlesPage"
 import CommentsPage from "../pages/CommentsPage"
-import HomePage from "../pages/HomePage"
+import DashboardPage from "../pages/DashboardPage"
 import TagsPage from "../pages/TagsPage"
 
 import Error404 from "../components/Error404"
@@ -10,11 +10,11 @@ import Error404 from "../components/Error404"
 const router = [
   {
     path: '/',
-    element: <Navigate to='/home' />
+    element: <Navigate to='/dashboard' />
   },
   {
-    path: '/home',
-    element: <HomePage />
+    path: '/dashboard',
+    element: <DashboardPage />
   },
   {
     path: '/articles',
@@ -27,10 +27,6 @@ const router = [
   {
     path: '/comments',
     element: <CommentsPage />
-  },
-  {
-    path: '/404',
-    element: <Error404 />
   },
   {
     path: '*',

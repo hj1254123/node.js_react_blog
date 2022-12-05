@@ -7,6 +7,7 @@ import zhCN from 'antd/locale/zh_CN'
 import ErrorBoundary from './components/ErrorBoundary'
 import AppProviders from './context'
 import LoginPage from './pages/LoginPage'
+import Error404 from './components/Error404'
 import App from './App'
 
 import 'normalize.css'
@@ -21,6 +22,7 @@ root.render(
         <ConfigProvider locale={zhCN}>
           <Routes>
             <Route path='/login' element={<LoginPage />} />
+            <Route path='/404' element={<Error404 />} />
             <Route path='*' element={<App />} />
           </Routes>
         </ConfigProvider>
