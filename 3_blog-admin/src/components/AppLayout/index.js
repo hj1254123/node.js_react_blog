@@ -1,8 +1,8 @@
 import logo from '../../assets/logo.png'
 import avatar from '../../assets/avatar.png'
 
-import React, { memo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { memo, useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   DashboardOutlined,
   FileTextOutlined,
@@ -20,6 +20,8 @@ const { Header, Sider, Content } = Layout
 
 const AppLayout = memo(({ children }) => {
   const [collapsed, setCollapsed] = useState(false)
+  
+  const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuthContext()
 
@@ -59,7 +61,7 @@ const AppLayout = memo(({ children }) => {
           <Menu
             className='slider-menu'
             mode="inline"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={[location.pathname]}
             items={sliderMenuItems}
             onClick={({ key }) => {
               navigate(key)
