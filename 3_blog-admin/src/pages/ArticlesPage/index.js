@@ -8,47 +8,15 @@ import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-
 const ArticlesPage = memo(() => {
-
-  const columns = [
-    {
-      title: '文章标题',
-      dataIndex: 'title',
-      key: 'title',
-    },
-    {
-      title: '标签',
-      dataIndex: 'tags',
-      key: 'tags',
-      render: (tags) => (
-        <span>
-          {tags.map((tag) => {
-            return (
-              <Tag color='geekblue' key={tag}>{tag}</Tag>
-            )
-          })}
-        </span>
-      ),
-    },
-    {
-      title: '浏览量',
-      dataIndex: 'views',
-      key: 'views',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'time',
-      key: 'time',
-    },
-  ]
+  // 当前页码
   const { id } = useParams()
   const currentIndex = parseInt(id) || 1
-
+  // 获取currentIndex的文章列表数据
   const { data } = useSWR(`/article/page/${currentIndex}`, (url) => {
     return hjRequest.get(url).then(res => res)
   })
-
+  // dataSource：用于展示的文章列表数据
   const [dataSource, setDataSource] = useState([])
   useEffect(() => {
     if(!data) return
@@ -65,11 +33,45 @@ const ArticlesPage = memo(() => {
         tags: tags,
         time: dayjs(article.time).format('YYYY-MM-DD HH:mm:ss')
       })
-
     }
     setDataSource(dataSource)
   }, [data])
-  console.log(data)
+  // 表头配置
+  const columns = [
+    {
+      title: '文章标题',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: '标签',
+      dataIndex: 'tags',
+      key: 'tags',
+      render: (tags) => (
+        <span>
+          {tags.map((tag) => <Tag color='geekblue' key={tag}>{tag}</Tag>)}
+        </span>
+      ),
+    },
+    {
+      title: '浏览量',
+      dataIndex: 'views',
+      key: 'views',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'time',
+      key: 'time',
+    },
+  ]
+  // 页码配置
+  const pagination = { defaultCurrent: 1, total: 5 }
+  // 行选择配置（复选框已选中的项）
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    }
+  }
   // const navigate = useNavigate()
   // 根据page下标跳转页面，传给pageNav调用的回调函数
   // const changeIndex = useCallback((index) => {
@@ -89,9 +91,13 @@ const ArticlesPage = memo(() => {
           <Button type="primary" icon={<PlusOutlined />}>添加文章</Button>
           <Button type="primary" icon={<DeleteOutlined />} danger>批量删除</Button>
         </Space>
-        <Table columns={columns} dataSource={dataSource} pagination={{ defaultCurrent: 1, total: 5 }} />
+        <Table
+          columns={columns}
+          dataSource={dataSource}
+          pagination={pagination}
+          rowSelection={rowSelection}
+        />
       </Space>
-
     </Card>)
 })
 
