@@ -1,8 +1,6 @@
 const express = require('express')
 const articleModel = require('../model/article')
 
-const cacheMiddleware = require('../middleware/cache')
-
 const router = express.Router()
 
 router.post('/', function(req, res) {
@@ -55,7 +53,7 @@ router.get('/:id', function(req, res) {
   }
 })
 
-router.get('/page/:id', cacheMiddleware(10), function(req, res) {
+router.get('/page/:id', function(req, res) {
   try {
     const pageN = parseInt(req.params.id)
     const data = articleModel.getPage(pageN)

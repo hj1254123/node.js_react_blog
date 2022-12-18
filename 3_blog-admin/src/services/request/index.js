@@ -62,8 +62,8 @@ class HjRequest {
   post(url, data = {}, config = {}) {
     return this.request({ ...config, data, url, method: 'post' })
   }
-  delete(url, config = {}) {
-    return this.request({ ...config, url, method: 'delete' })
+  delete(url, data = {}, config = {}) {
+    return this.request({ ...config, data, url, method: 'delete' })
   }
   put(url, data = {}, config = {}) {
     return this.request({ ...config, data, url, method: 'put' })

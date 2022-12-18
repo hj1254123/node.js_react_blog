@@ -9,21 +9,23 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 
 const ArticlesPage = memo(() => {
+  const [dataSource, setDataSource] = useState([]) // dataSource：用于展示的文章列表数据
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]) //选中的行，key数组
+  const [selectedRows, setSelectedRows] = useState([]) //选中的行，详细数据数组
+
   const { id } = useParams() // 当前页码
   const currentIndex = parseInt(id) || 1
   const navigate = useNavigate()
-  
   const changePageIndex = useCallback((index) => {
     navigate(`/articles/page/${index}`)
     document.querySelector('.content').scrollTop = 0
   }, [navigate])
-  
-  const { data } = useSWR(`/article/page/${currentIndex}`, (url) => {
+
+  const { data, mutate } = useSWR(`/article/page/${currentIndex}`, (url) => {
     return hjRequest.get(url).then(res => res)
   })
+  console.log(data)
 
-  const [dataSource, setDataSource] = useState([]) // dataSource：用于展示的文章列表数据
- 
   useEffect(() => { // 格式化data
     if(!data) return
     const dataSource = []
@@ -44,7 +46,7 @@ const ArticlesPage = memo(() => {
     setDataSource(dataSource)
   }, [data])
 
-  
+
   const columns = [ //列配置
     {
       title: '文章标题',
@@ -79,12 +81,19 @@ const ArticlesPage = memo(() => {
       render: (text, record) => (
         <Space>
           <Button type="primary" onClick={() => { console.log(record) }}>编辑</Button>
-          <Button type="primary" onClick={() => { console.log(record) }} danger>删除</Button>
+          <Button type="primary" onClick={() => { delArticles([record.key]) }} danger>删除</Button>
         </Space>
       )
     }
   ]
- 
+
+  const rowSelection = {// 行选择配置
+    onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(selectedRowKeys)
+      setSelectedRows(selectedRows)
+    }
+  }
+
   const pagination = {  //页码配置
     defaultCurrent: 1,
     current: currentIndex,
@@ -93,11 +102,27 @@ const ArticlesPage = memo(() => {
       changePageIndex(page)
     }
   }
-  
-  const rowSelection = {// 行选择配置
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+
+  async function delArticles(articleIDArr) { // 删除文章
+
+    const res = await hjRequest.delete('/article/batch', {
+      articlesID: articleIDArr
+    })
+
+    if(res.message === '批量删除文章成功') {
+      let newData = data.data
+      for(const articleID of articleIDArr) {
+        newData = newData.filter(item => {
+          return item.id !== articleID
+        })
+      }
+
+      mutate({
+        ...data,
+        data: newData
+      })
     }
+
   }
 
   return (
@@ -110,7 +135,12 @@ const ArticlesPage = memo(() => {
       >
         <Space>
           <Button type="primary" icon={<PlusOutlined />}>添加文章</Button>
-          <Button type="primary" icon={<DeleteOutlined />} danger>批量删除</Button>
+          <Button
+            type="primary"
+            icon={<DeleteOutlined />}
+            danger
+            onClick={() => (delArticles(selectedRowKeys))}
+          >批量删除</Button>
         </Space>
         <Table
           columns={columns}
