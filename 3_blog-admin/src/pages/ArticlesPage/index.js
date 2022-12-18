@@ -21,6 +21,7 @@ const ArticlesPage = memo(() => {
   useEffect(() => {
     if(!data) return
     const dataSource = []
+    // 处理数据为 Table 需要的格式
     for(const article of data.data) {
       const tags = []
       for(const tag of article.tags) {
@@ -36,7 +37,7 @@ const ArticlesPage = memo(() => {
     }
     setDataSource(dataSource)
   }, [data])
-  // 表头配置
+  // 列配置
   const columns = [
     {
       title: '文章标题',
@@ -63,6 +64,17 @@ const ArticlesPage = memo(() => {
       dataIndex: 'time',
       key: 'time',
     },
+    {
+      title: '操作',
+      dataIndex: 'operate',
+      key: 'operate',
+      render: (text, record) => (
+        <Space>
+          <Button type="primary" onClick={() => { console.log(record) }}>编辑</Button>
+          <Button type="primary" onClick={() => { console.log(record) }} danger>删除</Button>
+        </Space>
+      )
+    }
   ]
   // 页码配置
   const pagination = { defaultCurrent: 1, total: 5 }
@@ -96,6 +108,7 @@ const ArticlesPage = memo(() => {
           dataSource={dataSource}
           pagination={pagination}
           rowSelection={rowSelection}
+          loading={!data}
         />
       </Space>
     </Card>)

@@ -1,7 +1,7 @@
 import logo from '../../assets/logo.png'
 import avatar from '../../assets/avatar.png'
 
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   DashboardOutlined,
@@ -20,7 +20,7 @@ const { Header, Sider, Content } = Layout
 
 const AppLayout = memo(({ children }) => {
   const [collapsed, setCollapsed] = useState(false)
-  
+
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuthContext()
@@ -54,7 +54,13 @@ const AppLayout = memo(({ children }) => {
   return (
     <AppLayoutWrapper>
       <Layout className='layout-box'>
-        <Sider trigger={null} collapsible collapsed={collapsed} breakpoint="lg" onBreakpoint={setCollapsed}>
+        <Sider
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          breakpoint="lg"
+          onBreakpoint={setCollapsed}
+        >
           <div className='logo'>
             <img src={logo} alt="HouJI's博客管理系统" />
           </div>
@@ -79,15 +85,14 @@ const AppLayout = memo(({ children }) => {
             <Dropdown
               menu={{
                 items: userBoxItems,
-                onClick: ({key}) => {
+                onClick: ({ key }) => {
                   logout()
                   navigate(key)
                 }
-              }
-              }
+              }}
             >
               <Space className="userInfo">
-                <Avatar src={avatar} alt="avatar"/>
+                <Avatar src={avatar} alt="avatar" />
                 <span>{user?.userName}</span>
               </Space>
             </Dropdown>
