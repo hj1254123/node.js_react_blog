@@ -12,7 +12,7 @@ export const ArticleListWrapper = styled.div`
       font-size: 13px;
       height: 24px;
       line-height: 24px;
-      font-weight: 800;
+      font-weight: 600;
       margin-bottom: 10px;
     }
     h3 {

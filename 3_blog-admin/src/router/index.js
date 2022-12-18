@@ -19,6 +19,10 @@ const router = [
     element: <ArticlesPage />
   },
   {
+    path: '/articles/page/:id',
+    element: <ArticlesPage />
+  },
+  {
     path: '/tags',
     element: <TagsPage />
   },

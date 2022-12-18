@@ -266,6 +266,8 @@ articleModel.getPage = function(pageN) {
   const end = start + size
   // 总共多少页
   const total = Math.ceil(articlesDB.length / size)
+  // 总文章数
+  const totalArticles = articlesDB.length
   // 切割下需要的文章
   const cutArticleArr = articlesDB.slice(start, end)
 
@@ -281,6 +283,7 @@ articleModel.getPage = function(pageN) {
   // 返回
   data.message = '获取文章列表成功'
   data.total = total
+  data.totalArticles = totalArticles
   data.data = cutArticleArr
   return data
 }

@@ -9,16 +9,22 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 
 const ArticlesPage = memo(() => {
-  // 当前页码
-  const { id } = useParams()
+  const { id } = useParams() // 当前页码
   const currentIndex = parseInt(id) || 1
-  // 获取currentIndex的文章列表数据
+  const navigate = useNavigate()
+  
+  const changePageIndex = useCallback((index) => {
+    navigate(`/articles/page/${index}`)
+    document.querySelector('.content').scrollTop = 0
+  }, [navigate])
+  
   const { data } = useSWR(`/article/page/${currentIndex}`, (url) => {
     return hjRequest.get(url).then(res => res)
   })
-  // dataSource：用于展示的文章列表数据
-  const [dataSource, setDataSource] = useState([])
-  useEffect(() => {
+
+  const [dataSource, setDataSource] = useState([]) // dataSource：用于展示的文章列表数据
+ 
+  useEffect(() => { // 格式化data
     if(!data) return
     const dataSource = []
     // 处理数据为 Table 需要的格式
@@ -37,12 +43,14 @@ const ArticlesPage = memo(() => {
     }
     setDataSource(dataSource)
   }, [data])
-  // 列配置
-  const columns = [
+
+  
+  const columns = [ //列配置
     {
       title: '文章标题',
       dataIndex: 'title',
       key: 'title',
+      ellipsis: true,
     },
     {
       title: '标签',
@@ -76,20 +84,21 @@ const ArticlesPage = memo(() => {
       )
     }
   ]
-  // 页码配置
-  const pagination = { defaultCurrent: 1, total: 5 }
-  // 行选择配置（复选框已选中的项）
-  const rowSelection = {
+ 
+  const pagination = {  //页码配置
+    defaultCurrent: 1,
+    current: currentIndex,
+    total: data?.totalArticles,
+    onChange: (page) => {
+      changePageIndex(page)
+    }
+  }
+  
+  const rowSelection = {// 行选择配置
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
     }
   }
-  // const navigate = useNavigate()
-  // 根据page下标跳转页面，传给pageNav调用的回调函数
-  // const changeIndex = useCallback((index) => {
-  //   navigate(`/article/page/${index}`)
-  //   document.documentElement.scrollTop = 0
-  // }, [navigate])
 
   return (
     <Card title='文章管理'>
