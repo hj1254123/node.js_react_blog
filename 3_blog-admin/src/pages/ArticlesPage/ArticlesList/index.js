@@ -1,0 +1,79 @@
+import React, { memo } from 'react'
+import {  Table, Space, Button, Tag } from 'antd'
+
+const ArticlesList = memo((props) => {
+  const {
+    setSelectedRows, setSelectedRowKeys,
+    dataSource, delArticles,
+    currentIndex, changePageIndex,
+    totalArticles,
+  } = props
+
+  const columns = [ //列配置
+    {
+      title: '文章标题',
+      dataIndex: 'title',
+      key: 'title',
+      ellipsis: true,
+    },
+    {
+      title: '标签',
+      dataIndex: 'tags',
+      key: 'tags',
+      render: (tags) => (
+        <span>
+          {tags.map((tag) => <Tag color='geekblue' key={tag}>{tag}</Tag>)}
+        </span>
+      ),
+    },
+    {
+      title: '浏览量',
+      dataIndex: 'views',
+      key: 'views',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'time',
+      key: 'time',
+    },
+    {
+      title: '操作',
+      dataIndex: 'operate',
+      key: 'operate',
+      render: (text, record) => (
+        <Space>
+          <Button type="primary" onClick={() => { console.log(record) }}>编辑</Button>
+          <Button type="primary" onClick={() => { delArticles([record.key]) }} danger>删除</Button>
+        </Space>
+      )
+    }
+  ]
+
+  const rowSelection = {// 行选择配置
+    onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(selectedRowKeys)
+      setSelectedRows(selectedRows)
+    }
+  }
+
+  const pagination = {  //页码配置
+    defaultCurrent: 1,
+    current: currentIndex,
+    total: totalArticles,
+    onChange: (page) => {
+      changePageIndex(page)
+    }
+  }
+
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={pagination}
+      rowSelection={rowSelection}
+      loading={!dataSource}
+    />
+  )
+})
+
+export default ArticlesList
