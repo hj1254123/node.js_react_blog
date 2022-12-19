@@ -104,6 +104,10 @@ const ArticlesPage = memo(() => {
   }
   
   function delArticles(articleIDArr) { // 删除文章
+    if(articleIDArr.length === 0) {
+      message.info('未选择文章')
+      return
+    }
     Modal.confirm({
       content: '确定要删除文章吗？',
       maskClosable: true,
