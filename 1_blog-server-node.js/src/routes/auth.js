@@ -47,7 +47,7 @@ router.post('/login', (req, res) => {
 
 function issueToken(data) {
   return jwt.sign(data, PRIVATE_KEY, {
-    expiresIn: 60 * 60 * 24, // 1天过期
+    expiresIn: 60 * 60 * 24 * 7, // n天过期
     algorithm: 'RS256',// 设置算法为 RS256
     issuer: 'Monkey'
   })

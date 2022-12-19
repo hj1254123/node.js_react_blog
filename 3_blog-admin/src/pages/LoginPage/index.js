@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useState } from 'react'
-import { Card } from 'antd'
+import { Card, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 import { useAuthContext } from '../../context/auth-context'
@@ -10,13 +10,17 @@ import RegisterForm from './RegisterForm'
 
 const LoginPage = memo(() => {
   const [pageSwitch, setPageSwitch] = useState('登录')
+  const [loading, setLoading] = useState(false)
+  const goPath = '/dashboard'
+
   const navigate = useNavigate()
   const { login, register, setDemoUser } = useAuthContext()
-  const [loading, setLoading] = useState(false)
   
+
   const goDirectly = useCallback(() => { // 通过演示账号直接进入管理页面
     setDemoUser()
-    navigate('/home')
+    message.info('正在使用演示账号，部分功能受限！')
+    navigate(goPath)
   }, [setDemoUser, navigate])
 
   const onLoginFinish = useCallback((values) => {
@@ -27,7 +31,7 @@ const LoginPage = memo(() => {
       password,
       remember
     }).then(() => {
-      navigate('/dashboard')
+      navigate(goPath)
     }).catch(() => {
       setLoading(false)
     })
@@ -42,7 +46,7 @@ const onRegisterFinish = useCallback((values) => {
     invitationCode,
     remember
   }).then(() => {
-    navigate('/dashboard')
+    navigate(goPath)
   }).catch(() => {
     setLoading(false)
   })

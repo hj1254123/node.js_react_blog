@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react'
-import { Card, Table, Space, Button, Tag } from 'antd'
+import { Card, Table, Space, Button, Tag, Modal, message } from 'antd'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import useSWR from 'swr'
 import hjRequest from '../../services/request';
@@ -102,26 +102,35 @@ const ArticlesPage = memo(() => {
       changePageIndex(page)
     }
   }
+  
+  function delArticles(articleIDArr) { // 删除文章
+    Modal.confirm({
+      content: '确定要删除文章吗？',
+      maskClosable: true,
+      onOk: async () => {
+        const res = await hjRequest.delete('/article/batch', {
+          articlesID: articleIDArr
+        })
 
-  async function delArticles(articleIDArr) { // 删除文章
+        if(res.message === '批量删除文章成功') {
+          let newData = data.data
+          for(const articleID of articleIDArr) {
+            newData = newData.filter(item => {
+              return item.id !== articleID
+            })
+          }
 
-    const res = await hjRequest.delete('/article/batch', {
-      articlesID: articleIDArr
+          mutate({
+            ...data,
+            data: newData
+          })
+          message.success('删除文章成功')
+        } else {
+          message.error(res.message || '未知错误')
+        }
+      }
     })
 
-    if(res.message === '批量删除文章成功') {
-      let newData = data.data
-      for(const articleID of articleIDArr) {
-        newData = newData.filter(item => {
-          return item.id !== articleID
-        })
-      }
-
-      mutate({
-        ...data,
-        data: newData
-      })
-    }
 
   }
 
