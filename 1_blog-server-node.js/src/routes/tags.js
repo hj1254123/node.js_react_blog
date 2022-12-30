@@ -79,7 +79,6 @@ router.get('/page', cacheMiddleware(10), function(req, res) {
   try {
     // - 拿到标签数据
     const tagsArr = tagsModel.getTagsArr()
-
     // 该对象用于存放 tagName 映射对应的文章数组
     const tagNameMapsToArticleArrObj = {}
     // 添加映射数据
