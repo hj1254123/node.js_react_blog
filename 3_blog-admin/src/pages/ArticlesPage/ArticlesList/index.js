@@ -1,12 +1,12 @@
 import React, { memo } from 'react'
-import {  Table, Space, Button, Tag } from 'antd'
+import { Table, Space, Button, Tag } from 'antd'
 
 const ArticlesList = memo((props) => {
   const {
     setSelectedRows, setSelectedRowKeys,
     dataSource, delArticles,
     currentIndex, changePageIndex,
-    totalArticles,
+    totalArticles, editorArticle
   } = props
 
   const columns = [ //列配置
@@ -42,7 +42,7 @@ const ArticlesList = memo((props) => {
       key: 'operate',
       render: (text, record) => (
         <Space>
-          <Button type="primary" onClick={() => { console.log(record) }}>编辑</Button>
+          <Button type="primary" onClick={() => { editorArticle(record.key) }}>编辑</Button>
           <Button type="primary" onClick={() => { delArticles([record.key]) }} danger>删除</Button>
         </Space>
       )

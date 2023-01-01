@@ -10,6 +10,7 @@ const articleModel = require('./article.js')
 
 const tagsDBPath = path.resolve(__dirname, '../db/tags.json')
 
+// 根据标签数组，添加标签，并返回添加后的标签数据
 // 参数 tagsArr 在 ./article.js 中已校验和安全处理
 tagsModel.addTagsFromArticleInterface = function(tagsArr) {
   // 待返回的数据

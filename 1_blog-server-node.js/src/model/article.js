@@ -27,7 +27,7 @@ articleModel.addArticle = function(articleData) {
   }
 
   // 1.文章校验
-  let result = addArticleVerification(articleData)
+  let result = articleVerification(articleData)
 
   // 如校验失败直接返回信息
   if(!result.boolean) {
@@ -164,7 +164,7 @@ articleModel.putArticle = function(articleData) {
     data: {}
   }
   // 1.校验数据
-  const result = putArticleVerification(articleData)
+  const result = articleVerification(articleData)
   // 如校验失败直接返回信息
   if(!result.boolean) {
     data.message = result.message
@@ -172,7 +172,7 @@ articleModel.putArticle = function(articleData) {
   }
 
   // 2.这里关于xss防御，交给前端处理更合适。
-  const { articleID, title, intro, content } = articleData
+  const { articleID, title, intro, content, tags } = articleData
 
   // 3.检查是否存在该文章
   const articlesDB = getArticlesData()
@@ -185,14 +185,38 @@ articleModel.putArticle = function(articleData) {
     return data
   }
 
-  // 4.修改并保存
+  // 4.修改并保存文章数据
   articlesDB[index].title = title
   articlesDB[index].intro = intro
   articlesDB[index].content = content
   save(articlesDB)
-  // 5.返回结果
-  data.message = '文章修改成功'
   data.data = { ...articlesDB[index] }
+  // 5.修改并保存tags数据
+  // 删除之前的标签
+  tagAndArticleModel.delItemsBasedOnTheArticleID(articleID)
+  // 添加新的标签
+  try {
+    let tagsArr = tagsModel.addTagsFromArticleInterface(tags)
+    console.log('tagsArr', tagsArr)
+    data.data.tags = tagsArr
+  } catch(error) {
+    data.message = '标签保存出错，请手动删除新添加数据。'
+    data.data = null
+    return data
+  }
+  // 保存标签与文章关系数据文档
+  const tagsIDArr = []
+  for(const item of data.data.tags) {
+    tagsIDArr.push(item.id)
+  }
+
+  try {
+    tagAndArticleModel.addTagArticle(articleID, tagsIDArr)
+  } catch(error) {
+    data.message = '标签与文章关系文档保存出错，请手动删除新添加数据。'
+  }
+  // 6.返回结果
+  data.message = '文章修改成功'
   return data
 }
 
@@ -372,8 +396,8 @@ function saveNewArticle(title, intro, content) {
   return newArticleData
 }
 
-//添加文章接口校验数据是否合法
-function addArticleVerification(articleData) {
+//文章校验数据是否合法
+function articleVerification(articleData) {
   let result = { message: '校验通过', boolean: true }
   let { title, intro, content, tags } = articleData
   // 标题：不能为空、类型为string
@@ -416,45 +440,6 @@ function addArticleVerification(articleData) {
     result.message = '文章内容校验失败'
   } else if(checkTags) {
     result.message = '文章标签校验失败'
-  }
-  // 全部校验通过
-  return result
-}
-
-// 修改文章接口校验是否合法
-function putArticleVerification(articleData) {
-  let result = { message: '校验通过', boolean: true }
-  let { articleID, title, intro, content } = articleData
-
-  // ID: 只能是数字
-  // 标题：不能为空、类型为string
-  // 简介: 类型为string
-  // 内容：不能为空、类型为string
-
-  let checkArticleID = typeof articleID !== 'number'
-  let checkTitle = !title || (typeof title !== 'string')
-  let checkIntro = typeof intro !== 'string'
-  let checkContent = !content || (typeof content !== 'string')
-  // 长度控制
-  if(title.length > 60) {
-    checkTitle = true
-  } else if(intro.length > 300) {
-    checkIntro = true
-  } else if(content.length > 30000) {
-    checkContent = true
-  }
-
-  if(checkArticleID || checkTitle || checkIntro || checkContent) {
-    result.boolean = false
-  }
-  if(checkArticleID) {
-    result.message = '文章id校验失败'
-  } else if(checkTitle) {
-    result.message = '文章标题校验失败'
-  } else if(checkIntro) {
-    result.message = '文章简介校验失败'
-  } else if(checkContent) {
-    result.message = '文章内容校验失败'
   }
   // 全部校验通过
   return result

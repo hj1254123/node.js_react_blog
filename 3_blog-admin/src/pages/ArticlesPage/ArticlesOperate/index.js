@@ -1,17 +1,15 @@
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import { Space, Button } from 'antd'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
-import ArticlesEditor from '../../../components/ArticleEditor'
 
-const ArticlesOperate = memo(({ delArticles, selectedRowKeys }) => {
-  const [isopen, setIsopen] = useState(false)
+const ArticlesOperate = memo(({ delArticles, selectedRowKeys, addArticle }) => {
   
   return (
     <Space>
       <Button
         type="primary"
         icon={<PlusOutlined />}
-        onClick={() => { setIsopen(true) }}
+        onClick={() => { addArticle() }}
       >添加文章</Button>
       <Button
         type="primary"
@@ -19,11 +17,6 @@ const ArticlesOperate = memo(({ delArticles, selectedRowKeys }) => {
         danger
         onClick={() => (delArticles(selectedRowKeys))}
       >批量删除</Button>
-      <ArticlesEditor
-        title='新建文章'
-        isopen={isopen}
-        setIsopen={setIsopen}
-      />
     </Space>
   )
 })

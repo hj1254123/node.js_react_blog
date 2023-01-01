@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react'
-import { Card,  Space,  Modal, message } from 'antd'
+import { Card, Space, Modal, message } from 'antd'
 import useSWR from 'swr'
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -8,11 +8,14 @@ import hjRequest from '../../services/request';
 
 import ArticlesOperate from './ArticlesOperate';
 import ArticlesList from './ArticlesList';
+import ArticlesEditor from '../../components/ArticleEditor';
 
 const ArticlesPage = memo(() => {
   const [dataSource, setDataSource] = useState([]) // dataSource：用于展示的文章列表数据
   const [selectedRowKeys, setSelectedRowKeys] = useState([]) //选中的行，key数组
-  const [selectedRows, setSelectedRows] = useState([]) //选中的行，详细数据数组
+  const [isEditorOpen, setIsEditorOpen] = useState(false) //控制文章编辑组件打开
+  const [editorTitle, setEditorTitle] = useState('')
+  const [articleKey, setArticleKey] = useState(1)
 
   const navigate = useNavigate()
   const { id } = useParams() // 当前页码
@@ -21,8 +24,6 @@ const ArticlesPage = memo(() => {
   const { data, mutate } = useSWR(`/article/page/${currentIndex}`, (url) => {
     return hjRequest.get(url).then(res => res)
   })
-
-  console.log(data)
 
   useEffect(() => { // 格式化 data=>dataSource
     if(!data) return
@@ -84,6 +85,17 @@ const ArticlesPage = memo(() => {
 
   }
 
+  function addArticle() {
+    setEditorTitle('新建文章')
+    setIsEditorOpen(true)
+  }
+
+  function editorArticle(articleKey) {
+    setEditorTitle('编辑文章')
+    setArticleKey(articleKey)
+    setIsEditorOpen(true)
+  }
+
   return (
     <Card title='文章管理'>
       <Space
@@ -95,6 +107,7 @@ const ArticlesPage = memo(() => {
         <ArticlesOperate
           delArticles={delArticles}
           selectedRowKeys={selectedRowKeys}
+          addArticle={addArticle}
         />
         <ArticlesList
           dataSource={dataSource}
@@ -103,8 +116,18 @@ const ArticlesPage = memo(() => {
           changePageIndex={changePageIndex}
           totalArticles={data?.totalArticles}
           setSelectedRowKeys={setSelectedRowKeys}
-          setSelectedRows={setSelectedRows}
+          editorArticle={editorArticle}
         />
+        {
+          isEditorOpen ? <ArticlesEditor
+            title={editorTitle}
+            isopen={isEditorOpen}
+            setIsopen={setIsEditorOpen}
+            articleKey={articleKey}
+            mutate={mutate}
+          /> : ''
+        }
+
       </Space>
     </Card>
   )
