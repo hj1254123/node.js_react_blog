@@ -42,6 +42,10 @@ img {
   vertical-align: middle;
 }
 
+a {
+  color: black;
+}
+
 /* 自定义滚动条样式 */
 *::-webkit-scrollbar {
   -webkit-appearance: none;

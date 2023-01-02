@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import { Table, Space, Button, Tag } from 'antd'
+import { BLOG_URL } from '../../../common/config'
 
 const ArticlesList = memo((props) => {
   const {
@@ -15,6 +16,9 @@ const ArticlesList = memo((props) => {
       dataIndex: 'title',
       key: 'title',
       ellipsis: true,
+      render: (title, record) => (
+        <a href={`${BLOG_URL}/article/${record.key}`} target="_blank">{title}</a>
+      )
     },
     {
       title: '标签',
