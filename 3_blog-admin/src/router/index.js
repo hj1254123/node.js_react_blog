@@ -27,6 +27,10 @@ const router = [
     element: <TagsPage />
   },
   {
+    path: '/tags/page/:id',
+    element: <TagsPage />
+  },
+  {
     path: '/comments',
     element: <CommentsPage />
   },

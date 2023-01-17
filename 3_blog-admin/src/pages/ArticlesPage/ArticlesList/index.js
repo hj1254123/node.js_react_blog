@@ -4,13 +4,18 @@ import { BLOG_URL } from '../../../common/config'
 
 const ArticlesList = memo((props) => {
   const {
-    setSelectedRows, setSelectedRowKeys,
+    setSelectedRowKeys,
     dataSource, delArticles,
     currentIndex, changePageIndex,
     totalArticles, editorArticle
   } = props
 
   const columns = [ //列配置
+    {
+      title: '文章ID',
+      dataIndex: 'key',
+      key: 'key',
+    },
     {
       title: '文章标题',
       dataIndex: 'title',
@@ -54,9 +59,8 @@ const ArticlesList = memo((props) => {
   ]
 
   const rowSelection = {// 行选择配置
-    onChange: (selectedRowKeys, selectedRows) => {
+    onChange: (selectedRowKeys) => {
       setSelectedRowKeys(selectedRowKeys)
-      setSelectedRows(selectedRows)
     }
   }
 

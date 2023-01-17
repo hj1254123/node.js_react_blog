@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   useMount(() => {
     const user = auth.getUser()
     if(!user) {
-      console.log('调整？')
       navigate('/login')
       return
     }

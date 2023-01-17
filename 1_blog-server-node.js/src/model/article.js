@@ -148,6 +148,8 @@ articleModel.delArticles = function(articlesID) {
     articlesDB = articlesDB.filter(item => {
       return item.id !== articleID
     })
+    // 根据文章id删除文章与标签关系文档中对应的数据
+    tagAndArticleModel.delItemsBasedOnTheArticleID(articleID)
   }
   // 保存文章数据
   save(articlesDB)
