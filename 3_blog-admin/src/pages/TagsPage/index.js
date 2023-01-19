@@ -1,10 +1,13 @@
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo, useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMount } from 'react-use'
-import { Button, Space, Table } from 'antd'
 import dayjs from 'dayjs'
+import { Card, Space } from 'antd';
 
 import hjRequest from '../../services/request'
+
+import TagsList from './TagsList'
+import TagsOperate from './TagsOperate';
 
 const TagsPage = memo(() => {
   const navigate = useNavigate()
@@ -42,61 +45,31 @@ const TagsPage = memo(() => {
   }, [currentIndex, data])
 
   console.log('selectedRowKeys', selectedRowKeys)
-  const columns = [
-    {
-      title: '标签ID',
-      dataIndex: 'key',
-    },
-    {
-      title: '标签名',
-      dataIndex: 'tagName',
-    },
-    {
-      title: '文章量',
-      dataIndex: 'numberOfArticles',
-    },
-    {
-      title: '添加时间',
-      dataIndex: 'time',
-    },
-    {
-      title: '操作',
-      dataIndex: 'operate',
-      render: (text, record) => (
-        <Space>
-          <Button type="primary" onClick={() => { }}>编辑</Button>
-          <Button type="primary" onClick={() => { }} danger>删除</Button>
-        </Space>
-      )
-    }
-  ]
-  const rowSelection = {// 行选择配置
-    onChange: (selectedRowKeys) => {
-      setSelectedRowKeys(selectedRowKeys)
-    }
-  }
-  const pagination = {  //页码配置
-    defaultCurrent: 1,
-    current: currentIndex,
-    total: data.length,
-    onChange: (page) => {
-      changePageIndex(page)
-    }
-  }
 
-  function changePageIndex(index) {
+  const changePageIndex = useCallback((index) => {
     navigate(`/tags/page/${index}`)
     document.querySelector('.content').scrollTop = 0
-  }
+  }, [])
+
 
   return (
-    <Table
-      columns={columns}
-      dataSource={dataSource}
-      pagination={pagination}
-      rowSelection={rowSelection}
-      loading={!dataSource}
-    />
+    <Card title='标签管理'>
+      <Space
+        direction='vertical'
+        style={{
+          display: 'flex',
+        }}
+      >
+        <TagsOperate />
+        <TagsList
+          dataSource={dataSource}
+          setSelectedRowKeys={setSelectedRowKeys}
+          changePageIndex={changePageIndex}
+          total={data.length}
+        />
+      </Space>
+    </Card>
+
   )
 })
 
