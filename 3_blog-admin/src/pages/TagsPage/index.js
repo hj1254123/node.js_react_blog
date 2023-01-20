@@ -49,8 +49,7 @@ const TagsPage = memo(() => {
   const changePageIndex = useCallback((index) => {
     navigate(`/tags/page/${index}`)
     document.querySelector('.content').scrollTop = 0
-  }, [])
-
+  }, [navigate])
 
   return (
     <Card title='标签管理'>

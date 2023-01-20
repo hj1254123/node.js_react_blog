@@ -22,7 +22,7 @@ const ArticlesList = memo((props) => {
       key: 'title',
       ellipsis: true,
       render: (title, record) => (
-        <a href={`${BLOG_URL}/article/${record.key}`} target="_blank">{title}</a>
+        <a href={`${BLOG_URL}/article/${record.key}`} target="_blank" rel="noreferrer">{title}</a>
       )
     },
     {
