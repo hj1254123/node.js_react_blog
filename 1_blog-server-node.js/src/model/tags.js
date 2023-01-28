@@ -240,7 +240,7 @@ tagsModel.putTagName = function(tagID, tagName) {
   }
   tagsDB[i].tagName = tagName
   save(tagsDB)
-  data.message = '修改该标签名称成功'
+  data.message = '修改标签名称成功'
   data.data.tag = tagsDB[i]
   return data
 }

@@ -30,7 +30,7 @@ class HjRequest {
     instance.interceptors.response.use(res => {
       return res.data
     }, err => { //超出200的状态码会在这里执行
-      console.log(err)
+      // console.log(err)
       if(err.response.status === 401) {
         const user = getUser()
         if(user?.userName === '演示账号') {

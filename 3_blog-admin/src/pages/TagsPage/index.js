@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMount } from 'react-use'
 import dayjs from 'dayjs'
-import { Card, Space } from 'antd';
+import { Card, message, Space } from 'antd';
 
 import hjRequest from '../../services/request'
 
@@ -17,7 +17,7 @@ const TagsPage = memo(() => {
   const [data, setData] = useState([]) // 处理后的 Table 需要的格式的所有数据
   const [dataSource, setDataSource] = useState([]) // 切割后的 Table 当前页数据
   const [selectedRowKeys, setSelectedRowKeys] = useState([]) //选中的行，key数组
-
+  
   useMount(() => {
     hjRequest.get('/tags/page').then(d => {
       const tags = d[0]
@@ -36,8 +36,7 @@ const TagsPage = memo(() => {
     })
   })
 
-  useEffect(() => {
-    // 切割下当前页数据
+  useEffect(() => { //切割下当前页数据
     const size = 10
     const start = (currentIndex - 1) * size
     const end = start + size
@@ -50,6 +49,30 @@ const TagsPage = memo(() => {
     navigate(`/tags/page/${index}`)
     document.querySelector('.content').scrollTop = 0
   }, [navigate])
+
+  const modifyTagName = useCallback(tags => {
+    return hjRequest.put('/tags', tags)
+      .then(d => {
+        if(d.message === '修改标签名称成功') {
+          message.success(d.message)
+          const id = d.data.tag.id
+          const tagName = d.data.tag.tagName
+          const newData = data.map(item => {
+            if(item.key === id) {
+              return { ...item, tagName: tagName }
+            }
+            return item
+          })
+          setData(newData)
+          return d
+        } else {
+          return Promise.reject({ data: d.message })
+        }
+      })
+      .catch(err => {
+        message.error(err?.data || '未知错误')
+      })
+  })
 
   return (
     <Card title='标签管理'>
@@ -65,6 +88,7 @@ const TagsPage = memo(() => {
           setSelectedRowKeys={setSelectedRowKeys}
           changePageIndex={changePageIndex}
           total={data.length}
+          modifyTagName={modifyTagName}
         />
       </Space>
     </Card>

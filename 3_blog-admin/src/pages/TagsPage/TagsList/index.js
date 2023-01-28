@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { Button, Form, Input, Modal, Space, Table } from 'antd'
 
 
@@ -6,12 +6,16 @@ const TagsList = memo((props) => {
   const {
     dataSource, setSelectedRowKeys,
     changePageIndex, currentIndex,
-    total
+    total, modifyTagName
   } = props
   
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [form] = Form.useForm()
 
-  const columns = [
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [currentEditTag, setCurrentEditTag] = useState({ tagID: 0, tagName: '' }) //当前正在编辑的标签对象
+
+  const columns = [ //列配置
     {
       title: '标签ID',
       dataIndex: 'key',
@@ -33,7 +37,10 @@ const TagsList = memo((props) => {
       dataIndex: 'operate',
       render: (text, record) => (
         <Space>
-          <Button type="primary" onClick={() => { setIsModalOpen(true) }}>编辑</Button>
+          <Button type="primary" onClick={() => {
+            setIsModalOpen(true)
+            tagEditing(record)
+          }}>编辑</Button>
           <Button type="primary" onClick={() => { console.log(text, record) }} danger>删除</Button>
         </Space>
       )
@@ -59,6 +66,21 @@ const TagsList = memo((props) => {
     setIsModalOpen(false)
   }
 
+  function tagEditing(tagObj) {
+    form.setFieldValue('tagname', tagObj.tagName)
+    setCurrentEditTag({
+      tagName: tagObj.tagName,
+      tagID: tagObj.key
+    })
+  }
+
+  async function onEditTagFormFinish() {
+    setLoading(true)
+    await modifyTagName(currentEditTag)
+    setLoading(false)
+    closeTagEditorModal()
+  }
+
   return (
     <>
       <Table
@@ -74,7 +96,11 @@ const TagsList = memo((props) => {
         onCancel={closeTagEditorModal}
         footer={null}
       >
-        <Form style={{ marginTop: '30px' }}>
+        <Form
+          style={{ marginTop: '30px' }}
+          form={form}
+          onFinish={onEditTagFormFinish}
+        >
           <Form.Item
             label="标签名"
             name="tagname"
@@ -85,7 +111,11 @@ const TagsList = memo((props) => {
               },
             ]}
           >
-            <Input />
+            <Input
+              autoComplete='off'
+              onChange={(e) => {
+                setCurrentEditTag({ ...currentEditTag, tagName: e.target.value })
+              }} />
           </Form.Item>
           <Form.Item
             wrapperCol={{
@@ -93,7 +123,7 @@ const TagsList = memo((props) => {
             }}
           >
             <Space>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={loading}>
                 提交
               </Button>
               <Button onClick={closeTagEditorModal}>取消</Button>
