@@ -56,10 +56,7 @@ router.delete('/batch', function(req, res) {
       // 删除所有包含该tagsIDArr的关系项
       tagAndArticleModel.delItemsBasedOnTheTagsIDArr(tagsIDArr)
     }
-    // res.json(data)
-    setTimeout(() => {
-      res.json(data)
-    }, 1000)
+    res.json(data)
   } catch(error) {
     console.log(error)
     res.status(500).json('删除标签出错，注意处理')
