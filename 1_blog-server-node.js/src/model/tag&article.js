@@ -103,7 +103,6 @@ tagAndArticleModel.delItemsBasedOnTheTagsIDArr = function(tagsIDArr) {
 // 根据文章ID返回所有包含该ID的项（数组）
 tagAndArticleModel.returnItemsBasedOnTheArticleID = function(articleID) {
   const tagArticleDB = getTagArticleData()
-
   const newArr = tagArticleDB.filter(item => {
     return item.articleID === articleID
   })

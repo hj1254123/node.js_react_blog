@@ -2,7 +2,7 @@ import React, { memo, useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMount } from 'react-use'
 import dayjs from 'dayjs'
-import { Card, message, Space } from 'antd';
+import { Card, message, Modal, Space } from 'antd';
 
 import hjRequest from '../../services/request'
 
@@ -17,7 +17,7 @@ const TagsPage = memo(() => {
   const [data, setData] = useState([]) // 处理后的 Table 需要的格式的所有数据
   const [dataSource, setDataSource] = useState([]) // 切割后的 Table 当前页数据
   const [selectedRowKeys, setSelectedRowKeys] = useState([]) //选中的行，key数组
-  
+
   useMount(() => {
     hjRequest.get('/tags/page').then(d => {
       const tags = d[0]
@@ -42,8 +42,6 @@ const TagsPage = memo(() => {
     const end = start + size
     setDataSource(data.slice(start, end))
   }, [currentIndex, data])
-
-  console.log('selectedRowKeys', selectedRowKeys)
 
   const changePageIndex = useCallback((index) => {
     navigate(`/tags/page/${index}`)
@@ -72,7 +70,41 @@ const TagsPage = memo(() => {
       .catch(err => {
         message.error(err?.data || '未知错误')
       })
-  })
+  }, [data])
+
+
+
+  const delTagsUseModal = useCallback(tagsIDArr => {
+    if(tagsIDArr.length === 0) {
+      message.info('未选择标签')
+      return
+    }
+    
+    Modal.confirm({
+      content: '确定要删除吗？',
+      maskClosable: true,
+      onOk: () => {
+        return hjRequest.delete('/tags/batch', { tagsIDArr })
+          .then(d => {
+            if(d.message === '批量删除标签成功') {
+              message.success('删除标签成功')
+              // 删除本地data对于的tag项
+              let newData = data
+              for(const tagID of tagsIDArr) {
+                newData = newData.filter(item => (item.key !== tagID))
+              }
+              setData(newData)
+              return d.data
+            } else {
+              return Promise.reject({ data: d.message })
+            }
+          })
+          .catch(err => {
+            message.error(err?.data || '未知错误')
+          })
+      },
+    })
+  }, [data])
 
   return (
     <Card title='标签管理'>
@@ -82,13 +114,14 @@ const TagsPage = memo(() => {
           display: 'flex',
         }}
       >
-        <TagsOperate />
+        <TagsOperate selectedRowKeys={selectedRowKeys} delTagsUseModal={delTagsUseModal} />
         <TagsList
           dataSource={dataSource}
           setSelectedRowKeys={setSelectedRowKeys}
           changePageIndex={changePageIndex}
           total={data.length}
           modifyTagName={modifyTagName}
+          delTagsUseModal={delTagsUseModal}
         />
       </Space>
     </Card>

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { Button, Form, Input, Modal, Space, Table } from 'antd'
 
 
@@ -6,12 +6,13 @@ const TagsList = memo((props) => {
   const {
     dataSource, setSelectedRowKeys,
     changePageIndex, currentIndex,
-    total, modifyTagName
+    total, modifyTagName,
+    delTagsUseModal,
   } = props
-  
+
   const [form] = Form.useForm()
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [currentEditTag, setCurrentEditTag] = useState({ tagID: 0, tagName: '' }) //当前正在编辑的标签对象
 
@@ -37,11 +38,22 @@ const TagsList = memo((props) => {
       dataIndex: 'operate',
       render: (text, record) => (
         <Space>
-          <Button type="primary" onClick={() => {
-            setIsModalOpen(true)
-            tagEditing(record)
-          }}>编辑</Button>
-          <Button type="primary" onClick={() => { console.log(text, record) }} danger>删除</Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              setIsEditModalOpen(true)
+              tagEditing(record)
+            }}
+          >
+            编辑</Button>
+          <Button
+            type="primary"
+            danger
+            onClick={() => {
+              delTagsUseModal([record.key])
+            }}
+          >
+            删除</Button>
         </Space>
       )
     }
@@ -63,7 +75,7 @@ const TagsList = memo((props) => {
   }
 
   function closeTagEditorModal() {
-    setIsModalOpen(false)
+    setIsEditModalOpen(false)
   }
 
   function tagEditing(tagObj) {
@@ -92,7 +104,7 @@ const TagsList = memo((props) => {
       />
       <Modal
         title="修改标签名"
-        open={isModalOpen}
+        open={isEditModalOpen}
         onCancel={closeTagEditorModal}
         footer={null}
       >
