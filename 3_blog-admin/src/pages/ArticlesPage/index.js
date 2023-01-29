@@ -71,10 +71,11 @@ const ArticlesPage = memo(() => {
             })
           }
 
-          mutate({
-            ...data,
-            data: newData
-          })
+          mutate(
+            { ...data, data: newData },
+            //禁止重新验证
+            { revalidate: false },
+          )
           message.success('删除文章成功')
         } else {
           message.error(res.message || '未知错误')

@@ -7,7 +7,7 @@ const ArticlesList = memo((props) => {
     setSelectedRowKeys,
     dataSource, delArticles,
     currentIndex, changePageIndex,
-    totalArticles, editorArticle
+    totalArticles, editorArticle,
   } = props
 
   const columns = [ //列配置
@@ -75,10 +75,10 @@ const ArticlesList = memo((props) => {
 
   return (
     <Table
-      columns={columns}
       dataSource={dataSource}
-      pagination={pagination}
+      columns={columns}
       rowSelection={rowSelection}
+      pagination={pagination}
       loading={!dataSource}
     />
   )
