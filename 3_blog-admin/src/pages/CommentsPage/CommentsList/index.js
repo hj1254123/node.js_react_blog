@@ -8,6 +8,7 @@ const CommentsList = memo((props) => {
     dataSource, setSelectedRowComments,
     currentIndex, total,
     changePageIndex, delComments,
+    isLoading,
   } = props
 
   const columns = [ //列配置
@@ -90,7 +91,7 @@ const CommentsList = memo((props) => {
       columns={columns}
       rowSelection={rowSelection}
       pagination={pagination}
-      loading={!dataSource}
+      loading={isLoading}
     />
   )
 })

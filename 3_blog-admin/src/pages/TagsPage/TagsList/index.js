@@ -7,7 +7,7 @@ const TagsList = memo((props) => {
     dataSource, setSelectedRowKeys,
     changePageIndex, currentIndex,
     total, modifyTagName,
-    delTagsUseModal,
+    delTagsUseModal, isLoading
   } = props
 
   const [form] = Form.useForm()
@@ -100,7 +100,7 @@ const TagsList = memo((props) => {
         dataSource={dataSource}
         pagination={pagination}
         rowSelection={rowSelection}
-        loading={!dataSource}
+        loading={isLoading}
       />
       <Modal
         title="修改标签名"

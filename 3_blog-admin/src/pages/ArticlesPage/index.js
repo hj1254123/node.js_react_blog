@@ -21,9 +21,12 @@ const ArticlesPage = memo(() => {
   const { id } = useParams() // 当前页码
   const currentIndex = parseInt(id) || 1
 
-  const { data, mutate } = useSWR(`/article/page/${currentIndex}`, (url) => {
+
+  const { data, mutate, error } = useSWR(`/article/page/${currentIndex}`, (url) => {
     return hjRequest.get(url).then(res => res)
   })
+
+  const isLoading = !data && !error //SWR是否有数据正在请求(不包含重新验证)
 
   useEffect(() => { // 格式化 data=>dataSource
     if(!data) return
@@ -96,7 +99,6 @@ const ArticlesPage = memo(() => {
     setArticleKey(articleKey)
     setIsEditorOpen(true)
   }
-
   return (
     <Card title='文章管理'>
       <Space
@@ -118,6 +120,7 @@ const ArticlesPage = memo(() => {
           totalArticles={data?.totalArticles}
           setSelectedRowKeys={setSelectedRowKeys}
           editorArticle={editorArticle}
+          isLoading={isLoading}
         />
         {
           isEditorOpen ? <ArticlesEditor

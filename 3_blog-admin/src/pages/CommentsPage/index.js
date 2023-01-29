@@ -18,9 +18,11 @@ const CommentsPage = memo(() => {
   const { id } = useParams() // 当前页码
   const currentIndex = parseInt(id) || 1
 
-  const { data, mutate } = useSWR(`/comment/page/${currentIndex}`, (url) => {
+  const { data, mutate, error } = useSWR(`/comment/page/${currentIndex}`, (url) => {
     return hjRequest.get(url).then(res => res)
   })
+
+  const isLoading = !data && !error //SWR是否有数据正在请求(不包含重新验证)
 
   useEffect(() => {
     if(!data) return
@@ -99,6 +101,7 @@ const CommentsPage = memo(() => {
           total={data?.total}
           changePageIndex={changePageIndex}
           delComments={delComments}
+          isLoading={isLoading}
         />
       </Space>
     </Card>

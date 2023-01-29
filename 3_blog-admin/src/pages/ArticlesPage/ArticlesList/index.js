@@ -8,6 +8,7 @@ const ArticlesList = memo((props) => {
     dataSource, delArticles,
     currentIndex, changePageIndex,
     totalArticles, editorArticle,
+    isLoading,
   } = props
 
   const columns = [ //列配置
@@ -79,7 +80,7 @@ const ArticlesList = memo((props) => {
       columns={columns}
       rowSelection={rowSelection}
       pagination={pagination}
-      loading={!dataSource}
+      loading={isLoading}
     />
   )
 })

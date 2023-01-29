@@ -17,9 +17,12 @@ const TagsPage = memo(() => {
   const [data, setData] = useState([]) // 处理后的 Table 需要的格式的所有数据
   const [dataSource, setDataSource] = useState([]) // 切割后的 Table 当前页数据
   const [selectedRowKeys, setSelectedRowKeys] = useState([]) //选中的行，key数组
+  const [isLoading, setIsLoading] = useState(false)
 
-  useMount(() => {
-    hjRequest.get('/tags/page').then(d => {
+  // TODO：标签接口不太一样，是全量请求的，所以没有用SWR，待优化接口
+  useMount(async () => {
+    setIsLoading(true)
+    await hjRequest.get('/tags/page').then(d => {
       const tags = d[0]
       const tagMapArticles = d[1]
       const arr = []
@@ -34,6 +37,7 @@ const TagsPage = memo(() => {
       }
       setData(arr)
     })
+    setIsLoading(false)
   })
 
   useEffect(() => { //切割下当前页数据
@@ -79,7 +83,7 @@ const TagsPage = memo(() => {
       message.info('未选择标签')
       return
     }
-    
+
     Modal.confirm({
       content: '确定要删除吗？',
       maskClosable: true,
@@ -122,6 +126,7 @@ const TagsPage = memo(() => {
           total={data.length}
           modifyTagName={modifyTagName}
           delTagsUseModal={delTagsUseModal}
+          isLoading={isLoading}
         />
       </Space>
     </Card>
