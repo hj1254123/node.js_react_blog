@@ -212,6 +212,12 @@ commentModel.getComments = function(pageN) {
   data.data = commentsDB
   return data
 }
+
+// 向外抛出评论数据
+commentModel.throwCommentsData = function() {
+  return getCommentDB()
+}
+
 /**
  * 下面是一些工具函数
  */

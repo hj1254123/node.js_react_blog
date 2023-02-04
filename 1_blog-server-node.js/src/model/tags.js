@@ -262,6 +262,11 @@ tagsModel.getTagsArr = function() {
   return getTagsData()
 }
 
+// 向外抛出标签数据
+tagsModel.throwTagsData = function() {
+  return getTagsData()
+}
+
 // 以下是一些工具函数
 
 function getTagsData() {

@@ -6,11 +6,12 @@ const path = require('path')
 
 const { PUBLIC_KEY } = require('./constants/config.js')
 // 路由
-const authRouter = require('./routes/auth.js');
-const articleRouter = require('./routes/article.js');
+const authRouter = require('./routes/auth.js')
+const articleRouter = require('./routes/article.js')
 const tagsRouter = require('./routes/tags.js')
-const commentRouter = require('./routes/comment.js');
+const commentRouter = require('./routes/comment.js')
 const archiveRouter = require('./routes/archive.js')
+const dashboardRouter = require('./routes/dashboard.js')
 
 const app = express()
 const port = 3003
@@ -51,6 +52,7 @@ app.use(expressJwt({
     { url: /^\/comment\/page\/\d+$/, methods: ['GET'] },
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
     { url: '/tags/page', methods: ['GET'] },
+    { url: '/dashboard/statistics', methods: ['GET'] },
     // { url: '/test', methods: ['GET', 'OPTIONS'] },
   ]
 }))
@@ -68,6 +70,7 @@ app.use('/article', articleRouter)
 app.use('/tags', tagsRouter)
 app.use('/comment', commentRouter)
 app.use('/archive', archiveRouter)
+app.use('/dashboard', dashboardRouter)
 // 测试接口
 app.get('/test', function(req, res) {
   res.status(200).send('ok');

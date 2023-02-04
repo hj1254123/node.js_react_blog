@@ -1,8 +1,18 @@
 import React, { memo } from 'react'
+import { Card, Space } from 'antd'
 
 const DashboardPage = memo(() => {
   return (
-    <div>DashboardPage</div>
+    <Card title='Dashboard'>
+      <Space
+        direction='vertical'
+        style={{
+          display: 'flex',
+        }}
+      >
+
+      </Space>
+    </Card>
   )
 })
 

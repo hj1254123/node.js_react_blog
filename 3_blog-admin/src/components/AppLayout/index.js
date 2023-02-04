@@ -29,7 +29,7 @@ const AppLayout = memo(({ children }) => {
     {
       key: '/dashboard',
       icon: <DashboardOutlined />,
-      label: '仪表盘',
+      label: 'Dashboard',
     },
     {
       key: '/articles',
