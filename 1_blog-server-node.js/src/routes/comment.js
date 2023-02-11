@@ -70,7 +70,6 @@ router.get('/page/:num', cacheMiddleware(10), (req, res) => {
 // 根据文章id获取评论
 router.get('/:id', (req, res) => {
   try {
-    console.log(1)
     const articleID = parseInt(req.params.id)
     const data = commentModel.getCommentByArticleID(articleID)
     res.json(data)
