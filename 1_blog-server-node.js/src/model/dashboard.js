@@ -38,6 +38,14 @@ dashboardModel.getBasicStatistics = function() { //获取统计信息
   return data
 }
 
+dashboardModel.getAnnualArticleStatistics = function(year) {
+  const data = {
+    message: '',
+    data: []
+  }
+
+  return data
+}
 
 
 

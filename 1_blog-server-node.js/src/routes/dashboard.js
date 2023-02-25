@@ -14,5 +14,16 @@ router.get('/basic_statistics', cacheMiddleware(10), (req, res) => {
   }
 })
 
+router.get('/annual_article_statistics/:year', cacheMiddleware(10), (req, res) => {
+  try {
+    const year = req.params.year
+    const data = dashboardModel.getAnnualArticleStatistics(year)
+    res.json(data)
+  } catch(error) {
+    console.log('basic_statistics接口出错', error)
+    res.status(500).json('basic_statistics接口出错')
+  }
+})
+
 module.exports = router
 
