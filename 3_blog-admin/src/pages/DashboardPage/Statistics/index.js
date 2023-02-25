@@ -1,8 +1,17 @@
 import React, { memo } from 'react'
-import { Card, Col, Row, Statistic } from 'antd'
+import { Card, Col, Row, Skeleton, Statistic } from 'antd'
 import { CommentOutlined, FileTextOutlined, RiseOutlined, TagsOutlined, } from '@ant-design/icons'
+import useSWR from 'swr'
 
-const Statistics = memo(({ data }) => {
+import hjRequest from '../../../services/request'
+
+const Statistics = memo(() => {
+  const { data, error } = useSWR('/dashboard/basic_statistics', (url) => {
+    return hjRequest.get(url).then(d => d)
+  })
+  const isLoading = !data && !error //SWR是否有数据正在请求(不包含重新验证)
+  if(isLoading) return <Skeleton active />
+
   const colSpan = 6
   return (
     <Row gutter={16}>
@@ -10,7 +19,7 @@ const Statistics = memo(({ data }) => {
         <Card bordered={false}>
           <Statistic
             title="总文章数"
-            value={data.totalArticles}
+            value={data.data.totalArticles}
             prefix={<FileTextOutlined />}
           />
         </Card>
@@ -19,7 +28,7 @@ const Statistics = memo(({ data }) => {
         <Card bordered={false}>
           <Statistic
             title="总阅读量"
-            value={data.totalViews}
+            value={data.data.totalViews}
             prefix={<RiseOutlined />}
           />
         </Card>
@@ -28,7 +37,7 @@ const Statistics = memo(({ data }) => {
         <Card bordered={false}>
           <Statistic
             title="总评论数"
-            value={data.totalComments}
+            value={data.data.totalComments}
             prefix={<CommentOutlined />}
           />
         </Card>
@@ -37,7 +46,7 @@ const Statistics = memo(({ data }) => {
         <Card bordered={false}>
           <Statistic
             title="总标签数"
-            value={data.totalViews}
+            value={data.data.totalViews}
             prefix={<TagsOutlined />}
           />
         </Card>

@@ -4,18 +4,13 @@ const cacheMiddleware = require('../middleware/cache')
 
 const router = express.Router()
 
-router.get('/statistics', cacheMiddleware(10), (req, res) => {
+router.get('/basic_statistics', cacheMiddleware(10), (req, res) => {
   try {
-    const data = {
-      message: '成功'
-    }
-    const r1 = dashboardModel.getBasicInformation()
-    data.basicInformation = r1
-    console.log(data)
+    const data = dashboardModel.getBasicStatistics()
     res.json(data)
   } catch(error) {
-    console.log('dashboard/statistics接口出错', error)
-    res.status(500).json('dashboard/statistics接口出错')
+    console.log('basic_statistics接口出错', error)
+    res.status(500).json('basic_statistics接口出错')
   }
 })
 

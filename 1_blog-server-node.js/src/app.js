@@ -52,7 +52,7 @@ app.use(expressJwt({
     { url: /^\/comment\/page\/\d+$/, methods: ['GET'] },
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
     { url: '/tags/page', methods: ['GET'] },
-    { url: '/dashboard/statistics', methods: ['GET'] },
+    { url: '/dashboard/basic_statistics', methods: ['GET'] },
     // { url: '/test', methods: ['GET', 'OPTIONS'] },
   ]
 }))
