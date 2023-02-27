@@ -1,3 +1,5 @@
+const dayjs = require("dayjs")
+
 const articleModel = require("./article")
 const commentModel = require("./comment")
 const tagsModel = require("./tags")
@@ -41,9 +43,27 @@ dashboardModel.getBasicStatistics = function() { //获取统计信息
 dashboardModel.getAnnualArticleStatistics = function(year) {
   const data = {
     message: '',
-    data: []
+    data: {} // 格式{'2023-01-01': 1}，1代表当天发布的文章数
   }
 
+  // 读取文章数据
+  const articlesDB = articleModel.throwArticlesData()
+  // 计算当前年的数据，格式[['2023-01-01', 0], ['2023-01-02', 2], ...],元素2为当天发布了几篇文章。
+  const startTime = Date.parse(year + '-01-01 00:00:00 +8')
+  const endTime = Date.parse(year + 1 + '-01-01 00:00:00 +8')
+
+  articlesDB.forEach((item, index) => {
+    if(item.time >= startTime && item.time < endTime) {
+      const day = dayjs(item.time).format('YYYY-MM-DD')
+      if(day in data.data) {
+        data.data[day] += 1
+      } else {
+        data.data[day] = 1
+      }
+    }
+  })
+  // 返回
+  data.message = '成功'
   return data
 }
 

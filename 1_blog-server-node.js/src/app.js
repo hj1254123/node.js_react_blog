@@ -1,5 +1,5 @@
 const express = require('express')
-const expressJwt = require('express-jwt')
+const { expressjwt } = require('express-jwt')
 const fs = require('fs')
 const morgan = require('morgan')
 const path = require('path')
@@ -35,7 +35,7 @@ app.use(express.json())
 // token解析验证中间件
 // 成功，把用户信息赋值 req.user
 // 失败，直接报错
-app.use(expressJwt({
+app.use(expressjwt({
   secret: PUBLIC_KEY,
   algorithms: ['RS256'],
 }).unless({
