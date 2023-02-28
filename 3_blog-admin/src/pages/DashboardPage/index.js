@@ -1,6 +1,8 @@
 import React, { memo } from 'react'
 import { Space } from 'antd'
-import Statistics from './Statistics'
+
+import BasicStatistics from './BasicStatistics'
+import ArticleCalendarHeatmap from './ArticleCalendarHeatmap'
 
 const DashboardPage = memo(() => {
 
@@ -11,7 +13,8 @@ const DashboardPage = memo(() => {
         display: 'flex',
       }}
     >
-      <Statistics />
+      <BasicStatistics />
+      <ArticleCalendarHeatmap />
     </Space>
   )
 })

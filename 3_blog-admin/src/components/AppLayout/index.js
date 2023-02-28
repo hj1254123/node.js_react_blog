@@ -20,7 +20,7 @@ const { Header, Sider, Content } = Layout
 
 const AppLayout = memo(({ children }) => {
   const [collapsed, setCollapsed] = useState(false)
-  const location = useLocation()
+  const { pathname } = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuthContext()
 
@@ -66,8 +66,7 @@ const AppLayout = memo(({ children }) => {
           <Menu
             className='slider-menu'
             mode="inline"
-            defaultSelectedKeys={['/dashboard']}
-            selectedKeys={[location.pathname]}
+            defaultSelectedKeys={[pathname]}
             items={sliderMenuItems}
             onClick={({ key }) => {
               navigate(key)

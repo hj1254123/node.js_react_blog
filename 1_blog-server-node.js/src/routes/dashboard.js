@@ -14,10 +14,15 @@ router.get('/basic_statistics', cacheMiddleware(10), (req, res) => {
   }
 })
 
-router.get('/annual_article_statistics/:year', cacheMiddleware(10), (req, res) => {
+router.get('/annual_article_statistics/:year', (req, res) => {
   try {
-    const year = parseInt(req.params.year)
-    const data = dashboardModel.getAnnualArticleStatistics(year)
+    let data = null
+    const year = req.params.year
+    if(year === 'recent') { //最近一年的
+      data = dashboardModel.getRecentArticleStatistics()
+    } else {
+      data = dashboardModel.getAnnualArticleStatistics(year)
+    }
     res.json(data)
   } catch(error) {
     console.log('annual_article_statistics接口出错', error)

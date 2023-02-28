@@ -53,7 +53,7 @@ app.use(expressjwt({
     { url: /^\/archive\/\d+$/, methods: ['GET'] },
     { url: '/tags/page', methods: ['GET'] },
     { url: '/dashboard/basic_statistics', methods: ['GET'] },
-    { url: /^\/dashboard\/annual_article_statistics\/\d+$/, methods: ['GET'] },
+    { url: /^\/dashboard\/annual_article_statistics\/\w+$/, methods: ['GET'] },
     // { url: '/test', methods: ['GET', 'OPTIONS'] },
   ]
 }))

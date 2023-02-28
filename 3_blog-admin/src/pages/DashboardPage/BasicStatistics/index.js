@@ -5,7 +5,7 @@ import useSWR from 'swr'
 
 import hjRequest from '../../../services/request'
 
-const Statistics = memo(() => {
+const BasicStatistics = memo(() => {
   const { data, error } = useSWR('/dashboard/basic_statistics', (url) => {
     return hjRequest.get(url).then(d => d)
   })
@@ -55,4 +55,4 @@ const Statistics = memo(() => {
   )
 })
 
-export default Statistics
+export default BasicStatistics
