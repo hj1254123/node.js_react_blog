@@ -43,11 +43,17 @@ dashboardModel.getBasicStatistics = function() { //获取统计信息
 dashboardModel.getAnnualArticleStatistics = function(year) {
   const data = {
     message: '',
+    max: 0,
+    range: [],
     data: {}
   }
   const startTime = Date.parse(+year + '-01-01 00:00:00 +8')
-  const endTime = Date.parse(+year + 1 + '-01-01 00:00:00 +8')
-  data.data = getTheArticleStatisticsForACertainPeriodOfTime(startTime, endTime)
+  const endTime = Date.parse(+year + 1 + '-01-01 00:00:00 +8') - 1
+  const [obj, max] = getTheArticleStatisticsForACertainPeriodOfTime(startTime, endTime)
+  
+  data.data = obj
+  data.max = max
+  data.range = [dayjs(startTime).format('YYYY-MM-DD'), dayjs(endTime).format('YYYY-MM-DD')]
   data.message = '成功'
   return data
 }
@@ -55,11 +61,17 @@ dashboardModel.getAnnualArticleStatistics = function(year) {
 dashboardModel.getRecentArticleStatistics = function() {
   const data = {
     message: '',
+    range: [],
+    max: 0,
     data: {}
   }
   const endTime = Date.now()
   const startTime = endTime - (60 * 60 * 24 * 365 * 1000)
-  data.data = getTheArticleStatisticsForACertainPeriodOfTime(startTime, endTime)
+  const [obj, max] = getTheArticleStatisticsForACertainPeriodOfTime(startTime, endTime)
+
+  data.data = obj
+  data.max = max
+  data.range = [dayjs(startTime).format('YYYY-MM-DD'), dayjs(endTime).format('YYYY-MM-DD')]
   data.message = '成功'
   return data
 }
@@ -68,11 +80,12 @@ dashboardModel.getRecentArticleStatistics = function() {
 // 返回该时间段内的文章统计数据（日期：发布文章数）
 function getTheArticleStatisticsForACertainPeriodOfTime(startTime, endTime) {
   const obj = {}
+  let max = 0
   // 读取文章数据
   const articlesDB = articleModel.throwArticlesData()
 
   articlesDB.forEach(item => {
-    if(item.time >= startTime && item.time < endTime) {
+    if(item.time >= startTime && item.time <= endTime) {
       const day = dayjs(item.time).format('YYYY-MM-DD')
       if(obj.hasOwnProperty(day)) {
         obj[day] += 1
@@ -81,7 +94,15 @@ function getTheArticleStatisticsForACertainPeriodOfTime(startTime, endTime) {
       }
     }
   })
-  return obj
+  for(const key in obj) {
+    if(Object.hasOwnProperty.call(obj, key)) {
+      const element = obj[key]
+      if(element > max) {
+        max = element
+      }
+    }
+  }
+  return [obj, max]
 }
 
 
