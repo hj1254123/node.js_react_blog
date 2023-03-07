@@ -1,5 +1,4 @@
 const express = require('express')
-const cacheMiddleware = require('../middleware/cache')
 const commentModel = require('../model/comment')
 
 const router = express.Router()
@@ -51,13 +50,13 @@ router.delete('/batch', (req, res) => {
     const articleIDAndCommentIDArr = req.body.data
     const data = commentModel.delCommentsByArticlesIDAndcommentIDArr(articleIDAndCommentIDArr)
     res.json(data)
-  } catch (error) {
+  } catch(error) {
     res.status(500).json('批量删除评论出错,注意处理')
   }
 })
 
 // 获取所有评论（10条/页）
-router.get('/page/:num', cacheMiddleware(10), (req, res) => {
+router.get('/page/:num', (req, res) => {
   try {
     const pageN = parseInt(req.params.num)
     const data = commentModel.getComments(pageN)

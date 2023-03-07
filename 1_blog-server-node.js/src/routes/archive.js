@@ -3,7 +3,7 @@ const cacheMiddleware = require('../middleware/cache')
 const archiveModel = require('../model/archive')
 const router = express.Router()
 
-router.get('/:page', cacheMiddleware(10), (req, res) => {
+router.get('/:page', cacheMiddleware(2), (req, res) => {
   try {
     const pageNumber = parseInt(req.params.page)
     const data = archiveModel.getPage(pageNumber)

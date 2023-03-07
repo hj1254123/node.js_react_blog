@@ -75,7 +75,7 @@ router.put('/', function(req, res) {
 })
 
 // 标签页 - 获取所有标签和标签对应文章
-router.get('/page', cacheMiddleware(10), function(req, res) {
+router.get('/page', cacheMiddleware(2), function(req, res) {
   try {
     // - 拿到标签数据
     const tagsArr = tagsModel.getTagsArr()

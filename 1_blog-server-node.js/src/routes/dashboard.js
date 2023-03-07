@@ -4,7 +4,7 @@ const cacheMiddleware = require('../middleware/cache')
 
 const router = express.Router()
 
-router.get('/basic_statistics', cacheMiddleware(10), (req, res) => {
+router.get('/basic_statistics', cacheMiddleware(2), (req, res) => {
   try {
     const data = dashboardModel.getBasicStatistics()
     res.json(data)
@@ -14,7 +14,7 @@ router.get('/basic_statistics', cacheMiddleware(10), (req, res) => {
   }
 })
 
-router.get('/annual_article_statistics/:year', (req, res) => {
+router.get('/annual_article_statistics/:year', cacheMiddleware(2), (req, res) => {
   try {
     let data = null
     const year = req.params.year
