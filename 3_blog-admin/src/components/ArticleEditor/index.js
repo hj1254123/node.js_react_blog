@@ -4,7 +4,7 @@ import 'md-editor-rt/lib/style.css'
 import { Button, Drawer, Form, Input, message, Modal, Space, Tag } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
-import hjRequest, { imgRequest } from '../../services/request'
+import hjRequest from '../../services/request'
 
 const ArticlesEditor = memo(({ isopen, setIsopen, title = '新建文章', articleKey, mutate }) => {
   const [articleData, setArticleData] = useState({

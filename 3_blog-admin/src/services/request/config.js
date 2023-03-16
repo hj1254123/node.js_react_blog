@@ -13,5 +13,5 @@ if(process.env.NODE_ENV === 'development') {
 export {
   BASE_URL,
   TIMEOUT,
-  imageHosting_URL
+  // imageHosting_URL
 }
