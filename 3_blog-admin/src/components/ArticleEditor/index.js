@@ -4,7 +4,7 @@ import 'md-editor-rt/lib/style.css'
 import { Button, Drawer, Form, Input, message, Modal, Space, Tag } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
-import hjRequest from '../../services/request'
+import hjRequest, { imgRequest } from '../../services/request'
 
 const ArticlesEditor = memo(({ isopen, setIsopen, title = '新建文章', articleKey, mutate }) => {
   const [articleData, setArticleData] = useState({
@@ -144,6 +144,23 @@ const ArticlesEditor = memo(({ isopen, setIsopen, title = '新建文章', articl
     setArticleData({ ...articleData, title: allValues.title, intro: allValues.intro })
   }
 
+  // async function onUploadImg(files, callback) {
+  //   const res = await Promise.all(
+  //     files.map((file) => {
+  //       return new Promise((resolve, reject) => {
+  //         const form = new FormData()
+  //         form.append('file', file)
+          
+  //         imgRequest
+  //           .post('/upload/single', form)
+  //           .then((res) => resolve(res))
+  //           .catch((error) => reject(error));
+  //       })
+  //     })
+  //   )
+
+  //   callback(res.map((item) => encodeURI(item.url)));
+  // }
   return (
     <Drawer
       title={title}
@@ -229,11 +246,13 @@ const ArticlesEditor = memo(({ isopen, setIsopen, title = '新建文章', articl
           }]}
         >
           <MdEditor
+            style={{ height: '80vh' }}
             modelValue={articleData.content}
             onChange={(content) => {
               setArticleData({ ...articleData, content: content })
             }}
-            style={{ height: '80vh' }} />
+            // onUploadImg={onUploadImg}
+          />
         </Form.Item>
         <Form.Item
           style={{
