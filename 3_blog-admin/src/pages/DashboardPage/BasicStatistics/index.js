@@ -46,7 +46,7 @@ const BasicStatistics = memo(() => {
         <Card bordered={false}>
           <Statistic
             title="总标签数"
-            value={data.data.totalViews}
+            value={data.data.totalTags}
             prefix={<TagsOutlined />}
           />
         </Card>

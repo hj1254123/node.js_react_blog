@@ -27,7 +27,7 @@ function getInRangeData(data, range) {
   const end = dayjs(range[1])
   const dayTime = 3600 * 24 * 1000;
   const dataSource = [];
-  for(let time = date; time < end; time += dayTime) {
+  for(let time = date; time <= end; time += dayTime) {
     const day = dayjs(time).format('YYYY-MM-DD')
     let count = 0
     if(data.hasOwnProperty(day)) {
