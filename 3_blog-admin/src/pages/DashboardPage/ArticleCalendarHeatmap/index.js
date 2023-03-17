@@ -12,7 +12,6 @@ const ArticleCalendarHeatmap = memo(() => {
   })
   
   const isLoading = !data && !error //SWR是否有数据正在请求(不包含重新验证)
-  console.log(isLoading)
   if(isLoading) return <Skeleton active />
 
   const option = getCalendarHeatmapOption(data.data, data.max, data.range)
@@ -76,14 +75,11 @@ function getCalendarHeatmapOption(data, max, range) {
       cellSize: 'auto',
       range: range,
       itemStyle: {
-        borderWidth: 0.5
+        borderWidth: 5,
+        borderColor: '#fff',
       },
       yearLabel: { show: false },
       splitLine: false,
-      itemStyle: {
-        borderWidth: 5,
-        borderColor: '#fff',
-      }
     },
     series: {
       type: 'heatmap',
