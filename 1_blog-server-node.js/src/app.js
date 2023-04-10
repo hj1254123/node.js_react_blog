@@ -3,6 +3,7 @@ const { expressjwt } = require('express-jwt')
 const fs = require('fs')
 const morgan = require('morgan')
 const path = require('path')
+const multer = require('multer')
 
 const { PUBLIC_KEY } = require('./constants/config.js')
 // 路由
@@ -12,6 +13,7 @@ const tagsRouter = require('./routes/tags.js')
 const commentRouter = require('./routes/comment.js')
 const archiveRouter = require('./routes/archive.js')
 const dashboardRouter = require('./routes/dashboard.js')
+const uploadRouter = require('./routes/upload.js')
 
 const app = express()
 const port = 3003
@@ -72,6 +74,7 @@ app.use('/tags', tagsRouter)
 app.use('/comment', commentRouter)
 app.use('/archive', archiveRouter)
 app.use('/dashboard', dashboardRouter)
+app.use('/upload', uploadRouter)
 // 测试接口
 app.get('/test', function(req, res) {
   res.status(200).send('ok');
@@ -89,7 +92,7 @@ app.use(function(err, req, res, next) {
   console.log('===全局错误===', err)
   // 默认值
   let status = 500
-  let msg = '服务端错误'
+  let msg = '未知错误'
 
   // 由于后端管理和生产页面共用该程序，而生产不需要鉴权，
   // 按现在的写法没带正确token express-jwt 会报错，这里暂时这样处理
@@ -97,6 +100,10 @@ app.use(function(err, req, res, next) {
     // 管理页面返回401
     status = 401
     msg = 'token已过期，请重新登录！'
+  }
+
+  if(err instanceof multer.MulterError) {
+    return res.status(500).json({ success: false, ...err })
   }
 
   res.status(status).send(msg)

@@ -144,23 +144,20 @@ const ArticlesEditor = memo(({ isopen, setIsopen, title = '新建文章', articl
     setArticleData({ ...articleData, title: allValues.title, intro: allValues.intro })
   }
 
-  // async function onUploadImg(files, callback) {
-  //   const res = await Promise.all(
-  //     files.map((file) => {
-  //       return new Promise((resolve, reject) => {
-  //         const form = new FormData()
-  //         form.append('file', file)
-          
-  //         imgRequest
-  //           .post('/upload/single', form)
-  //           .then((res) => resolve(res))
-  //           .catch((error) => reject(error));
-  //       })
-  //     })
-  //   )
+  async function onUploadImg(files, callback) {
+    const formData = new FormData()
+    files.forEach(file => {
+      formData.append('images', file)
+    })
+  
+    hjRequest
+      .post('/upload/multiple', formData)
+      .then((res) => callback(res.data))
+      .catch((error) => {
+        throw new Error(error)
+      })
 
-  //   callback(res.map((item) => encodeURI(item.url)));
-  // }
+  }
   return (
     <Drawer
       title={title}
@@ -251,7 +248,7 @@ const ArticlesEditor = memo(({ isopen, setIsopen, title = '新建文章', articl
             onChange={(content) => {
               setArticleData({ ...articleData, content: content })
             }}
-            // onUploadImg={onUploadImg}
+            onUploadImg={onUploadImg}
           />
         </Form.Item>
         <Form.Item
