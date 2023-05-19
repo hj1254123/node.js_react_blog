@@ -6,6 +6,8 @@ const path = require('path')
 const multer = require('multer')
 
 const { PUBLIC_KEY } = require('./constants/config.js')
+const myCors = require('./middleware/myCors.js')
+
 // 路由
 const authRouter = require('./routes/auth.js')
 const articleRouter = require('./routes/article.js')
@@ -18,21 +20,8 @@ const uploadRouter = require('./routes/upload.js')
 const app = express()
 const port = 3003
 
-// 允许信任url跨域
-app.use((req, res, next) => {
-  const trustList = ['http://localhost:3000', 'http://localhost:3001']
-  const origin = req.headers.origin
-  if(trustList.indexOf(origin) > -1) {
-    res.header('Access-Control-Allow-Origin', origin)
-    res.header('Access-Control-Allow-Headers', 'Authorization,Origin,X-Requested-With,Content-Type,Accept')
-    res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
-    res.header('Content-Type', 'application/json; charset=utf-8')
-  }
-  next()
-})
-
+app.use(myCors) // 自定义允许跨域的url
 app.use(express.json())
-
 
 // token解析验证中间件
 // 成功，把用户信息赋值 req.user
@@ -87,7 +76,8 @@ app.get('/test', function(req, res) {
 app.get('*', function(req, res) {
   res.status(404).send('该接口未定义');
 })
-// 错误处理
+
+// 全局错误处理
 app.use(function(err, req, res, next) {
   console.log('===全局错误===', err)
   // 默认值
@@ -102,13 +92,13 @@ app.use(function(err, req, res, next) {
     msg = 'token已过期，请重新登录！'
   }
 
+  // multer 处理 formData的文件上传。全局错误，特殊处理一下。
   if(err instanceof multer.MulterError) {
     return res.status(500).json({ success: false, ...err })
   }
 
   res.status(status).send(msg)
 })
-
 
 app.listen(port, function() {
   console.log(`服务器启动成功, 运行在http://localhost:${port}`);
