@@ -1,3 +1,4 @@
+import 'react-app-polyfill/stable'; //兼容在 browserslist 中定义的浏览器
 import { createRoot } from 'react-dom/client';
 
 import { BrowserRouter } from "react-router-dom";
