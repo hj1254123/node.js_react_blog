@@ -1,6 +1,10 @@
 // 允许信任url跨域
 const myCors = ((req, res, next) => {
-  const trustList = ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://47.108.195.109:80']
+  const trustList = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+  ]
   const origin = req.headers.origin
   if(trustList.indexOf(origin) > -1) {
     res.header('Access-Control-Allow-Origin', origin)

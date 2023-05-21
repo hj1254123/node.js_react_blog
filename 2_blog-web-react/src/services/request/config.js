@@ -8,7 +8,7 @@ if(process.env.NODE_ENV === 'development') {
   BASE_URL = 'http://localhost:3003'
 } else {
   // BASE_URL = 'http://192.168.3.42:3001'
-  BASE_URL = 'http://47.108.195.109:3003'
+  BASE_URL = 'https://47.108.195.109'
 }
 
 export {
