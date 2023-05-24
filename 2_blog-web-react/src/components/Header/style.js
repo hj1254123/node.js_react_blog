@@ -14,7 +14,7 @@ export const HeaderWrapper = styled.header`
     opacity: 0;
     h1 {
       font-size: 44px;
-      line-height: 54px;
+      line-height: 58px;
       font-weight: 500;
       white-space: nowrap;
       text-overflow: ellipsis; 
@@ -42,7 +42,7 @@ export const HeaderWrapper = styled.header`
     padding: 72px 16px 0;
     h1 {
       font-size: 24px !important;
-      line-height: 30px !important;
+      line-height: 34px !important;
     }
     span {
       font-size: 14px !important;
