@@ -5,16 +5,20 @@ import { useTitleContext } from '../../context/Title-context'
 
 import { HeaderWrapper } from './style'
 
-const Header = memo(({ children, isShowTitle = true }) => {
+const Header = memo((props) => {
+  const {
+    children,
+    transitionControl = true,
+    isShowTitle = true,
+    isShowSpan = false
+  } = props
   const { title } = useTitleContext()
-  const isShowSpan = (title === "HouJi's Blog")
-  // console.log('title', title)
-  // console.log('isShowSpan', isShowSpan)
+
   return (
-    <HeaderWrapper isShowSpan={isShowSpan} isShowTitle={isShowTitle}>
+    <HeaderWrapper isShowSpan={isShowSpan} isShowTitle={isShowTitle} >
       <CSSTransition
-        in={true}
-        timeout={500}
+        in={transitionControl}
+        timeout={400}
         classNames='header'
         appear
       >

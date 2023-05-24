@@ -30,7 +30,7 @@ const HomePage = memo(() => {
 
   return (
     <HomePageWrapper>
-      <Header />
+      <Header isShowSpan={true} />
       {
         data && (
           <SwitchTransition mode='out-in'>

@@ -9,6 +9,7 @@ import { useTitleContext } from '../../context/Title-context'
 import { useMedia } from 'react-use';
 
 import { SmallScreenWidth } from '../../common/constant';
+import { useSetHeaderTitle } from '../../hooks/useSetHeaderTitle';
 
 import { Header } from '../../components'
 import { ArticleWrapper } from './style'
@@ -22,20 +23,15 @@ const ArticlePage = memo(() => {
   const [tocData, setTocData] = useState([]) //存储 h2、h3 元素信息，用于 toc 渲染
   const { setTitle } = useTitleContext() //全局title
 
-  useEffect(() => {
-    document.documentElement.scrollTop = 0
-    setTitle('文章页') //这里先设置一下，是为了隐藏 Header 副标题（详情见 Header 组件）
-  }, [id])
-
   const { data } = useSWRImmutable(`/article/${id}`, (url) => {
     return hjRequest.get(url).then(d => d)
-  }, {
-    onSuccess: (data) => {
-      setTitle(data.data.title)
+  },)
+  useEffect(() => {
+    if(data) {
       setTocData(buildToc(data))
+      setTitle(data.data.title)
     }
-  })
-
+  }, [data])
   // 解析返回用于渲染 TOC 的数据结构
   function buildToc(data) {
     const toc = [] // 最终处理好的标题数据
@@ -71,7 +67,7 @@ const ArticlePage = memo(() => {
 
   return (
     <ArticleWrapper>
-      <Header isShowTitle={isShowHeaderTitle} />
+      <Header transitionControl={!!data} isShowTitle={isShowHeaderTitle} />
       {
         data && <CSSTransition
           in={true}
