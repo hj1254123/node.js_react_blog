@@ -27,3 +27,18 @@
 > - 较于18年版本开发了更多的接口、代码结构优化
 >
 > 开发中基本上是现学现用，待系统的学习后端开发后，还需重构。
+
+## 项目初始化
+
+> 由于考虑不周，三个项目放在了同一个库里，之后会分开，暂时这样。
+
+在各自文件夹运行 `npm i ` 安装依赖。
+
+### Node.js 接口服务器
+
+在 `/node.js_react_blog/1_blog-server-node.js/src/constants/secret/` 下创建几个文件：
+
+- md5_salt：密码加盐，如：`jdslsdlwww1111`。
+- registry_invitation_code：邀请码，用于注册用户，如：`7355608`。
+- SMMS_token：用于图片上传至 SMMS 的 token，到[官网获取](https://sm.ms/home/apitoken)。
+- private.key 和 private.key：本项目采用 JWT 鉴权，非对称加密，生成方式见：[./0_doc/2.接口.md##鉴权](./0_doc/2.接口.md)
