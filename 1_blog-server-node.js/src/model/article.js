@@ -199,7 +199,6 @@ articleModel.putArticle = function(articleData) {
   // 添加新的标签
   try {
     let tagsArr = tagsModel.addTagsFromArticleInterface(tags)
-    console.log('tagsArr', tagsArr)
     data.data.tags = tagsArr
   } catch(error) {
     data.message = '标签保存出错，请手动删除新添加数据。'

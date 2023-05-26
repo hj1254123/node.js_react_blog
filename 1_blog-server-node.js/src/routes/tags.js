@@ -4,6 +4,7 @@ const tagAndArticleModel = require('../model/tag&article.js')
 const tagsModel = require('../model/tags.js')
 
 const cacheMiddleware = require('../middleware/cache')
+const logger = require('../utils/logger.js')
 
 const router = express.Router()
 
@@ -15,6 +16,7 @@ router.post('/article', function(req, res) {
     const data = tagsModel.additionalTag(articleID, tagName)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('向文章追加标签出错，注意处理')
   }
 })
@@ -26,6 +28,7 @@ router.delete('/article', function(req, res) {
     const data = tagAndArticleModel.removeTagFromArticle(articleID, tagID)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('删除文章某个标签出错，注意处理')
   }
 })
@@ -42,7 +45,7 @@ router.delete('/', function(req, res) {
     }
     res.json(data)
   } catch(error) {
-    console.log(error)
+    logger.error(error)
     res.status(500).json('删除标签出错，注意处理')
   }
 })
@@ -58,7 +61,7 @@ router.delete('/batch', function(req, res) {
     }
     res.json(data)
   } catch(error) {
-    console.log(error)
+    logger.error(error)
     res.status(500).json('删除标签出错，注意处理')
   }
 })
@@ -69,7 +72,7 @@ router.put('/', function(req, res) {
     const data = tagsModel.putTagName(tagID, tagName)
     res.json(data)
   } catch(error) {
-    console.log(error);
+    logger.error(error)
     res.status(500).json('修改标签名出错，注意处理')
   }
 })
@@ -98,7 +101,7 @@ router.get('/page', cacheMiddleware(2), function(req, res) {
     // - 返回
     res.json([tagsArr, tagNameMapsToArticleArrObj])
   } catch(error) {
-    console.log(error)
+    logger.error(error)
     res.status(500).json('标签页接口出错，注意处理')
   }
 })

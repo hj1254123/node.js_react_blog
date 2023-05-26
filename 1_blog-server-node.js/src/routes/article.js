@@ -1,5 +1,6 @@
 const express = require('express')
 const articleModel = require('../model/article')
+const logger = require('../utils/logger')
 
 const router = express.Router()
 
@@ -11,6 +12,7 @@ router.post('/', function(req, res) {
     const data = articleModel.addArticle(articleData)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('添加文章出错，注意处理')
   }
 })
@@ -20,6 +22,7 @@ router.delete('/', function(req, res) {
     const data = articleModel.delArticle(req.body.articleID)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('删除文章出错，注意处理')
   }
 })
@@ -29,6 +32,7 @@ router.delete('/batch', function(req, res) {
     const data = articleModel.delArticles(req.body.articlesID)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('批量删除文章出错，注意处理')
   }
 })
@@ -39,6 +43,7 @@ router.put('/', function(req, res) {
     const data = articleModel.putArticle(articleData)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('修改文章出错，注意处理')
   }
 })
@@ -49,6 +54,7 @@ router.get('/:id', function(req, res) {
     const data = articleModel.getArticle(articleID)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('获取文章出错，注意处理')
   }
 })
@@ -64,6 +70,7 @@ router.get('/page/:id', function(req, res) {
       res.json(data)
     }
   } catch(error) {
+    logger.error(error)
     res.status(500).json('获取某页文章列表出错，注意处理')
   }
 })

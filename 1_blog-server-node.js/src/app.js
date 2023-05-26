@@ -7,6 +7,7 @@ const multer = require('multer')
 
 const { PUBLIC_KEY } = require('./constants/config.js')
 const myCors = require('./middleware/myCors.js')
+const logger = require('./utils/logger.js')
 
 // 路由
 const authRouter = require('./routes/auth.js')
@@ -49,9 +50,8 @@ app.use(expressjwt({
   ]
 }))
 
-// 日志
+// HTTP日志
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' })
-// setup the logger
 app.use(morgan('combined', { stream: accessLogStream }))
 
 // 路由
@@ -77,7 +77,7 @@ app.get('*', function(req, res) {
 
 // 全局错误处理
 app.use(function(err, req, res, next) {
-  console.log('===全局错误===', err)
+  logger.error('全局错误捕获', err)
   // 默认值
   let status = 500
   let msg = '未知错误'

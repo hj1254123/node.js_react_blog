@@ -15,9 +15,10 @@
 
 - 框架：`express` 
 - 鉴权：采用 JWT 方案。使用 `jsonwebtoken` 颁发 token，`express-jwt` 解析验证。
-- 使用 `morgan` 记录日志。
+- 使用 `morgan` 记录 HTTP 日志、`log4js` 记录错误日志。
 - `Postman` 做接口测试
-- `Nginx` 代理转发、`PM2` 进程管理，。
+- `Nginx` 代理转发、`PM2` 进程管理。
+- 使用 `SM.MS` 图床，`multer` 处理上传来的图片。
 
 > 开发本接口服务器，更多的是为了学习目的，比如：
 >

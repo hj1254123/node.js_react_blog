@@ -1,5 +1,6 @@
 const express = require('express')
 const commentModel = require('../model/comment')
+const logger = require('../utils/logger')
 
 const router = express.Router()
 
@@ -28,7 +29,7 @@ router.post('/', (req, res) => {
 
     res.json(data)
   } catch(error) {
-    console.log(error)
+    logger.error(error)
     res.status(500).json('添加评论出错,注意处理')
   }
 })
@@ -40,6 +41,7 @@ router.delete('/', (req, res) => {
     const data = commentModel.delCommentByArticleIDAndCommentID(articleID, commentID)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('删除评论出错,注意处理')
   }
 })
@@ -51,6 +53,7 @@ router.delete('/batch', (req, res) => {
     const data = commentModel.delCommentsByArticlesIDAndcommentIDArr(articleIDAndCommentIDArr)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('批量删除评论出错,注意处理')
   }
 })
@@ -62,6 +65,7 @@ router.get('/page/:num', (req, res) => {
     const data = commentModel.getComments(pageN)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('获取所有评论出错,注意处理')
   }
 })
@@ -73,6 +77,7 @@ router.get('/:id', (req, res) => {
     const data = commentModel.getCommentByArticleID(articleID)
     res.json(data)
   } catch(error) {
+    logger.error(error)
     res.status(500).json('获取评论出错,注意处理')
   }
 })

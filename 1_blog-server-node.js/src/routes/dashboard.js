@@ -1,6 +1,7 @@
 const express = require('express')
 const dashboardModel = require('../model/dashboard')
 const cacheMiddleware = require('../middleware/cache')
+const logger = require('../utils/logger')
 
 const router = express.Router()
 
@@ -9,7 +10,7 @@ router.get('/basic_statistics', cacheMiddleware(2), (req, res) => {
     const data = dashboardModel.getBasicStatistics()
     res.json(data)
   } catch(error) {
-    console.log('basic_statistics接口出错', error)
+    logger.error(error)
     res.status(500).json('basic_statistics接口出错')
   }
 })
@@ -25,7 +26,7 @@ router.get('/annual_article_statistics/:year', cacheMiddleware(2), (req, res) =>
     }
     res.json(data)
   } catch(error) {
-    console.log('annual_article_statistics接口出错', error)
+    logger.error(error)
     res.status(500).json('annual_article_statistics接口出错')
   }
 })

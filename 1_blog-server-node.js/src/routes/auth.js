@@ -3,6 +3,7 @@ const router = express.Router()
 const jwt = require('jsonwebtoken')
 
 const authModel = require('../model/auth')
+const logger = require('../utils/logger')
 
 const { PRIVATE_KEY, PUBLIC_KEY } = require('../constants/config')
 
@@ -21,7 +22,7 @@ router.post('/register', (req, res) => {
     }
     res.json(data)
   } catch(error) {
-    console.log(error)
+    logger.error(error)
     res.status(500).json('注册用户出错')
   }
 })
@@ -40,7 +41,7 @@ router.post('/login', (req, res) => {
     res.json(data)
 
   } catch(error) {
-    console.log(error)
+    logger.error(error)
     res.status(500).json('登录出错')
   }
 })

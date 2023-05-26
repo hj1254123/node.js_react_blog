@@ -6,6 +6,7 @@ const fileType = require('file-type')
 const router = express.Router()
 
 const uploadImagesToSMMS = require('../utils/uploadImage')
+const logger = require('../utils/logger')
 
 const UPLOAD_DIR = path.resolve(__dirname, '../public/uploads')
 const allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp']
@@ -47,13 +48,13 @@ router.post('/multiple', upload.fields([{ name: 'images' }]), async (req, res) =
       return
     }
     const resArr = await uploadImagesToSMMS(paths)
-    console.log(resArr)
+    
     res.json({
       message: '成功',
       data: resArr
     })
   } catch(error) {
-    console.log('上传图片出错', error)
+    logger.error(error)
     res.status(500).json({
       message: '上传图片出错',
     })
@@ -89,8 +90,9 @@ async function deleteFiles(paths) {
         return fse.remove(path)
       })
     )
-  } catch(err) {
-    console.error('删除文件出错', err)
+  } catch(error) {
+    logger.error(error)
+    console.error('删除文件出错', error)
   }
 }
 

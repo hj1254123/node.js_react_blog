@@ -1,6 +1,7 @@
 const express = require('express')
 const cacheMiddleware = require('../middleware/cache')
 const archiveModel = require('../model/archive')
+const logger = require('../utils/logger')
 const router = express.Router()
 
 router.get('/:page', cacheMiddleware(2), (req, res) => {
@@ -13,7 +14,7 @@ router.get('/:page', cacheMiddleware(2), (req, res) => {
       res.json(data)
     }
   } catch(error) {
-    console.log(error);
+    logger.error(error)
     res.status(500).json('获取归档文章列表出错，注意处理')
   }
 })
