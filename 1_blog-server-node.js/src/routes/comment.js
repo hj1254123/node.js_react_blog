@@ -10,7 +10,8 @@ const ipSet = new Set()
 // 根据文章id添加评论
 router.post('/', (req, res) => {
   try {
-    const ip = req.ip
+    // const ip = req.ip
+    const ip = req.headers['x-real-ip'] //通过 nginx 转发过来的真实ip
     const commentData = { ...req.body, ip }
 
     // 限制单个ip评论频率
