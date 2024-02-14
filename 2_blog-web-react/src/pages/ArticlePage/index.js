@@ -32,7 +32,7 @@ const ArticlePage = memo(() => {
       setTocData(buildToc(data))
       setTitle(data.data.title)
     }
-  }, [data])
+  }, [data, setTitle])
   // 解析返回用于渲染 TOC 的数据结构
   function buildToc(data) {
     const toc = [] // 最终处理好的标题数据
@@ -65,7 +65,6 @@ const ArticlePage = memo(() => {
     })
     return toc
   }
-
   return (
     <ArticleWrapper>
       <Header transitionControl={!!data} isShowTitle={isShowHeaderTitle} />

@@ -17,7 +17,6 @@ const MyCode = ({ children }) => (<code>{children}</code>)
 
 const Article = memo((props) => {
   const { articleData, tocData } = props
-
   // 代码高亮
   useEffect(() => {
     hljs.highlightAll()
@@ -35,7 +34,6 @@ const Article = memo((props) => {
   useEffect(() => {
     // 包含文章内容的h2、h3元素列表（不是Toc的标题）
     const list = articleRef.current && articleRef.current.querySelectorAll('h2,h3')
-
     // 设置需要被高亮的标题id（这个id会传给TOC组件，用于高亮）
     const activeTitleFn = throttle(function() {
       if(list.length === 0) return // 为空跳过
@@ -52,7 +50,7 @@ const Article = memo((props) => {
       }
       // 都为负数高亮最后一个
       setActiveTitleID(list[list.length - 1].id)
-    }, 96)
+    }, 32)
 
     activeTitleFn() //初始化调用一次
 
@@ -66,7 +64,7 @@ const Article = memo((props) => {
     return () => {
       window.removeEventListener('scroll', handler)
     }
-  }, [])
+  }, [articleData])
 
   // markdown 引擎没有对重复的 html 标签 id 做处理，
   // 我们自行处理，用 record 来记录已用过的 id，详情见下方 <Markdown /> 实现
