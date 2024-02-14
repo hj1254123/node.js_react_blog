@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const TopHeaderWrapper = styled.header`
   display: flex;
@@ -9,12 +9,12 @@ export const TopHeaderWrapper = styled.header`
   width: 100%;
   height: 56px;
   background-color: #3f51b5;
-  transition: all .4s;
+  transition: all 0.4s;
   z-index: 888;
   .top-button {
     width: 240px;
     height: 100%;
-      button {
+    button {
       width: 56px;
       height: 100%;
       position: absolute;
@@ -24,10 +24,11 @@ export const TopHeaderWrapper = styled.header`
       color: #fff;
       cursor: pointer;
     }
-    .icon-cha1 { // 关闭按钮
-      transition: all .4s cubic-bezier(.18, .81, .3, .89);
-      left: ${props => props.isShow ? '240px' : '-56px'};
-      transform: ${props => props.isShow ? 'scale(1)' : 'scale(0)'};
+    .icon-cha1 {
+      // 关闭按钮
+      transition: all 0.4s cubic-bezier(0.18, 0.81, 0.3, 0.89);
+      left: ${(props) => (props.isShow ? "240px" : "-56px")};
+      transform: ${(props) => (props.isShow ? "scale(1)" : "scale(0)")};
       /* 小屏不显示关闭按钮（点击遮罩关闭） */
       @media (max-width: 1240px) {
         left: -56px;
@@ -41,8 +42,8 @@ export const TopHeaderWrapper = styled.header`
     text-align: center;
     span {
       display: inline-block;
-      transition: all .4s cubic-bezier(.18, .81, .3, .89);
-      transform: ${props => props.isShow ? '' : 'translateX(-120px)'};
+      transition: all 0.4s cubic-bezier(0.18, 0.81, 0.3, 0.89);
+      transform: ${(props) => (props.isShow ? "" : "translateX(-120px)")};
     }
   }
 
@@ -61,10 +62,11 @@ export const TopHeaderWrapper = styled.header`
     .top-title {
       white-space: nowrap;
       text-overflow: ellipsis;
+      text-align: start;
       overflow: hidden;
       span {
         display: inline;
       }
     }
   }
-`
+`;
