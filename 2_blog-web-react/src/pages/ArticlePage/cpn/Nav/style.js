@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const NavWrapper = styled.nav`
   display: flex;
@@ -7,7 +7,7 @@ export const NavWrapper = styled.nav`
   margin-top: 36px;
   > div {
     flex: 1;
-    @media screen and (max-width: 760px){
+    @media screen and (max-width: 760px) {
       padding: 0 5px;
       /* background: #fff; */
       /* border-bottom: 1px solid #dadada; */
@@ -29,22 +29,27 @@ export const NavWrapper = styled.nav`
     line-height: 2em;
     font-weight: bold;
   }
-
+  @media screen and (max-width: 760px) { 
+    h4 {
+      font-size: 16px;
+    }
+    .tips {
+      font-size: 16px;
+    }
+  }
   .prev {
     .tips {
       ::before {
-        content: '< ';
-        font-size: 1.33em;
+        content: "< ";
       }
     }
-  } 
+  }
   .next {
     .tips {
       ::after {
-        content: ' >';
-        font-size: 1.33em;
+        content: " >";
       }
     }
     text-align: right;
   }
-`
+`;
