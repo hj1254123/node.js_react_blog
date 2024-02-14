@@ -25,4 +25,4 @@
 //   })
 // })
 
-export default instanceImg
+// export default instanceImg
